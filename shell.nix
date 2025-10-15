@@ -9,7 +9,9 @@ pkgs.mkShell {
     cmake
     pkg-config
     # glibc is provided by gcc's stdenv on Linux; no need to add explicitly
+    clang-tools   # adds clangd, clang-tidy, etc.
   ];
+
 
   # Make sure CMake picks GCC by default
   CC = "gcc";

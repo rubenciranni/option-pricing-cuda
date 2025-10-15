@@ -3,65 +3,63 @@
 #include <algorithm>
 #include <cstdlib>
 #include <unordered_map>
+#include <CLI/CLI.hpp>
 #include "cpu/binomial_crr_american_vanilla_option_cpu.hpp"
 #include "constants.hpp"
+#include <benchmark.hpp>
+#include "dataset.hpp"
 
-std::unordered_map<std::string, std::string> parseArgs(int argc, char* argv[]) {
-    std::unordered_map<std::string, std::string> args;
-    for (int i = 1; i < argc; ++i) {
-        std::string key = argv[i];
-        if (key[0] == '-' && i + 1 < argc) {
-            args[key] = argv[i + 1];
-            ++i;
+
+
+int main(int argc, char** argv) {
+    CLI::App app{"QuantOptions - CLI for American Option Pricing"};
+
+    std::string type,function_name;
+    double S, K, T, r, sigma, q;
+    int n;
+
+    auto single = app.add_subcommand("single", "Run a single pricing query");
+    single->add_option("--type", type, "Option type (call|put)")
+        ->default_val("call")
+        ->check(CLI::IsMember({"call", "put"}));
+    single->add_option("-S", S, "Spot price")->default_val(100.0);
+    single->add_option("-K", K, "Strike price")->default_val(100.0);
+    single->add_option("-T", T, "Maturity (years)")->default_val(0.5);
+    single->add_option("-r", r, "Risk-free interest rate")->default_val(0.03);
+    single->add_option("--sigma", sigma, "Volatility")->default_val(0.2);
+    single->add_option("-q", q, "Dividend yield")->default_val(0.015);
+    single->add_option("-n", n, "Number of binomial steps")->default_val(60);
+    single->add_option("--function", function_name, "Function name")->default_val("binomial_crr_american_vanilla_option_cpu");
+
+    std::string filter_name;
+    std::string dataset;
+
+    auto bench = app.add_subcommand("benchmark", "Run benchmark on dataset");
+    bench->add_option("--filter-by-name", filter_name, "Filter by benchmark name")->default_val("");
+    bench->add_option("--dataset", dataset, "Dataset name (e.g., SP500)")->default_val("easy");
+
+    auto list = app.add_subcommand("listdataset", "List available datasets and their config");
+
+    try {
+        app.require_subcommand(1); // Must choose one of the three
+        app.parse(argc, argv);
+    } catch (const CLI::ParseError &e) {
+        return app.exit(e);
+    }
+
+    if (*single) {
+        OptionType type_opt = (type == "call") ? OptionType::Call : OptionType::Put;
+        if (FUNCTIONS.find(function_name) == FUNCTIONS.end()) {
+            std::cerr << "Function not found: " << function_name << "\n";
+            return 1;
         }
+        double price = FUNCTIONS[function_name](T, S, K, r, sigma, q, n, type_opt);
+        printf("Option Price: %.4f\n", price);
+    } else if (*bench) {
+        benchmark(filter_name, dataset);
+    } else if (*list) {
+        list_datasets();
     }
-    return args;
-}
-
-bool checkRequiredArgs(const std::unordered_map<std::string,std::string>& args) {
-    const std::string required[] = {"-type","-S","-K","-T","-r","-sigma","-q","-n"};
-    for (const auto& key : required) {
-        if (args.find(key) == args.end()) {
-            std::cerr << "Error: Missing required argument " << key << std::endl;
-            return false;
-        }
-    }
-    return true;
-}
-
-int main(int argc, char* argv[]) {
-    auto args = parseArgs(argc, argv);
-
-    // Check required arguments
-    if (!checkRequiredArgs(args)) {
-        std::cerr << "Usage: ./binomial_crr_american_vanilla_option -type <call|put> -S <stock> -K <strike> "
-                     "-T <maturity> -r <rate> -sigma <volatility> -q <dividend> -n <steps>\n";
-        return 1;
-    }
-
-    // Parse arguments
-    std::string t = args["-type"];
-    std::transform(t.begin(), t.end(), t.begin(), ::tolower);
-    OptionType type;
-    if (t == "call") type = OptionType::Call;
-    else if (t == "put") type = OptionType::Put;
-    else {
-        std::cerr << "Error: Invalid option type. Use 'call' or 'put'.\n";
-        return 1;
-    }
-
-    double S     = std::atof(args["-S"].c_str());
-    double K     = std::atof(args["-K"].c_str());
-    double T     = std::atof(args["-T"].c_str());
-    double r     = std::atof(args["-r"].c_str());
-    double sigma = std::atof(args["-sigma"].c_str());
-    double q     = std::atof(args["-q"].c_str());
-    int n        = std::atoi(args["-n"].c_str());
-
-    double price = binomial_crr_american_vanilla_option_cpu(T, S, K, r, sigma, q, n, type);
-
-    std::cout << (type == OptionType::Call ? "American Call Price: " : "American Put Price: ")
-              << price << std::endl;
 
     return 0;
 }
