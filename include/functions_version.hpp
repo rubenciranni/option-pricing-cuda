@@ -5,6 +5,8 @@
 #include <string>
 #include "cpu/binomial_crr_american_vanilla_option_cpu.hpp"
 #include "cpu/openmp.hpp"
+#include "cpu/remove_zero.hpp"
+
 
 typedef std::function<double(const double S, const double K, const double T, const double r, const double sigma, const double q, const int n, const OptionType type)>  PricingFunction;
 
