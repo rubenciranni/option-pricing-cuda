@@ -14,4 +14,6 @@
  * @param n      Number of binomial steps.
  * @return The computed American option price.
  */
-double binomial_crr_european_vanilla_option_cpu(const double S, const double K, const double T, const double r, const double sigma, const double q, const int n, const OptionType type);
+double binomial_crr_european_vanilla_option_cpu(const double S, const double K, const double T,
+                                                const double r, const double sigma, const double q,
+                                                const int n, const OptionType type);
