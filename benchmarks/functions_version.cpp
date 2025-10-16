@@ -1,5 +1,7 @@
 
 #include "functions_version.hpp"
+#include "backends/cpu/binomial_crr_american_vanilla_option_cpu.hpp"
+#include "backends/openmp/binomial_crr_american_vanilla_option_openmp.hpp"
 
 
 std::map<std::string, PricingFunction> FUNCTIONS = {

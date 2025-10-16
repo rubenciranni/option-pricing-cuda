@@ -1,5 +1,9 @@
-
-#include "openmp.hpp"
+#include "backends/openmp/binomial_crr_american_vanilla_option_openmp.hpp"
+#include <omp.h>
+#include <cmath>
+#include <cassert>
+#include <vector>
+#include <algorithm>
 
 double binomial_crr_american_vanilla_option_cpu_openmp(const double S, const double K, const double T, const double r, const double sigma, const double q, const int n, const OptionType type) {
     const double deltaT = T / n;
@@ -33,4 +37,3 @@ double binomial_crr_american_vanilla_option_cpu_openmp(const double S, const dou
     delete[] buf2;
     return result;
 }
-
