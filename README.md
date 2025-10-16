@@ -22,13 +22,13 @@ option_pricing/
 │       │
 │       └── backends/               # Backend interface headers
 │           ├── cpu/
-│           │   ├── binomial/
+│           │   ├── vanilla_european_binomial/
 │           │   └── ...
 │           ├── cuda/
-│           │   ├── binomial/
+│           │   ├── vanilla_european_binomial/
 │           │   └── ...
 │           └── openmp/
-│               ├── binomial/
+│               ├── vanilla_european_binomial/
 │               └── ...
 │
 ├── src/                            # Library implementation files
