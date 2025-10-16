@@ -1,5 +1,7 @@
 #include "sanity_checks.hpp"
 
+#include "backends/cpu/binomial_crr_american_vanilla_option_cpu.hpp"
+
 std::vector<SingleRun> TESTS = {SingleRun(100, 100, 0.5, 0.03, 0.2, 0.015, 60, OptionType::Put)};
 
 bool run_single_sanity_check(PricingFunction func, const std::pair<double, SingleRun>& test) {

@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include <cmath>
 
-#include "binomial_crr_american_vanilla_option_cpu.hpp"
+#include "backends/cpu/binomial_crr_american_vanilla_option_cpu.hpp"
 #include "catch.hpp"
 #include "constants.hpp"
 
