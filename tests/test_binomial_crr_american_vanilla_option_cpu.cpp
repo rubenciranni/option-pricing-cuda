@@ -4,17 +4,22 @@
 #include "backends/cpu/binomial_crr_american_vanilla_option_cpu.hpp"
 #include "catch.hpp"
 #include "constants.hpp"
-#include "sanity_checks.hpp"
 
 TEST_CASE("American Option Put-Call Parity Approximation", "[ame_put_call_parity]") {
-  SingleRun run(100, 100, 1, 0.05, 0.2, 0, 500, OptionType::Put);
+  double S = 100.0;
+  double K = 100.0;
+  double T = 1.0;
+  double r = 0.05;
+  double sigma = 0.2;
+  double q = 0.0;  // no dividends
+  int n = 500;
 
-  double putPrice = binomial_crr_american_vanilla_option_cpu(run.S, run.K, run.T, run.r, run.sigma,
-                                                             run.q, run.n, OptionType::Put);
-  double callPrice = binomial_crr_american_vanilla_option_cpu(run.S, run.K, run.T, run.r, run.sigma,
-                                                              run.q, run.n, OptionType::Call);
+  double putPrice =
+      binomial_crr_american_vanilla_option_cpu(S, K, T, r, sigma, q, n, OptionType::Put);
+  double callPrice =
+      binomial_crr_american_vanilla_option_cpu(S, K, T, r, sigma, q, n, OptionType::Call);
 
-  double callPriceParity = putPrice + run.S - run.K * std::exp(-run.r * run.T);
+  double callPriceParity = putPrice + S - K * std::exp(-r * T);
 
   INFO("Put Price: " << putPrice);
   INFO("Call Price: " << callPrice);
