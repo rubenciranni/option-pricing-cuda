@@ -6,8 +6,8 @@
 #include <string>
 #include <unordered_map>
 
+#include "backends/cpu/binomial_crr_american_vanilla_option_cpu.hpp"
 #include "constants.hpp"
-#include "cpu/binomial_crr_american_vanilla_option_cpu.hpp"
 #include "dataset.hpp"
 
 int main(int argc, char** argv) {
