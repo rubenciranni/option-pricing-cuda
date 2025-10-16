@@ -6,6 +6,8 @@ TODO
 ## Development
 
 ### Structure
+
+```
 .
 option_pricing/
 ├── CMakeLists.txt                  # Root CMake configuration
@@ -67,7 +69,7 @@ option_pricing/
 ├── scripts/                        # Development/debug/data-prep scripts
 │
 └── build/                          # Out-of-source build directory (ignored in Git)
-
+```
 
 ### Building
 
