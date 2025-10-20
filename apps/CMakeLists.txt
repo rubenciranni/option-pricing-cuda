@@ -1,0 +1,42 @@
+include(FetchContent)
+FetchContent_Declare(
+  CLI11
+  GIT_REPOSITORY https://github.com/CLIUtils/CLI11.git
+  GIT_TAG v2.5.0
+)
+FetchContent_MakeAvailable(CLI11)
+
+add_executable(pricing_cli)
+
+target_sources(pricing_cli PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/pricing_cli.cpp
+)
+
+target_include_directories(pricing_cli
+    PRIVATE
+        ${PROJECT_SOURCE_DIR}/include
+)
+
+target_link_libraries(pricing_cli
+    PRIVATE
+      CLI11::CLI11
+      models
+)
+
+if(TARGET benchmarks_impl)
+    target_link_libraries(pricing_cli PRIVATE benchmarks_impl)
+endif()
+
+target_link_libraries(pricing_cli PRIVATE cpu_impl)
+
+if(TARGET openmp_impl)
+    target_link_libraries(pricing_cli PRIVATE openmp_impl)
+endif()
+
+if(TARGET cuda_impl)
+    target_link_libraries(pricing_cli PRIVATE cuda_impl)
+endif()
+
+set_target_properties(pricing_cli PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin
+)
