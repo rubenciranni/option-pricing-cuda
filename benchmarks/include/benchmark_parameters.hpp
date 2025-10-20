@@ -1,10 +1,10 @@
 
 #pragma once
+
+#include <constants.hpp>
 #include <iostream>
 #include <map>
 #include <string>
-
-#include "constants.hpp"
 
 class SingleRun {
  public:
@@ -69,6 +69,6 @@ inline std::string to_string(Run run) {
          ", nstart=" + std::to_string(run.nstart) + ", nend=" + std::to_string(run.nend) +
          ", nstep=" + std::to_string(run.nstep) + ", type=" + to_string(run.type) + ")";
 }
-extern std::map<std::string, Run> DATASET;
+extern std::map<std::string, Run> BENCHMARK_PARAMETERS;
 
-void list_datasets();
+void list_benchmark_parameterss();

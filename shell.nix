@@ -17,4 +17,3 @@ pkgs.mkShell {
   CC = "gcc";
   CXX = "g++";
 }
-

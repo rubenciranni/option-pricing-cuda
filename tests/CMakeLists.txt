@@ -1,11 +1,20 @@
-include_directories(${PROJECT_SOURCE_DIR}/include)
+include(CTest)
 
-set(TEST_SOURCES
-    test_binomial_crr_american_vanilla_option_cpu.cpp
-    test_binomial_crr_european_vanilla_option_cpu.cpp
+file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
 )
 
-add_executable(test_cpu ${TEST_SOURCES})
-target_link_libraries(test_cpu PRIVATE cpu_impl)
+add_executable(test_option_pricing ${TEST_SOURCES})
 
-add_test(NAME test_cpu COMMAND test_cpu)
+target_link_libraries(test_option_pricing
+    PRIVATE
+        models
+)
+
+target_include_directories(test_option_pricing
+    PRIVATE
+        ${PROJECT_SOURCE_DIR}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+add_test(NAME test_option_pricing COMMAND test_option_pricing)

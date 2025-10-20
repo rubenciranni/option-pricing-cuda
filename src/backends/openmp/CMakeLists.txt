@@ -1,21 +1,21 @@
-
-# OpenMP backend implementation (guarded at top level)
 find_package(OpenMP REQUIRED)
 
-add_library(openmp_impl STATIC
-  ${CMAKE_SOURCE_DIR}/src/backends/openmp/binomial_crr_american_vanilla_option_openmp.cpp
+file(GLOB_RECURSE OPENMP_BACKEND_SOURCES CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
 )
 
+add_library(openmp_impl STATIC)
+
+target_sources(openmp_impl PRIVATE ${OPENMP_BACKEND_SOURCES})
+
 target_include_directories(openmp_impl
-  PUBLIC
-    ${PROJECT_INCLUDE_DIR}
+    PUBLIC
+        ${PROJECT_SOURCE_DIR}/include
 )
 
 target_link_libraries(openmp_impl
   PUBLIC
-    options_models
     OpenMP::OpenMP_CXX
 )
 
-# If you also want to propagate -fopenmp to dependents explicitly:
 target_compile_features(openmp_impl PUBLIC cxx_std_17)

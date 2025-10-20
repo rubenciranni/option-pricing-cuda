@@ -1,16 +1,12 @@
-
-# CPU backend implementation
-add_library(cpu_impl STATIC
-  ${CMAKE_SOURCE_DIR}/src/backends/cpu/binomial_crr_american_vanilla_option_cpu.cpp
-  ${CMAKE_SOURCE_DIR}/src/backends/cpu/binomial_crr_european_vanilla_option_cpu.cpp
+file(GLOB_RECURSE CPU_BACKEND_SOURCES CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
 )
+
+add_library(cpu_impl STATIC)
+
+target_sources(cpu_impl PRIVATE ${CPU_BACKEND_SOURCES})
 
 target_include_directories(cpu_impl
-  PUBLIC
-    ${PROJECT_INCLUDE_DIR}
-)
-
-target_link_libraries(cpu_impl
-  PUBLIC
-    options_models           # depend on models
+    PUBLIC
+        ${PROJECT_SOURCE_DIR}/include
 )

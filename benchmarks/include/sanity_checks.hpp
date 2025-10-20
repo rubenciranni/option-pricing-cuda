@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 
-#include "dataset.hpp"
+#include "benchmark_parameters.hpp"
 #include "functions_version.hpp"
 
 bool run_single_sanity_check(PricingFunction func, const std::pair<double, SingleRun>& test);

@@ -1,6 +1,6 @@
 #include "sanity_checks.hpp"
 
-#include "backends/cpu/binomial_crr_american_vanilla_option_cpu.hpp"
+#include "backends/cpu/vanilla_american_binomial_cpu.hpp"
 
 std::vector<SingleRun> TESTS = {SingleRun(100, 100, 0.5, 0.03, 0.2, 0.015, 60, OptionType::Put)};
 
@@ -27,10 +27,9 @@ bool run_multiple_sanity_checks(PricingFunction func,
 bool run_sanity_checks_by_function(const PricingFunction fun) {
   std::vector<std::pair<double, SingleRun>> TESTS_WITH_RESULTS = {};
   for (const auto& run : TESTS) {
-    TESTS_WITH_RESULTS.push_back(
-        {binomial_crr_american_vanilla_option_cpu(run.S, run.K, run.T, run.r, run.sigma, run.q,
-                                                  run.n, run.type),
-         run});
+    TESTS_WITH_RESULTS.push_back({vanilla_american_binomial_cpu(run.S, run.K, run.T, run.r,
+                                                                run.sigma, run.q, run.n, run.type),
+                                  run});
   }
   return run_multiple_sanity_checks(fun, TESTS_WITH_RESULTS);
 }

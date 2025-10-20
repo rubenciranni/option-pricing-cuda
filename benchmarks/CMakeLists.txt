@@ -1,16 +1,13 @@
-add_library(benchmarks_impl STATIC
-  ${CMAKE_SOURCE_DIR}/benchmarks/functions_version.cpp
-  ${CMAKE_SOURCE_DIR}/benchmarks/dataset.cpp
-  ${CMAKE_SOURCE_DIR}/benchmarks/benchmark.cpp
-  ${CMAKE_SOURCE_DIR}/tests/sanity_checks.cpp
+file(GLOB_RECURSE BENCHMARK_SOURCES CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
 )
 
-target_include_directories(benchmarks_impl PUBLIC
-  ${PROJECT_INCLUDE_DIR}
-  ${CMAKE_SOURCE_DIR}/benchmarks/include
-  ${CMAKE_SOURCE_DIR}/tests/include
-)
+add_library(benchmarks_impl STATIC)
 
-set_target_properties(benchmarks_impl PROPERTIES
-  POSITION_INDEPENDENT_CODE ON
+target_sources(benchmarks_impl PRIVATE ${BENCHMARK_SOURCES})
+
+target_include_directories(benchmarks_impl
+    PUBLIC
+        ${PROJECT_SOURCE_DIR}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
 )

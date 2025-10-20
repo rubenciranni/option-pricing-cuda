@@ -125,4 +125,3 @@ if __name__ == "__main__":
     price, values, mask, _ = american_put_binomial(S, K, T, r, sigma, q, n)
     print(f"American put price (n={n}): {price:.4f}")
     plot_binomial_tree(values, mask, title=f"American Put Binomial Tree (n={n})")
-

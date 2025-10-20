@@ -1,4 +1,4 @@
-#include "backends/cpu/binomial_crr_american_vanilla_option_cpu.hpp"
+#include "backends/cpu/vanilla_american_binomial_cpu.hpp"
 
 #include <omp.h>
 
@@ -7,9 +7,9 @@
 #include <cmath>
 #include <vector>
 
-double binomial_crr_american_vanilla_option_cpu(const double S, const double K, const double T,
-                                                const double r, const double sigma, const double q,
-                                                const int n, const OptionType type) {
+double vanilla_american_binomial_cpu(const double S, const double K, const double T, const double r,
+                                     const double sigma, const double q, const int n,
+                                     const OptionType type) {
   const double deltaT = T / n;
   const double up = std::exp(sigma * std::sqrt(deltaT));
 
@@ -35,10 +35,10 @@ double binomial_crr_american_vanilla_option_cpu(const double S, const double K, 
   return p[0];
 }
 
-double binomial_crr_american_vanilla_option_cpu_remove_zeros(const double S, const double K,
-                                                             const double T, const double r,
-                                                             const double sigma, const double q,
-                                                             const int n, const OptionType type) {
+double vanilla_american_binomial_cpu_remove_zeros(const double S, const double K, const double T,
+                                                  const double r, const double sigma,
+                                                  const double q, const int n,
+                                                  const OptionType type) {
   const double deltaT = T / n;
   const double up = std::exp(sigma * std::sqrt(deltaT));
 

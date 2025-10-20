@@ -1,13 +1,12 @@
-#include "backends/cpu/binomial_crr_european_vanilla_option_cpu.hpp"
+#include "backends/cpu/vanilla_european_binomial_cpu.hpp"
 
-#include <math.h>
-
+#include <cmath>
 #include <iostream>
 #include <vector>
 
-double binomial_crr_european_vanilla_option_cpu(const double S, const double K, const double T,
-                                                const double r, const double sigma, const double q,
-                                                const int n, const OptionType type) {
+double vanilla_european_binomial_cpu(const double S, const double K, const double T, const double r,
+                                     const double sigma, const double q, const int n,
+                                     const OptionType type) {
   double dt = T / static_cast<double>(n);
   double disc = std::exp(-r * T);
   double u = std::exp(sigma * std::sqrt(dt));

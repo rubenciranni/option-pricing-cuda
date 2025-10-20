@@ -1,4 +1,3 @@
-# CLI-only for apps
 include(FetchContent)
 FetchContent_Declare(
   CLI11
@@ -7,39 +6,37 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(CLI11)
 
-# App(s)
-add_executable(binomial_crr_american_vanilla_option
-  ${CMAKE_SOURCE_DIR}/apps/binomial_crr_american_vanilla_option.cpp
+add_executable(pricing_cli)
+
+target_sources(pricing_cli PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/pricing_cli.cpp
 )
 
-# Headers for the app
-target_include_directories(binomial_crr_american_vanilla_option
-  PRIVATE
-    ${PROJECT_INCLUDE_DIR}
+target_include_directories(pricing_cli
+    PRIVATE
+        ${PROJECT_SOURCE_DIR}/include
 )
 
-# Link: always CPU; optionally OpenMP; and CLI11 only here
-target_link_libraries(binomial_crr_american_vanilla_option
-  PRIVATE
-    CLI11::CLI11
+target_link_libraries(pricing_cli
+    PRIVATE
+      CLI11::CLI11
+      models
 )
 
-# Link benchmarks first so that the cpu/openmp impl libraries (listed after)
-# can resolve any symbols referenced by the benchmarks archive.
-if (TARGET benchmarks_impl)
-  target_link_libraries(binomial_crr_american_vanilla_option PRIVATE benchmarks_impl)
+if(TARGET benchmarks_impl)
+    target_link_libraries(pricing_cli PRIVATE benchmarks_impl)
 endif()
 
-# Link runtime implementations after benchmarks so their symbols are available
-target_link_libraries(binomial_crr_american_vanilla_option
-  PRIVATE
-    cpu_impl
-)
+target_link_libraries(pricing_cli PRIVATE cpu_impl)
 
-if (TARGET openmp_impl)
-  target_link_libraries(binomial_crr_american_vanilla_option PRIVATE openmp_impl)
+if(TARGET openmp_impl)
+    target_link_libraries(pricing_cli PRIVATE openmp_impl)
 endif()
 
-set_target_properties(binomial_crr_american_vanilla_option PROPERTIES
-  RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin
+if(TARGET cuda_impl)
+    target_link_libraries(pricing_cli PRIVATE cuda_impl)
+endif()
+
+set_target_properties(pricing_cli PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin
 )
