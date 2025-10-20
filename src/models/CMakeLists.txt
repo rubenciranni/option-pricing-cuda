@@ -17,8 +17,5 @@ target_link_libraries(models
       openmp_impl
       # cuda_impl
 )
-<<<<<<< Updated upstream
-=======
 
-target_compile_features(openmp_impl PUBLIC cxx_std_17)
->>>>>>> Stashed changes
+target_compile_features(models PUBLIC cxx_std_17)

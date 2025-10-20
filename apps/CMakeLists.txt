@@ -40,8 +40,5 @@ endif()
 set_target_properties(pricing_cli PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin
 )
-<<<<<<< Updated upstream
-=======
 
 target_compile_features(openmp_impl PUBLIC cxx_std_17)
->>>>>>> Stashed changes
