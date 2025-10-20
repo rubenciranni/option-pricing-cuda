@@ -10,3 +10,8 @@ target_include_directories(cpu_impl
     PUBLIC
         ${PROJECT_SOURCE_DIR}/include
 )
+<<<<<<< Updated upstream
+=======
+
+target_compile_features(openmp_impl PUBLIC cxx_std_17)
+>>>>>>> Stashed changes

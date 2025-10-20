@@ -6,6 +6,12 @@ file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS
 
 add_executable(test_option_pricing ${TEST_SOURCES})
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+add_test(NAME test_cpu COMMAND test_cpu)
+=======
+>>>>>>> Stashed changes
 target_link_libraries(test_option_pricing
     PRIVATE
         models
@@ -18,3 +24,9 @@ target_include_directories(test_option_pricing
 )
 
 add_test(NAME test_option_pricing COMMAND test_option_pricing)
+<<<<<<< Updated upstream
+=======
+
+target_compile_features(openmp_impl PUBLIC cxx_std_17)
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
