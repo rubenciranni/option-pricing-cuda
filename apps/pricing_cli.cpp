@@ -74,7 +74,7 @@ int main(int argc, char** argv) {
   } else if (*bench) {
     benchmark(filter_name, benchmark_parameters);
   } else if (*list) {
-    list_benchmark_parameterss();
+    list_benchmark_parameters();
   }
 
   return 0;

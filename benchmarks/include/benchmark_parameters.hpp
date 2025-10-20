@@ -71,4 +71,4 @@ inline std::string to_string(Run run) {
 }
 extern std::map<std::string, Run> BENCHMARK_PARAMETERS;
 
-void list_benchmark_parameterss();
+void list_benchmark_parameters();
