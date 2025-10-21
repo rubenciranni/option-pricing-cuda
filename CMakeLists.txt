@@ -15,6 +15,7 @@ endif()
 
 add_subdirectory(src/models)
 add_subdirectory(src/backends/cpu)
+add_subdirectory(src/backends/cuda)
 add_subdirectory(src/backends/openmp)
 add_subdirectory(tests)
 add_subdirectory(benchmarks)
