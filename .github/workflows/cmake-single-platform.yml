@@ -22,9 +22,13 @@ jobs:
     - uses: actions/checkout@v4
     
     - name: Install CUDA Toolkit
-      run: |
-        sudo apt update
-        sudo apt install -y nvidia-cuda-toolkit
+      uses: Jimver/cuda-toolkit@v0.2.14
+      with:
+        cuda: '12.2.0'  # Specify version
+        method: 'network'
+    
+    - name: Verify CUDA Installation
+      run: nvcc --version
         
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
