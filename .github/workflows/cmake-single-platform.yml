@@ -21,12 +21,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
+
     - name: Install CUDA Toolkit
-      uses: Jimver/cuda-toolkit@v0.2.14
-      with:
-        cuda: '12.2.0'  # Specify version
-        method: 'network'
-    
+      run: |
+        sudo apt update
+        sudo apt install -y nvidia-cuda-toolkit
+        
     - name: Verify CUDA Installation
       run: nvcc --version
         
