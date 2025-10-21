@@ -9,4 +9,6 @@ std::map<std::string, PricingFunction> FUNCTIONS = {
     {"vanilla_american_binomial_cpu_remove_zeros_cache",
      vanilla_american_binomial_cpu_remove_zeros_cache},
     {"vanilla_american_binomial_openmp", vanilla_american_binomial_openmp},
+    {"vanilla_american_binomial_cpu_index_opt_cache",
+     vanilla_american_binomial_cpu_index_opt_cache},
     {"vanilla_american_binomial_cpu_remove_zeros", vanilla_american_binomial_cpu_remove_zeros}};

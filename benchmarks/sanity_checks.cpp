@@ -9,6 +9,7 @@ bool run_single_sanity_check(PricingFunction func, const std::pair<double, Singl
   const SingleRun& run = test.second;
   double price = func(run.S, run.K, run.T, run.r, run.sigma, run.q, run.n, run.type);
   if (std::abs(price - expected) > 1e-2) {
+    std::cout << "expected: " << expected << " got: " << price << std::endl;
     return false;
   }
   return true;
