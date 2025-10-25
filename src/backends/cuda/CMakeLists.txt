@@ -1,5 +1,6 @@
 # add_compile_definitions(_GLIBCXX_USE_FLOAT_128=0)
-set(CMAKE_CUDA_ARCHITECTURES 90)
+set(CMAKE_CUDA_ARCHITECTURES 120)
+find_package(CUDAToolkit REQUIRED)
 enable_language(CUDA)
 
 file(GLOB_RECURSE CUDA_BACKEND_SOURCES CONFIGURE_DEPENDS
@@ -22,7 +23,9 @@ target_compile_options(cuda_impl PRIVATE
 
 set_target_properties(cuda_impl PROPERTIES
     CUDA_SEPARABLE_COMPILATION ON
+    CUDA_RESOLVE_DEVICE_SYMBOLS ON 
     POSITION_INDEPENDENT_CODE ON
 )
 
 target_compile_features(cuda_impl PUBLIC cxx_std_17)
+target_link_libraries(cuda_impl PUBLIC CUDA::cudart)
