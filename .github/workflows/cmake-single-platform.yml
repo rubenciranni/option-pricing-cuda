@@ -23,7 +23,8 @@ jobs:
     
     - uses: Jimver/cuda-toolkit@v0.2.27
       id: cuda-toolkit
-
+      with:
+        cuda: '13.0.0'
 
     - name: Verify CUDA Installation
       run: nvcc --version
