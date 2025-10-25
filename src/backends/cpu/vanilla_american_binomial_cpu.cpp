@@ -53,7 +53,6 @@ double vanilla_american_binomial_cpu_remove_zeros(const double S, const double K
 
   std::vector<double> p(n + 1);
   int sign = option_type_sign(type);
-  // call
   if (sign < 0) {
     for (int i = 0; i <= round_up; ++i) {
       double ST = S * std::pow(up, 2.0 * i - n + 1.0);
@@ -110,6 +109,7 @@ double vanilla_american_binomial_cpu_remove_zeros_cache(const double S, const do
   std::vector<double> s_store(2 * n + 1);
 
   if (sign != -1) {
+    // TODO: implement the other direction
     return 0.0;
   }
   for (int i = 0; i <= n * 2; ++i) {
@@ -145,14 +145,15 @@ double vanilla_american_binomial_cpu_index_opt_cache_old(const double S, const d
   const double up = p * risk_free_rate;
   const double down = one_minus_p * risk_free_rate;
 
-  int round_up = std::round((n - 1) / 2 + 0.5 * std::log(K / S) / std::log(u)) +
-                 1;  // you can find it from the formula   0 < K - S * up^(2i - n)
+  // you can find it from the formula   0 < K - S * up^(2i - n)
+  int round_up = std::round((n - 1) / 2 + 0.5 * std::log(K / S) / std::log(u)) + 1;
 
   int sign = option_type_sign(type);
   std::vector<double> p_store(n + 1);
   std::vector<double> s_store(2 * n + 1);
 
   if (sign != -1) {
+    // TODO: implement the other direction
     return 0.0;
   }
   for (int i = 0; i <= n * 2; ++i) {
@@ -168,7 +169,6 @@ double vanilla_american_binomial_cpu_index_opt_cache_old(const double S, const d
 
   for (int j = n - 1; j >= 0; --j) {
     bool blue_found = false;
-    // for (int i = 0; i <= std::min(j, round_up); ++i) {
     for (int i = std::max(last_red, 0); i <= std::min(j, round_up); ++i) {
       double S_i_j = s_store[get_index(i, j)];
       double up_value = (round_up + 1) == i ? s_store[get_index(i + 1, j + 1)] : p_store[i + 1];
@@ -182,18 +182,11 @@ double vanilla_american_binomial_cpu_index_opt_cache_old(const double S, const d
       } else {
         p_store[i] = hold;
         if (!blue_found) {
-          // std::cout << "blue "<<i<<std::endl;
           blue_found = true;
         }
       }
-      // if (j > n - 3) std::cout << "j: " << j << " i: " << i << " red "<< p_store[i]<< std::endl;
     }
-    // std::cout << std::endl;
   }
-  // if(last_red > 0){
-  //   p_store[0] = s_store[get_index(0,0)];
-  // }
-  // std::cout << "Final price: " << p_store[0] << std::endl;
   return p_store[0];
 }
 double vanilla_american_binomial_cpu_index_opt_cache(const double S, const double K, const double T,
@@ -209,14 +202,15 @@ double vanilla_american_binomial_cpu_index_opt_cache(const double S, const doubl
   const double up = p * risk_free_rate;
   const double down = one_minus_p * risk_free_rate;
 
-  int round_up = std::round((n - 1) / 2 + 0.5 * std::log(K / S) / std::log(u)) +
-                 1;  // you can find it from the formula   0 < K - S * up^(2i - n)
+  // you can find it from the formula   0 < K - S * up^(2i - n)
+  int round_up = std::round((n - 1) / 2 + 0.5 * std::log(K / S) / std::log(u)) + 1;
 
   int sign = option_type_sign(type);
   std::vector<double> p_store(n + 1);
   std::vector<double> s_store(2 * n + 1);
 
   if (sign != -1) {
+    // TODO: implement the other direction
     return 0.0;
   }
   for (int i = 0; i <= n * 2; ++i) {
