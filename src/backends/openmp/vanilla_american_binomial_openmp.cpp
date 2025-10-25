@@ -7,9 +7,9 @@
 #include <cmath>
 #include <vector>
 
-double vanilla_american_binomial_openmp(const double S, const double K, const double T,
-                                        const double r, const double sigma, const double q,
-                                        const int n, const OptionType type) {
+double vanilla_american_binomial_openmp_naive(const double S, const double K, const double T,
+                                              const double r, const double sigma, const double q,
+                                              const int n, const OptionType type) {
   const double deltaT = T / n;
   const double up = std::exp(sigma * std::sqrt(deltaT));
 

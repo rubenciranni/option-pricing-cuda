@@ -1,8 +1,7 @@
-#include "backends/cuda/vanilla_american_binomial_cuda.cuh"
-
 #include <cuda.h>
 #include <cuda_runtime.h>
 
+#include "backends/cuda/vanilla_american_binomial_cuda.cuh"
 #include "constants.hpp"
 
 __global__ void first_layer_kernel(double* d_option_values, int level, double S, double u, double K,
@@ -26,9 +25,9 @@ __global__ void vanilla_american_binomial_cuda_kernel(double* d_option_values,
   d_option_values_next[thread_id] = max(hold, exercise);
 }
 
-double vanilla_american_binomial_cuda(const double S, const double K, const double T,
-                                      const double r, const double sigma, const double q,
-                                      const int n, const OptionType type) {
+double vanilla_american_binomial_cuda_naive(const double S, const double K, const double T,
+                                            const double r, const double sigma, const double q,
+                                            const int n, const OptionType type) {
   const double deltaT = T / n;
   const double u = std::exp(sigma * std::sqrt(deltaT));
   const double d = 1.0 / u;
