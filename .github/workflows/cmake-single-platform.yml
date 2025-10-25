@@ -25,7 +25,7 @@ jobs:
     - name: Install CUDA Toolkit
       run: |
         sudo apt update
-        sudo apt install -y nvidia-cuda-toolkit
+        sudo apt install -y cuda-toolkit-12-9
         
     - name: Verify CUDA Installation
       run: nvcc --version
