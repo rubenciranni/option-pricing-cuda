@@ -7,7 +7,7 @@
 __global__ void first_layer_kernel(double* d_option_values, int level, double S, double u, double K,
                                    const int sign) {
   int thread_id = blockIdx.x * blockDim.x + threadIdx.x;
-  if (i > level) return;
+  if (thread_id > level) return;
   double ST = S * pow(u, 2 * thread_id - level + 1);
   d_option_values[thread_id] = max(0.0, sign * (ST - K));
 }
@@ -39,7 +39,7 @@ double vanilla_american_binomial_cuda_naive(const double S, const double K, cons
   const int sign = option_type_sign(type);
 
   const int num_threads = 1024;
-  const int num_blocks = std::ceil((n + 1) * 1.0 / num_threads);
+  int num_blocks = std::ceil((n + 1) * 1.0 / num_threads);
 
   double *d_option_values, *d_option_values_next;
   cudaMalloc(&d_option_values, (n + 1) * sizeof(double));
@@ -75,7 +75,7 @@ double vanilla_american_binomial_cuda_no_sync(const double S, const double K, co
   const int sign = option_type_sign(type);
 
   const int num_threads = 1024;
-  const int num_blocks = std::ceil((n + 1) * 1.0 / num_threads);
+  int num_blocks = std::ceil((n + 1) * 1.0 / num_threads);
 
   double *d_option_values, *d_option_values_next;
   cudaMalloc(&d_option_values, (n + 1) * sizeof(double));
