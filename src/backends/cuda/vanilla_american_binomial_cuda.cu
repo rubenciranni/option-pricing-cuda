@@ -1,7 +1,8 @@
+#include "backends/cuda/vanilla_american_binomial_cuda.cuh"
+
 #include <cuda.h>
 #include <cuda_runtime.h>
 
-#include "backends/cuda/vanilla_american_binomial_cuda.cuh"
 #include "constants.hpp"
 
 __global__ void first_layer_kernel(double* d_option_values, int level, double S, double u, double K,
