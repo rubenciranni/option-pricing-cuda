@@ -21,7 +21,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - uses: Jimver/cuda-toolkit@master
+    - uses: Jimver/cuda-toolkit@v0.2.27
       id: cuda-toolkit
 
 
