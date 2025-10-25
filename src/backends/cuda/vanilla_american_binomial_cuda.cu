@@ -2,25 +2,26 @@
 #include <cuda_runtime.h>
 
 #include "backends/cuda/vanilla_american_binomial_cuda.cuh"
+#include "constants.hpp"
 
-__global__ void first_layer_kernel(double* d_option_values, int level, double S, double u,
-                                   double K) {
+__global__ void first_layer_kernel(double* d_option_values, int level, double S, double u, double K,
+                                   const int sign) {
   int thread_id = blockIdx.x * blockDim.x + threadIdx.x;
   if (i > level) return;
   double ST = S * pow(u, 2 * thread_id - level + 1);
-  d_option_values[thread_id] = max(0.0, -1 * (ST - K));
+  d_option_values[thread_id] = max(0.0, sign * (ST - K));
 }
 
 __global__ void vanilla_american_binomial_cuda_kernel(double* d_option_values,
                                                       double* d_option_values_next, const double S,
                                                       const double K, const double up,
                                                       const double down, const double u,
-                                                      const int level) {
+                                                      const int level, const int sign) {
   int thread_id = blockIdx.x * blockDim.x + threadIdx.x;
   if (thread_id > level) return;
   double ST = S * pow(u, 2.0 * thread_id - level);
   double hold = up * d_option_values[thread_id + 1] + down * d_option_values[thread_id];
-  double exercise = max(-1 * (ST - K), 0.0);
+  double exercise = max(sign * (ST - K), 0.0);
   d_option_values_next[thread_id] = max(hold, exercise);
 }
 
@@ -35,24 +36,21 @@ double vanilla_american_binomial_cuda(const double S, const double K, const doub
   const double one_minus_p = 1.0 - p;
   const double up = p * risk_free_rate;
   const double down = one_minus_p * risk_free_rate;
+  const int sign = option_type_sign(type);
 
-  int sign = option_type_sign(type);
-  if (sign != -1) {
-    return 0.0;
-  }
+  const int num_threads = 1024;
+  const int num_blocks = std::ceil((n + 1) * 1.0 / num_threads);
 
-  int num_threads = 1024;
-  int num_blocks = std::ceil((n + 1) * 1.0 / num_threads);
   double *d_option_values, *d_option_values_next;
   cudaMalloc(&d_option_values, (n + 1) * sizeof(double));
   cudaMalloc(&d_option_values_next, (n + 1) * sizeof(double));
 
-  first_layer_kernel<<<num_blocks, num_threads>>>(d_option_values, n, S, u, K);
+  first_layer_kernel<<<num_blocks, num_threads>>>(d_option_values, n, S, u, K, sign);
   for (int level = n - 1; level >= 0; level--) {
     num_blocks = std::ceil((level + 1) * 1.0 / num_threads);
     cudaDeviceSynchronize();
     vanilla_american_binomial_cuda_kernel<<<num_blocks, num_threads>>>(
-        d_option_values, d_option_values_next, S, K, up, down, u, level);
+        d_option_values, d_option_values_next, S, K, up, down, u, level, sign);
     std::swap(d_option_values, d_option_values_next);
   }
   cudaDeviceSynchronize();
@@ -74,23 +72,20 @@ double vanilla_american_binomial_cuda_no_sync(const double S, const double K, co
   const double one_minus_p = 1.0 - p;
   const double up = p * risk_free_rate;
   const double down = one_minus_p * risk_free_rate;
+  const int sign = option_type_sign(type);
 
-  int sign = option_type_sign(type);
-  if (sign != -1) {
-    return 0.0;
-  }
+  const int num_threads = 1024;
+  const int num_blocks = std::ceil((n + 1) * 1.0 / num_threads);
 
-  int num_threads = 1024;
-  int num_blocks = std::ceil((n + 1) * 1.0 / num_threads);
   double *d_option_values, *d_option_values_next;
   cudaMalloc(&d_option_values, (n + 1) * sizeof(double));
   cudaMalloc(&d_option_values_next, (n + 1) * sizeof(double));
 
-  first_layer_kernel<<<num_blocks, num_threads>>>(d_option_values, n, S, u, K);
+  first_layer_kernel<<<num_blocks, num_threads>>>(d_option_values, n, S, u, K, sign);
   for (int level = n - 1; level >= 0; level--) {
     num_blocks = std::ceil((level + 1) * 1.0 / num_threads);
     vanilla_american_binomial_cuda_kernel<<<num_blocks, num_threads>>>(
-        d_option_values, d_option_values_next, S, K, up, down, u, level);
+        d_option_values, d_option_values_next, S, K, up, down, u, level, sign);
     std::swap(d_option_values, d_option_values_next);
   }
   cudaDeviceSynchronize();
