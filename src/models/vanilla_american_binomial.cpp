@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "backends/cpu/vanilla_american_binomial_cpu.hpp"
+#include "backends/cuda/vanilla_american_binomial_cuda.cuh"
 #include "backends/openmp/vanilla_american_binomial_openmp.hpp"
 #include "constants.hpp"
 
@@ -13,6 +14,8 @@ float vanilla_american_binomial(const double S, const double K, const double T, 
     return vanilla_american_binomial_cpu_remove_zeros(S, K, T, r, sigma, q, n, type);
   } else if (backend == Backend::OpenMP) {
     return vanilla_american_binomial_openmp(S, K, T, r, sigma, q, n, type);
+  } else if (backend == Backend::CUDA) {
+    return vanilla_american_binomial_cuda(S, K, T, r, sigma, q, n, type);
   } else {
     throw std::invalid_argument("Unknown backend: " + to_string(backend));
   }

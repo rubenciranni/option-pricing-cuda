@@ -14,7 +14,7 @@ TEST_CASE("American Option Put-Call Parity Approximation", "[ame_put_call_parity
   double q = 0.0;  // no dividends
   int n = 500;
 
-  for (auto backend : {Backend::CPU, Backend::OpenMP}) {
+  for (auto backend : {Backend::CPU, Backend::OpenMP, Backend::CUDA}) {
     double putPrice = vanilla_american_binomial(S, K, T, r, sigma, q, n, OptionType::Put, backend);
     double callPrice =
         vanilla_american_binomial(S, K, T, r, sigma, q, n, OptionType::Call, backend);
@@ -39,8 +39,7 @@ TEST_CASE("American Option Linear Homogeneity", "[ame_linear_hom]") {
   int n = 500;
   double alpha = 1.92767;
 
-  // for (auto backend : {Backend::CPU, Backend::OpenMP, Backend::CUDA}) {
-  for (auto backend : {Backend::CPU, Backend::OpenMP}) {
+  for (auto backend : {Backend::CPU, Backend::OpenMP, Backend::CUDA}) {
     double callPrice =
         vanilla_american_binomial(S, K, T, r, sigma, q, n, OptionType::Call, backend);
     double callPriceS = vanilla_american_binomial(alpha * S, alpha * K, T, r, sigma, q, n,
