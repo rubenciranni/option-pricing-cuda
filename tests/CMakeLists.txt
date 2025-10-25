@@ -20,4 +20,4 @@ target_include_directories(test_option_pricing
 
 add_test(NAME test_option_pricing COMMAND test_option_pricing)
 
-target_compile_features(openmp_impl PUBLIC cxx_std_17)
+target_compile_features(test_option_pricing PUBLIC cxx_std_17)

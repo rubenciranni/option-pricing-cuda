@@ -15,7 +15,7 @@ target_link_libraries(models
     PUBLIC
       cpu_impl
       openmp_impl
-      # cuda_impl
+      cuda_impl
 )
 
 target_compile_features(models PUBLIC cxx_std_17)
