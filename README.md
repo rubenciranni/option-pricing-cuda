@@ -12,7 +12,6 @@ pre-commit install
 mkdir build
 cd build
 cmake -DCMAKE_CUDA_COMPILER=/cluster/data/cuda/13.0.0/bin/nvcc ..
-cmake ..
 make
 ```
 
