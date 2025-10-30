@@ -16,14 +16,13 @@ __global__ void fill_pricing_unroll(double* __restrict__ buffer, const double S,
   if (threadId > 2 * n) return;
   buffer[((threadId - n) & 1) * (n + 1) + (threadId) / 2] =
       max(sign * (S * pow(u, threadId - n) - K), 0.0);
-  //  buffer[threadId] = max(sign*(S * pow(u, threadId-n) - K), 0.0);
 }
 
 __global__ void first_layer_kernel_unroll(double* d_option_values, double* __restrict__ st_buffer,
                                           const int n) {
   int threadId = blockIdx.x * blockDim.x + threadIdx.x;
   if (threadId > n) return;
-  int idx_uns = 2 * threadId + 1;
+  int idx_uns = 2 * threadId;
   d_option_values[threadId] = st_buffer[((idx_uns - n) & 1) * (n + 1) + idx_uns / 2];
 }
 
@@ -60,8 +59,7 @@ __global__ void vanilla_american_binomial_cuda_kernel_unroll(const double* d_opt
                                                              const int level, const int n) {
   int threadId = blockIdx.x * blockDim.x + threadIdx.x;
   if (threadId > level) return;
-  // assert(threadId+UNROLL_FACTOR <= level);
-  // threadId = (threadId % (level+1));
+
   double res = calc_idx(d_option_values, st_buffer, prob_up, prob_down, threadId, level, n);
   d_option_values_next[threadId] = res;
 }
@@ -78,8 +76,6 @@ double vanilla_american_binomial_cuda_unroll(const double S, const double K, con
   const double up = p * risk_free_rate;
   const double down = one_minus_p * risk_free_rate;
   const int sign = option_type_sign(type);
-
-  // double* binom_d = calc_binom(p, -r*deltaT);
 
   const int thread_per_block = THREADS_PER_BLOCK;
   int num_blocks = std::ceil((n + 1) * 1.0 / thread_per_block);
@@ -99,15 +95,16 @@ double vanilla_american_binomial_cuda_unroll(const double S, const double K, con
     vanilla_american_binomial_cuda_kernel_unroll<<<num_blocks, thread_per_block>>>(
         d_option_values, d_option_values_next, st_buffer, up, down, level, n);
     cudaDeviceSynchronize();
-    // std::cout << level << "\n?";
     std::swap(d_option_values, d_option_values_next);
   }
   cudaDeviceSynchronize();
+
   double h_s_store;
   cudaMemcpy(&h_s_store, d_option_values, (1) * sizeof(double), cudaMemcpyDeviceToHost);
+
   cudaFree(d_option_values);
   cudaFree(d_option_values_next);
   cudaFree(st_buffer);
-  // cudaFree(binom_d);
+
   return h_s_store;
 }

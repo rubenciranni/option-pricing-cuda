@@ -8,7 +8,7 @@ __global__ void first_layer_kernel(double* d_option_values, int level, double S,
                                    const int sign) {
   int thread_id = blockIdx.x * blockDim.x + threadIdx.x;
   if (thread_id > level) return;
-  double ST = S * pow(u, 2 * thread_id - level + 1);
+  double ST = S * pow(u, 2 * thread_id - level);
   d_option_values[thread_id] = max(0.0, sign * (ST - K));
 }
 

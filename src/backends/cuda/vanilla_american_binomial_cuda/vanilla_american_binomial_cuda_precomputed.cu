@@ -9,7 +9,7 @@ __global__ void first_layer_kernel_precomputed_stock_price(double* d_option_valu
                                                            const int sign, const int n) {
   int thread_id = blockIdx.x * blockDim.x + threadIdx.x;
   if (thread_id > level) return;
-  int exponent = 2 * thread_id - level + 1;
+  int exponent = 2 * thread_id - level;
   double ST = d_stock_prices[exponent + n];  // Lookup instead of pow()
   d_option_values[thread_id] = max(0.0, sign * (ST - K));
 }

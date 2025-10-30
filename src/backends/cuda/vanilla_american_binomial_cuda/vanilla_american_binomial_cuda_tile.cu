@@ -20,7 +20,7 @@ __global__ void first_layer_kernel_tile(double* __restrict__ d_option_values,
   if (threadId > n) return;
 #pragma unroll
   for (int i = 0; i < NUM_OUTS_PER_THREAD; i++) {
-    d_option_values[threadId + i] = st_buffer[2 * (threadId + i) + 1];
+    d_option_values[threadId + i] = st_buffer[2 * (threadId + i)];
   }
 }
 
