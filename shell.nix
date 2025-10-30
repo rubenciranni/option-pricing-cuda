@@ -7,6 +7,7 @@ pkgs.mkShell {
     gcc          # includes g++
     gdb
     cmake
+    ninja
     pkg-config
     cudaPackages.cuda_nvvp
     cudaPackages.cuda_cudart

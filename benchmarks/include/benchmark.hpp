@@ -2,12 +2,11 @@
 
 #include <chrono>
 #include <string>
+#include <vector>
 
 #include "benchmark_parameters.hpp"
 #include "functions_version.hpp"
 #include "sanity_checks.hpp"
-
-void benchmark(const std::string& filter_function_name, const std::string& benchmark_parameters);
 
 class Result {
  public:
@@ -47,3 +46,6 @@ inline std::string to_string(const Result& result) {
   }
   return output;
 }
+
+std::vector<Result> benchmark(const std::string& filter_function_name,
+                              const std::string& benchmark_parameters, const bool no_verify);

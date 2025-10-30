@@ -2,6 +2,7 @@ CompileFlags:
   Add:
     - "--include-directory=include"
     - "--include-directory=build/_deps/cli11-src/include"
+    - "--include-directory=build/_deps/rang-src/include"
 Diagnostics:
   MissingIncludes: Strict
   UnusedIncludes: Strict
