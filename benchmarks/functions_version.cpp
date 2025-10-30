@@ -17,5 +17,6 @@ std::map<std::string, PricingFunction> FUNCTIONS = {
     {"vanilla_american_binomial_cuda_unroll", vanilla_american_binomial_cuda_unroll},
     {"vanilla_american_binomial_cuda_precomputed_stock_price",
      vanilla_american_binomial_cuda_precomputed_stock_price},
-    {"vanilla_american_binomial_cuda_precomputed_payoffs",
-     vanilla_american_binomial_cuda_precomputed_payoffs}};
+    // {"vanilla_american_binomial_cuda_precomputed_payoffs",
+    //  vanilla_american_binomial_cuda_precomputed_payoffs}
+};

@@ -3,6 +3,7 @@
 #include <benchmark.hpp>
 #include <cstdlib>
 #include <iostream>
+#include <rang.hpp>
 #include <string>
 #include <unordered_map>
 
@@ -16,6 +17,7 @@ int main(int argc, char** argv) {
 
   std::string option_type_str, exercise_type_str, pricing_method_str, backend_str;
   double S, K, T, r, sigma, q;
+  bool no_verify = false;
   int n;
 
   auto price_subcommand = app.add_subcommand("price", "Run a single pricing query");
@@ -44,6 +46,7 @@ int main(int argc, char** argv) {
   bench->add_option("--filter-by-name", filter_name, "Filter by benchmark name")->default_val("");
   bench->add_option("--parameters", benchmark_parameters, "Parameters identifier")
       ->default_val("easy");
+  bench->add_flag("--no-verify", no_verify, "Skip verification");
 
   auto list =
       app.add_subcommand("parameters", "List available benchmark parameters and their config");
@@ -72,7 +75,28 @@ int main(int argc, char** argv) {
 
     printf("Option Price: %.4f\n", price);
   } else if (*bench) {
-    benchmark(filter_name, benchmark_parameters);
+    auto results = benchmark(filter_name, benchmark_parameters, no_verify);
+    std::cout << "Benchmark Parameters:\n";
+    std::cout << to_string(results[0].run) << "\n";
+    for (const auto& res : results) {
+      if (res.pass_sanity_check) {
+        std::cout << rang::fg::green;
+      } else {
+        std::cout << rang::fg::red;
+      }
+      std::cout << res.function_name << ":\n" << rang::fg::reset;
+
+      for (const auto& [n_steps, time] : res.execution_times) {
+        std::cout << "  n=" << n_steps << ": " << time << " ms\n";
+      }
+    }
+    for (const auto& res : results) {
+      if (!res.pass_sanity_check) {
+        std::cout << rang::fg::red;
+        std::cout << "Sanity check failed for function: " << res.function_name << "\n";
+        std::cout << rang::fg::reset;
+      }
+    }
   } else if (*list) {
     list_benchmark_parameters();
   }
