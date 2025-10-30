@@ -20,14 +20,10 @@ target_include_directories(pricing_cli
 target_link_libraries(pricing_cli
     PRIVATE
       CLI11::CLI11
+      benchmarks
       models
+      cpu_impl
 )
-
-if(TARGET benchmarks_impl)
-    target_link_libraries(pricing_cli PRIVATE benchmarks_impl)
-endif()
-
-target_link_libraries(pricing_cli PRIVATE cpu_impl)
 
 if(TARGET openmp_impl)
     target_link_libraries(pricing_cli PRIVATE openmp_impl)
@@ -41,4 +37,4 @@ set_target_properties(pricing_cli PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin
 )
 
-target_compile_features(openmp_impl PUBLIC cxx_std_17)
+target_compile_features(pricing_cli PUBLIC cxx_std_17)

@@ -11,7 +11,7 @@ pre-commit install
 ```bash
 mkdir build
 cd build
-cmake ..
+cmake -DCMAKE_CUDA_COMPILER=/cluster/data/cuda/13.0.0/bin/nvcc ..
 make
 ```
 
@@ -33,3 +33,17 @@ make
 - run `cd build/bin`
 - run ``./pricing_cli benchmark --help` to learn about parameters.
 - Example: `./pricing_cli benchmark --filter-by-name vanilla_american_binomial_cpu --parameters easy`.
+
+## Testing
+
+```bash
+cd build/tests
+ctest -V
+```
+
+
+
+# GPU command
+```bash
+srun -A dphpc -t 60:00 --gpus 5060ti:1 --pty bash
+```

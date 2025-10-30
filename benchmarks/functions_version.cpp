@@ -13,6 +13,9 @@ std::map<std::string, PricingFunction> FUNCTIONS = {
     {"vanilla_american_binomial_cpu_removed_zeros_and_red",
      vanilla_american_binomial_cpu_removed_zeros_and_red},
     {"vanilla_american_binomial_cpu_remove_zeros", vanilla_american_binomial_cpu_remove_zeros},
-    // {"vanilla_american_binomial_cuda_naive", vanilla_american_binomial_cuda_naive},
-    // {"vanilla_american_binomial_cuda_no_sync", vanilla_american_binomial_cuda_no_sync}
-};
+    {"vanilla_american_binomial_cuda_naive", vanilla_american_binomial_cuda_naive},
+    {"vanilla_american_binomial_cuda_no_sync", vanilla_american_binomial_cuda_no_sync},
+    {"vanilla_american_binomial_cuda_precomputed_stock_price",
+     vanilla_american_binomial_cuda_precomputed_stock_price},
+    {"vanilla_american_binomial_cuda_precomputed_payoffs",
+     vanilla_american_binomial_cuda_precomputed_payoffs}};
