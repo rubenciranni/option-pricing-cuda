@@ -1,4 +1,3 @@
-
 #include "functions_version.hpp"
 
 #include "backends/cpu/vanilla_american_binomial_cpu.hpp"

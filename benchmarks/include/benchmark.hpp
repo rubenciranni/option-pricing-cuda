@@ -1,10 +1,12 @@
 #pragma once
-#include <benchmark_parameters.hpp>
+
 #include <chrono>
-#include <functions_version.hpp>
-#include <sanity_checks.hpp>
 #include <string>
 #include <vector>
+
+#include "benchmark_parameters.hpp"
+#include "functions_version.hpp"
+#include "sanity_checks.hpp"
 
 class Result {
  public:
