@@ -10,6 +10,23 @@ double vanilla_american_binomial_cuda_no_sync(const double S, const double K, co
                                               const double r, const double sigma, const double q,
                                               const int n, const OptionType type);
 
+double vanilla_american_binomial_cuda_fill(const double S, const double K, const double T,
+                                           const double r, const double sigma, const double q,
+                                           const int n, const OptionType type);
+
+double vanilla_american_binomial_cuda_tile(const double S, const double K, const double T,
+                                           const double r, const double sigma, const double q,
+                                           const int n, const OptionType type);
+
+double vanilla_american_binomial_cuda_unroll(const double S, const double K, const double T,
+                                             const double r, const double sigma, const double q,
+                                             const int n, const OptionType type);
+
+double vanilla_american_binomial_cuda_unroll_tile(const double S, const double K, const double T,
+                                                  const double r, const double sigma,
+                                                  const double q, const int n,
+                                                  const OptionType type);
+
 inline double vanilla_american_binomial_cuda(const double S, const double K, const double T,
                                              const double r, const double sigma, const double q,
                                              const int n, const OptionType type) {

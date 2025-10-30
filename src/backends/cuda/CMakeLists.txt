@@ -23,9 +23,12 @@ target_compile_options(cuda_impl PRIVATE
 
 set_target_properties(cuda_impl PROPERTIES
     CUDA_SEPARABLE_COMPILATION ON
-    CUDA_RESOLVE_DEVICE_SYMBOLS ON 
+    CUDA_RESOLVE_DEVICE_SYMBOLS ON
     POSITION_INDEPENDENT_CODE ON
 )
 
 target_compile_features(cuda_impl PUBLIC cxx_std_17)
+target_compile_options(cuda_impl PRIVATE
+    --ptxas-options=-v
+)
 target_link_libraries(cuda_impl PUBLIC CUDA::cudart)
