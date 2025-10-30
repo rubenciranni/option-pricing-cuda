@@ -14,7 +14,7 @@ std::vector<SingleRun> TESTS = {
     SingleRun(100, 100, 1.0, -0.01, 0.25, 0.01, 100, OptionType::Put, "Negative interest rate put"),
     SingleRun(100, 100, 1.0, 0.03, 0.2, 0.0, 100, OptionType::Put, "Zero dividend put"),
     SingleRun(100, 100, 1.0, 0.03, 0.2, 0.1, 100, OptionType::Put, "High dividend yield put"),
-    // SingleRun(100, 100, 1.0, 0.03, 0.2, 0.01, 1, OptionType::Put, "Very small time step put"),
+    SingleRun(100, 100, 1.0, 0.03, 0.2, 0.01, 1, OptionType::Put, "Very small time step put"),
     SingleRun(1000, 100, 1.0, 0.03, 0.3, 0.01, 100, OptionType::Put, "Extreme spot vs strike put"),
     SingleRun(100, 100, 1.0, 0.0, 0.0, 0.0, 100, OptionType::Put, "Near zero vol and rate put"),
     SingleRun(100, 80, 0.05, 0.02, 0.6, 0.01, 25, OptionType::Put, "Short-term high vol put"),

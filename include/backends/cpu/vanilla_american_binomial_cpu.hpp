@@ -15,10 +15,6 @@ double vanilla_american_binomial_cpu_remove_zeros_cache(const double S, const do
                                                         const double T, const double r,
                                                         const double sigma, const double q,
                                                         const int n, const OptionType type);
-double vanilla_american_binomial_cpu_removed_zeros_and_red(const double S, const double K,
-                                                           const double T, const double r,
-                                                           const double sigma, const double q,
-                                                           const int n, const OptionType type);
 
 inline double vanilla_american_binomial_cpu(const double S, const double K, const double T,
                                             const double r, const double sigma, const double q,
