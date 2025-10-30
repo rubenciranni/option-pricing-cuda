@@ -21,10 +21,11 @@ class SingleRun {
   SingleRun() : S(0), K(0), T(0), r(0), sigma(0), q(0), n(0), type(OptionType::Call) {}
 
   SingleRun(double S, double K, double T, double r, double sigma, double q, int n, OptionType type)
-      : S(S), K(K), T(T), r(r), sigma(sigma), q(q), n(n), type(type), name("") {}
+      : name(""), S(S), K(K), T(T), r(r), sigma(sigma), q(q), n(n), type(type) {}
+
   SingleRun(double S, double K, double T, double r, double sigma, double q, int n, OptionType type,
             std::string name)
-      : S(S), K(K), T(T), r(r), sigma(sigma), q(q), n(n), type(type), name(name) {}
+      : name(name), S(S), K(K), T(T), r(r), sigma(sigma), q(q), n(n), type(type) {}
 };
 
 class Run {
