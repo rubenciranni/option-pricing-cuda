@@ -23,7 +23,7 @@ double vanilla_american_binomial_openmp_naive(const double S, const double K, co
   int sign = option_type_sign(type);
 #pragma omp parallel for
   for (int i = 0; i <= n; ++i) {
-    double ST = S * std::pow(up, 2.0 * i - n + 1.0);
+    double ST = S * std::pow(up, 2.0 * i - n);
     current[i] = std::max(sign * (ST - K), 0.0);
   }
   for (int j = n - 1; j >= 0; --j) {
