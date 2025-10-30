@@ -4,6 +4,15 @@ FetchContent_Declare(
   GIT_REPOSITORY https://github.com/CLIUtils/CLI11.git
   GIT_TAG v2.5.0
 )
+# Declare rang (header-only)
+FetchContent_Declare(
+    rang
+    GIT_REPOSITORY https://github.com/agauniyal/rang.git
+    GIT_TAG        master   # you can pin a commit hash instead for reproducibility
+)
+
+FetchContent_MakeAvailable(rang)
+
 FetchContent_MakeAvailable(CLI11)
 
 add_executable(pricing_cli)
@@ -20,6 +29,7 @@ target_include_directories(pricing_cli
 target_link_libraries(pricing_cli
     PRIVATE
       CLI11::CLI11
+      rang
       benchmarks
       models
       cpu_impl

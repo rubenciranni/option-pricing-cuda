@@ -2,10 +2,11 @@
 
 #include "backends/cpu/vanilla_american_binomial_cpu.hpp"
 
-void benchmark(const std::string& filter_function_name, const std::string& benchmark_parameters) {
+std::vector<Result> benchmark(const std::string& filter_function_name,
+                              const std::string& benchmark_parameters, bool no_verify) {
   if (BENCHMARK_PARAMETERS.find(benchmark_parameters) == BENCHMARK_PARAMETERS.end()) {
     std::cerr << "Benchmark parameters identifier not found: " << benchmark_parameters << "\n";
-    return;
+    return {};
   }
   TestFunctionSanityChecks sanity_checker("vanilla_american_binomial_cpu_naive",
                                           vanilla_american_binomial_cpu_naive);
@@ -13,7 +14,7 @@ void benchmark(const std::string& filter_function_name, const std::string& bench
   std::vector<Result> results;
   for (const auto& [name, func] : FUNCTIONS) {
     // filter_function_name is a substring match
-    bool sanity_check = sanity_checker.run_single_all_sanity_checks(name, func);
+    bool sanity_check = no_verify || sanity_checker.run_single_all_sanity_checks(name, func);
     if (name.find(filter_function_name) != std::string::npos || filter_function_name.empty()) {
       // Measure execution time
       Result result(data, benchmark_parameters, {}, name, sanity_check);
@@ -27,7 +28,5 @@ void benchmark(const std::string& filter_function_name, const std::string& bench
       results.push_back(result);
     }
   }
-  for (const auto& res : results) {
-    std::cout << to_string(res) << "\n";
-  }
+  return results;
 }
