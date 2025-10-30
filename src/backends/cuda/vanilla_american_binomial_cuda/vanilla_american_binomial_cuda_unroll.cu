@@ -36,12 +36,12 @@ __device__ inline double calc_idx(const double* past_values, const double* __res
   for (int i = 0; i <= UNROLL_FACTOR; i++) {
     res[i] = past_values[idx + i];
   }
-// threadIdx => exponents from 2*(threadIdx)-level+n-UNROLL_FACTOR+1
-// to 2*threadIdx+2*UNROLL_FACTOR-2*i-2-level+n-UNROLL_FACTOR+1+i = 2*tid + UNROLL_FACTOR-1-i
-// -level+n = 2*tid+UF-1
-  #pragma unroll
+  // threadIdx => exponents from 2*(threadIdx)-level+n-UNROLL_FACTOR+1
+  // to 2*threadIdx+2*UNROLL_FACTOR-2*i-2-level+n-UNROLL_FACTOR+1+i = 2*tid + UNROLL_FACTOR-1-i
+  // -level+n = 2*tid+UF-1
+#pragma unroll
   for (int i = 0; i < UNROLL_FACTOR; i++) {
-    #pragma unroll
+#pragma unroll
     for (int j = 0; j < UNROLL_FACTOR - i; j++) {
       // uncoalesced
       int idx_uns = 2 * (idx + j) - level + n - UNROLL_FACTOR + 1 + i;
