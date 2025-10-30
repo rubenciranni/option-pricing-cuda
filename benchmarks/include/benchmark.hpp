@@ -1,9 +1,11 @@
 #pragma once
-#include <benchmark_parameters.hpp>
+
 #include <chrono>
-#include <functions_version.hpp>
-#include <sanity_checks.hpp>
 #include <string>
+
+#include "benchmark_parameters.hpp"
+#include "functions_version.hpp"
+#include "sanity_checks.hpp"
 
 void benchmark(const std::string& filter_function_name, const std::string& benchmark_parameters);
 
