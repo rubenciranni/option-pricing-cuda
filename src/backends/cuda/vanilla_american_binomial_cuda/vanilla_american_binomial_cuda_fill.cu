@@ -18,7 +18,7 @@ __global__ void first_layer_kernel(double* d_option_values, double* st_buffer, c
   int threadId = blockIdx.x * blockDim.x + threadIdx.x;
   // threadId = (threadId % (n+1));
   if (threadId > n) return;
-  int exp = 2 * threadId + 1;
+  int exp = 2 * threadId;
   // d_option_values[threadId] = st_buffer[2*threadId+1];
   d_option_values[threadId] = st_buffer[((exp - n) & 1) * (n + 1) + exp / 2];
 }
