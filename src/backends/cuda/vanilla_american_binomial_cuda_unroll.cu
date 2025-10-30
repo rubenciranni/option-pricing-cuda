@@ -8,7 +8,7 @@
 #include "constants.hpp"
 
 #define THREADS_PER_BLOCK 1024
-#define UNROLL_FACTOR 16
+#define UNROLL_FACTOR 4
 
 __global__ void fill_pricing_unroll(double* __restrict__ buffer, const double S, const double K,
                                     const double u, const int sign, const int n) {
@@ -39,13 +39,13 @@ __device__ inline double calc_idx(const double* past_values, const double* __res
 // threadIdx => exponents from 2*(threadIdx)-level+n-UNROLL_FACTOR+1
 // to 2*threadIdx+2*UNROLL_FACTOR-2*i-2-level+n-UNROLL_FACTOR+1+i = 2*tid + UNROLL_FACTOR-1-i
 // -level+n = 2*tid+UF-1
-#pragma unroll 4
+  #pragma unroll
   for (int i = 0; i < UNROLL_FACTOR; i++) {
+    #pragma unroll
     for (int j = 0; j < UNROLL_FACTOR - i; j++) {
       // uncoalesced
       int idx_uns = 2 * (idx + j) - level + n - UNROLL_FACTOR + 1 + i;
       int buf_idx = ((idx_uns - n) & 1) * (n + 1) + idx_uns / 2;
-      assert(buf_idx < 2 * n + 2 && buf_idx >= 0);
       res[j] = fmax(st_buffer[buf_idx], prob_up * res[j + 1] + prob_down * res[j]);
     }
   }
