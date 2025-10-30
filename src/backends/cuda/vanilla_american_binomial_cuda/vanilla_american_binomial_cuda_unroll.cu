@@ -8,7 +8,7 @@
 #include "constants.hpp"
 
 #define THREADS_PER_BLOCK 1024
-#define UNROLL_FACTOR 7
+#define UNROLL_FACTOR 4
 
 __global__ void fill_pricing_unroll(double* __restrict__ buffer, const double S, const double K,
                                     const double u, const int sign, const int n) {

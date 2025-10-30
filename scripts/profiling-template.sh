@@ -13,12 +13,12 @@ echo "And kernel regex: ${REGEX_KERNEL}"
 
 ## BUILD
 
+module load cuda/12.8
 cd ./build || exit 1
 bash ../scripts/compile_on_cluster.sh || exit 1
 make -j 4 || exit 1
 
 ## PROFILE
-
 
 # ---- Nsight Compute
 
@@ -32,6 +32,6 @@ srun --pty -A dphpc -t 60 \
 # RUn sbatch system
 srun --pty -A dphpc -t 60 \
   ncu --kernel-name $REGEX_KERNEL \
-    --launch-count 1  -o ../profile_res/profile_kernel \
+    --launch-count 1 -f -o ../profile_res/profile_kernel \
  ./bin/pricing_cli benchmark --parameters $PARAMETER   --filter-by-name cuda  --no-verify
-  # here we run only the cuda implementation benchmarks 
+# here we run only the cuda implementation benchmarks 
