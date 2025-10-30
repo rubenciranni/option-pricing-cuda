@@ -8,7 +8,7 @@
 #include "constants.hpp"
 
 #define THREADS_PER_BLOCK 1024
-#define UNROLL_FACTOR 4
+#define UNROLL_FACTOR 7
 
 __global__ void fill_pricing_unroll(double* __restrict__ buffer, const double S, const double K,
                                     const double u, const int sign, const int n) {
@@ -26,28 +26,28 @@ __global__ void first_layer_kernel_unroll(double* d_option_values, double* __res
   d_option_values[threadId] = st_buffer[((idx_uns - n) & 1) * (n + 1) + idx_uns / 2];
 }
 
-__device__ inline double calc_idx(const double* past_values, const double* __restrict__ st_buffer,
+__device__ inline double calc_idx(const double* past_values, const double* st_buffer,
                                   const double prob_up, const double prob_down, const int idx,
                                   const int level, const int n) {
   double res[UNROLL_FACTOR + 1];
-  if (idx + UNROLL_FACTOR > level + UNROLL_FACTOR) return 0.0;
-#pragma unroll 4
+  // #pragma unroll
   for (int i = 0; i <= UNROLL_FACTOR; i++) {
     res[i] = past_values[idx + i];
   }
   // threadIdx => exponents from 2*(threadIdx)-level+n-UNROLL_FACTOR+1
   // to 2*threadIdx+2*UNROLL_FACTOR-2*i-2-level+n-UNROLL_FACTOR+1+i = 2*tid + UNROLL_FACTOR-1-i
   // -level+n = 2*tid+UF-1
-#pragma unroll
-  for (int i = 0; i < UNROLL_FACTOR; i++) {
-#pragma unroll
-    for (int j = 0; j < UNROLL_FACTOR - i; j++) {
-      // uncoalesced
-      int idx_uns = 2 * (idx + j) - level + n - UNROLL_FACTOR + 1 + i;
-      int buf_idx = ((idx_uns - n) & 1) * (n + 1) + idx_uns / 2;
-      res[j] = fmax(st_buffer[buf_idx], prob_up * res[j + 1] + prob_down * res[j]);
+  // #pragma unroll
+
+  for (int delta_level = UNROLL_FACTOR - 1; delta_level >= 0; delta_level--) {
+    for (int delta_id = 0; delta_id <= delta_level; delta_id++) {
+      int exponent = 2 * (idx + delta_id) - level - delta_level + n;
+      int buf_idx = ((exponent - n) & 1) * (n + 1) + (exponent / 2);
+      res[delta_id] =
+          fmax(st_buffer[buf_idx], prob_up * res[delta_id + 1] + prob_down * res[delta_id]);
     }
   }
+
   return res[0];
 }
 
@@ -62,6 +62,20 @@ __global__ void vanilla_american_binomial_cuda_kernel_unroll(const double* d_opt
 
   double res = calc_idx(d_option_values, st_buffer, prob_up, prob_down, threadId, level, n);
   d_option_values_next[threadId] = res;
+}
+
+__global__ void single_vanilla_american_binomial_cuda_kernel(
+    double* d_option_values, double* d_option_values_next, double* st_buffer, const double prob_up,
+    const double prob_down, const int level, const int n) {
+  int threadId = blockIdx.x * blockDim.x + threadIdx.x;
+  // threadId = (threadId % (level+1));
+  if (threadId > level) return;
+  //   double ST = S * pow(u, 2.0 * thread_id - level);
+  double hold = prob_up * d_option_values[threadId + 1] + prob_down * d_option_values[threadId];
+  // double exercise = st_buffer[2*threadId - level+n];
+  int exp = 2 * threadId - level;
+  double exercise = st_buffer[(exp & 1) * (n + 1) + (exp + n) / 2];
+  d_option_values_next[threadId] = max(hold, exercise);
 }
 
 double vanilla_american_binomial_cuda_unroll(const double S, const double K, const double T,
@@ -90,11 +104,18 @@ double vanilla_american_binomial_cuda_unroll(const double S, const double K, con
   fill_pricing_unroll<<<fill_num_blocks, 1024>>>(st_buffer, S, K, u, sign, n);
 
   first_layer_kernel_unroll<<<num_blocks, thread_per_block>>>(d_option_values, st_buffer, n);
-  for (int level = n - UNROLL_FACTOR; level >= 0; level -= UNROLL_FACTOR) {
-    num_blocks = std::ceil((level + 1) * 1.0 / thread_per_block);
+  int level = n;
+  for (; level >= UNROLL_FACTOR; level -= UNROLL_FACTOR) {
+    num_blocks = std::ceil((level - UNROLL_FACTOR + 1) * 1.0 / thread_per_block);
     vanilla_american_binomial_cuda_kernel_unroll<<<num_blocks, thread_per_block>>>(
-        d_option_values, d_option_values_next, st_buffer, up, down, level, n);
-    cudaDeviceSynchronize();
+        d_option_values, d_option_values_next, st_buffer, up, down, level - UNROLL_FACTOR, n);
+    std::swap(d_option_values, d_option_values_next);
+  }
+
+  for (; level >= 1; level--) {
+    num_blocks = std::ceil((level)*1.0 / thread_per_block);
+    single_vanilla_american_binomial_cuda_kernel<<<num_blocks, thread_per_block>>>(
+        d_option_values, d_option_values_next, st_buffer, up, down, level - 1, n);
     std::swap(d_option_values, d_option_values_next);
   }
   cudaDeviceSynchronize();
