@@ -7,8 +7,8 @@
 #include "backends/cuda/vanilla_american_binomial_cuda.cuh"
 #include "constants.hpp"
 
-#define THREADS_PER_BLOCK 1024
-#define UNROLL_FACTOR 4
+#define THREADS_PER_BLOCK 256
+#define UNROLL_FACTOR 7
 
 __global__ void fill_pricing_unroll(double* __restrict__ buffer, const double S, const double K,
                                     const double u, const int sign, const int n) {
@@ -34,11 +34,7 @@ __device__ inline double calc_idx(const double* past_values, const double* st_bu
   for (int i = 0; i <= UNROLL_FACTOR; i++) {
     res[i] = past_values[idx + i];
   }
-  // threadIdx => exponents from 2*(threadIdx)-level+n-UNROLL_FACTOR+1
-  // to 2*threadIdx+2*UNROLL_FACTOR-2*i-2-level+n-UNROLL_FACTOR+1+i = 2*tid + UNROLL_FACTOR-1-i
-  // -level+n = 2*tid+UF-1
-  // #pragma unroll
-
+#pragma unroll
   for (int delta_level = UNROLL_FACTOR - 1; delta_level >= 0; delta_level--) {
     for (int delta_id = 0; delta_id <= delta_level; delta_id++) {
       int exponent = 2 * (idx + delta_id) - level - delta_level + n;
@@ -68,11 +64,8 @@ __global__ void single_vanilla_american_binomial_cuda_kernel(
     double* d_option_values, double* d_option_values_next, double* st_buffer, const double prob_up,
     const double prob_down, const int level, const int n) {
   int threadId = blockIdx.x * blockDim.x + threadIdx.x;
-  // threadId = (threadId % (level+1));
   if (threadId > level) return;
-  //   double ST = S * pow(u, 2.0 * thread_id - level);
   double hold = prob_up * d_option_values[threadId + 1] + prob_down * d_option_values[threadId];
-  // double exercise = st_buffer[2*threadId - level+n];
   int exp = 2 * threadId - level;
   double exercise = st_buffer[(exp & 1) * (n + 1) + (exp + n) / 2];
   d_option_values_next[threadId] = max(hold, exercise);
