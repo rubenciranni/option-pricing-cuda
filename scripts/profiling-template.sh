@@ -7,7 +7,8 @@ echo -e "${RED}WARNING: This is a template script for profiling. Modify it as ne
 
 # default parameter hard dataset
 REGEX_KERNEL="${1}"
-PARAMETER="${2:-cuda_debug}"
+FUNCTION_NAMES="${2:-cuda}"
+PARAMETER="${3:-cuda_debug}"
 echo "Profiling with parameters set: ${PARAMETER}"
 echo "And kernel regex: ${REGEX_KERNEL}"
 
@@ -23,15 +24,15 @@ make -j 4 || exit 1
 # ---- Nsight Compute
 
 srun --pty -A dphpc -t 60 \
-  nsys profile -o ../profile_res/profile_report \
- ./bin/pricing_cli benchmark --parameters $PARAMETER   --filter-by-name cuda --no-verify
-  # here we run only the cuda implementation benchmarks 
+  /usr/local/bin/nsys profile --stats=true -o ../profile_res/profile_report -f true \
+ ./bin/pricing_cli benchmark --parameters $PARAMETER   --filter-by-name $FUNCTION_NAMES --no-verify
+  # here we run only the cuda implementation benchmarks
 
 # ----- Nsight Systems
 
 # RUn sbatch system
 srun --pty -A dphpc -t 60 \
-  ncu --kernel-name $REGEX_KERNEL \
+  ncu --kernel-name $REGEX_KERNEL --set full \
     --launch-count 1 -f -o ../profile_res/profile_kernel \
- ./bin/pricing_cli benchmark --parameters $PARAMETER   --filter-by-name cuda  --no-verify
-# here we run only the cuda implementation benchmarks 
+ ./bin/pricing_cli benchmark --parameters $PARAMETER   --filter-by-name $FUNCTION_NAMES  --no-verify
+# here we run only the cuda implementation benchmarks
