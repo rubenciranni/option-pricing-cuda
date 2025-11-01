@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <string>
+#include <vector>
 
 #include "benchmark_parameters.hpp"
 #include "functions_version.hpp"
