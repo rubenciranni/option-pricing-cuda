@@ -8,6 +8,8 @@
 #include "functions_version.hpp"
 #include "sanity_checks.hpp"
 
+#include <vector>
+
 class Result {
  public:
   Run run;

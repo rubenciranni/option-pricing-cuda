@@ -1,6 +1,7 @@
 #include "benchmark.hpp"
 
 #include "backends/cpu/vanilla_american_binomial_cpu.hpp"
+#include "backends/cuda/vanilla_american_binomial_cuda.cuh"
 
 std::vector<Result> benchmark(const std::string& filter_function_name,
                               const std::string& benchmark_parameters, bool no_verify) {
@@ -8,8 +9,12 @@ std::vector<Result> benchmark(const std::string& filter_function_name,
     std::cerr << "Benchmark parameters identifier not found: " << benchmark_parameters << "\n";
     return {};
   }
-  TestFunctionSanityChecks sanity_checker("vanilla_american_binomial_cpu_naive",
-                                          vanilla_american_binomial_cpu_naive);
+  // TestFunctionSanityChecks sanity_checker("vanilla_american_binomial_cpu_naive",
+  //                                         vanilla_american_binomial_cpu_naive);
+
+  TestFunctionSanityChecks sanity_checker(
+      "vanilla_american_binomial_cuda_unroll_tile",
+      vanilla_american_binomial_cuda_unroll_tile);
   const Run& data = BENCHMARK_PARAMETERS[benchmark_parameters];
   std::vector<Result> results;
   for (const auto& [name, func] : FUNCTIONS) {

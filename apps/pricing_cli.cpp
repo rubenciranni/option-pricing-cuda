@@ -77,6 +77,10 @@ int main(int argc, char** argv) {
   } else if (*bench) {
     auto results = benchmark(filter_name, benchmark_parameters, no_verify);
     std::cout << "Benchmark Parameters:\n";
+    if(results.empty()) {
+        std::cout << rang::fg::yellow << "No benchmarks matched the given filter." << rang::fg::reset << "\n";
+        return 0;
+    }
     std::cout << to_string(results[0].run) << "\n";
     for (const auto& res : results) {
       if (res.pass_sanity_check) {
