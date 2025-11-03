@@ -19,7 +19,7 @@ make
 - Existing models are inside `src/backends/models` for example `vanilla_american_binomial.cpp`
 - Place your new implementation inside `src/backends/<backend>/<model>_<backend>.cpp`
 - Place the corresponding function declaration inside `include/backends/<backend>/<model>_<backend>.hpp`
-- Add your backend to `benchmarks/functions_version.cpp` (for benchmarking)
+- Add your backend to the function registry `benchmarks/benchmark.cpp` (for benchmarking)
 
 ## CLI Tool Usage
 ### Price an option
