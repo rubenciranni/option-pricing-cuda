@@ -35,19 +35,23 @@ double vanilla_american_binomial_cuda_unroll_tile(const double S, const double K
                                                   const double r, const double sigma,
                                                   const double q, const int n,
                                                   const OptionType type);
-                                                
 
 double vanilla_american_binomial_cuda_x_y_unroll_new(const double S, const double K, const double T,
-                                                 const double r, const double sigma, const double q,
-                                                 const int n, const OptionType type) ;
+                                                     const double r, const double sigma,
+                                                     const double q, const int n,
+                                                     const OptionType type);
 double vanilla_american_binomial_cuda_x_y_unroll(const double S, const double K, const double T,
                                                  const double r, const double sigma, const double q,
                                                  const int n, const OptionType type);
 
+double vanilla_american_binomial_cuda_x_y_unroll_tile(const double S, const double K,
+                                                      const double T, const double r,
+                                                      const double sigma, const double q,
+                                                      const int n, const OptionType type);
 
 inline double vanilla_american_binomial_cuda(const double S, const double K, const double T,
                                              const double r, const double sigma, const double q,
                                              const int n, const OptionType type) {
-  // Choose the current best backend here:
-  return vanilla_american_binomial_cuda_fill(S, K, T, r, sigma, q, n, type);
+    // Choose the current best backend here:
+    return vanilla_american_binomial_cuda_fill(S, K, T, r, sigma, q, n, type);
 }
