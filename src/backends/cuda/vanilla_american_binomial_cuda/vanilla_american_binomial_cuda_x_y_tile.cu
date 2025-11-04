@@ -17,6 +17,7 @@
 #define UNROLL_FACTOR 128
 #define OUTPUTS_PER_THREAD 1
 #define MAX_LEVEL_SIZE (UNROLL_FACTOR + OUTPUTS_PER_THREAD - 1)
+#define CEIL_DIV(A, B) (((A) + (B)-1) / (B))
 
 #define IMPL_NAME x_y_unroll_tile
 #define CONCAT_IMPL(a, b) a##_##b
@@ -43,17 +44,21 @@ __global__ void KERNEL_NAME(vanilla_american_binomial_cuda_kernel)(
     const double* __restrict__ d_option_values, double* d_option_values_next,
     const double* __restrict__ st_buffer, const double prob_up, const double prob_down,
     const int level, const int n) {
-    int threadId = blockIdx.x * blockDim.x + threadIdx.x;
     constexpr int values_tile_size = OUTPUTS_PER_THREAD * THREADS_PER_BLOCK + UNROLL_FACTOR;
-    __shared__ double values_tile[values_tile_size];
+    __shared__ double values_tile_read_array[values_tile_size];
+    __shared__ double values_tile_write_array[values_tile_size];
+
+    double* values_tile_write = values_tile_write_array;
+    double* values_tile_read = values_tile_read_array;
+
     constexpr int prices_tile_size =
         2 * (OUTPUTS_PER_THREAD * THREADS_PER_BLOCK + UNROLL_FACTOR - 1);
-    __shared__ double prices_tile[prices_tile_size];
+    __shared__ double prices_tile[2][prices_tile_size / 2];
 
     const int value_bl_off = OUTPUTS_PER_THREAD * blockIdx.x * blockDim.x;
     for (int i = threadIdx.x; i < values_tile_size; i += THREADS_PER_BLOCK) {
         if (value_bl_off + i <= level + UNROLL_FACTOR)
-            values_tile[i] = d_option_values[value_bl_off + i];
+            values_tile_read[i] = d_option_values[value_bl_off + i];
     }
 
     // when threadIdx.x == 0 essentially
@@ -63,19 +68,18 @@ __global__ void KERNEL_NAME(vanilla_american_binomial_cuda_kernel)(
     // add + n offset to access the prices array (otherwise it's negative)
     const int prices_blk_off = min_exp_blk + n;
     for (int i = threadIdx.x; i < prices_tile_size; i += THREADS_PER_BLOCK) {
-        if (i + prices_blk_off <= 2 * n) prices_tile[i] = st_buffer[prices_blk_off + i];
+        if (i + prices_blk_off <= 2 * n) prices_tile[i % 2][i / 2] = st_buffer[prices_blk_off + i];
     }
 
     __syncthreads();
 
-    threadId *= OUTPUTS_PER_THREAD;
     const int adjustedLocalId = OUTPUTS_PER_THREAD * threadIdx.x;
 
-    double partial_res[OUTPUTS_PER_THREAD + UNROLL_FACTOR];
     int end;
 #pragma unroll
     for (int delta_level = UNROLL_FACTOR - 1; delta_level >= 0; delta_level--) {
         end = 0;
+
         for (int offset = adjustedLocalId; offset < values_tile_size;
              offset += OUTPUTS_PER_THREAD * THREADS_PER_BLOCK) {
 #pragma unroll
@@ -83,28 +87,20 @@ __global__ void KERNEL_NAME(vanilla_american_binomial_cuda_kernel)(
                 int v_tile_idx = delta_id + offset;
                 int p_tile_idx = 2 * (v_tile_idx)-delta_level + UNROLL_FACTOR - 1;
                 if (v_tile_idx + 1 < values_tile_size - UNROLL_FACTOR + 1 + delta_level) {
-                    double exponent = prices_tile[p_tile_idx];
-                    partial_res[end] =
-                        fmax(exponent, fma(prob_up, values_tile[v_tile_idx + 1],
-                                           fma(prob_down, values_tile[v_tile_idx], 0.0)));
+                    double exercise = prices_tile[p_tile_idx % 2][p_tile_idx / 2];
+                    values_tile_write[v_tile_idx] =
+                        fmax(exercise, fma(prob_up, values_tile_read[v_tile_idx + 1],
+                                           fma(prob_down, values_tile_read[v_tile_idx], 0.0)));
                     end++;
                 }
             }
         }
+
         __syncthreads();
 
-        int start = 0;
-        for (int offset = adjustedLocalId; offset < values_tile_size;
-             offset += OUTPUTS_PER_THREAD * THREADS_PER_BLOCK) {
-#pragma unroll
-            for (int i = 0; i < OUTPUTS_PER_THREAD; i++) {
-                if (start < end) {
-                    values_tile[offset + i] = partial_res[start];
-                    start++;
-                }
-            }
-        }
-        __syncthreads();
+        double* tmp = values_tile_read;
+        values_tile_read = values_tile_write;
+        values_tile_write = tmp;
     }
 
     int start = 0;
@@ -114,7 +110,7 @@ __global__ void KERNEL_NAME(vanilla_american_binomial_cuda_kernel)(
         for (int i = 0; i < OUTPUTS_PER_THREAD; i++) {
             int gmem_idx = offset + OUTPUTS_PER_THREAD * blockIdx.x * blockDim.x;
             if (gmem_idx + i <= level && start < end) {
-                d_option_values_next[gmem_idx + i] = partial_res[start];
+                d_option_values_next[gmem_idx + i] = values_tile_read[offset + i];
                 start++;
                 // printf("[xy_tile] level %d, wrote %f at %d\n", level,
                 // d_option_values_next[gmem_idx + i], gmem_idx+i);
@@ -158,21 +154,21 @@ double vanilla_american_binomial_cuda_x_y_unroll_tile(const double S, const doub
     cudaMalloc(&d_option_values_next, buffer_dim * sizeof(double));
     double* st_buffer;
     cudaMalloc(&st_buffer, (2 * n + 2) * sizeof(double));
-    cudaDeviceSynchronize();
 
     int fill_num_blocks = std::ceil((2 * n + 1) * 1.0 / 1024);
     KERNEL_NAME(fill_pricing)<<<fill_num_blocks, 1024>>>(st_buffer, S, K, u, sign, n);
 
     KERNEL_NAME(first_layer)<<<num_blocks, thread_per_block>>>(d_option_values, st_buffer, n);
     int level = n;
+#ifdef PROFILING
     int _iter = 0;
-    bool profiling = false;
-    cudaDeviceSynchronize();
+#endif
 
     for (; level >= UNROLL_FACTOR && level > OUTPUTS_PER_THREAD; level -= UNROLL_FACTOR) {
         num_blocks =
             std::ceil((level - UNROLL_FACTOR + 1) * 1.0 / (thread_per_block * OUTPUTS_PER_THREAD));
-        if ((_iter % 100) == 0 && profiling) {
+#ifdef PROFILING
+        if ((_iter % 100) == 0) {
             std::string kernel_label = "lvl_" + std::to_string(level);
             nvtxRangePushA(kernel_label.c_str());
             cudaProfilerStart();
@@ -187,8 +183,12 @@ double vanilla_american_binomial_cuda_x_y_unroll_tile(const double S, const doub
                 d_option_values, d_option_values_next, st_buffer, up, down, level - UNROLL_FACTOR,
                 n);
         }
-        std::swap(d_option_values, d_option_values_next);
         _iter++;
+#else
+        KERNEL_NAME(vanilla_american_binomial_cuda_kernel)<<<num_blocks, thread_per_block>>>(
+            d_option_values, d_option_values_next, st_buffer, up, down, level - UNROLL_FACTOR, n);
+#endif
+        std::swap(d_option_values, d_option_values_next);
     }
 
     for (; level >= 1; level--) {
