@@ -46,7 +46,6 @@ __device__ __forceinline__ double calc_idx_tile(const double* past_values, const
                      fma(prob_up, res[delta_id + 1], prob_down * res[delta_id]));
         }
     }
-
     return res[0];
 }
 
@@ -109,7 +108,6 @@ double vanilla_american_binomial_cuda_unroll_tile(const double S, const double K
 
     const int thread_per_block = THREADS_PER_BLOCK;
     int num_blocks = std::ceil((n + 1) * 1.0 / thread_per_block);
-
     double *d_option_values, *d_option_values_next;
     cudaMalloc(&d_option_values, (n + 1) * sizeof(double));
     cudaMalloc(&d_option_values_next, (n + 1) * sizeof(double));
@@ -138,7 +136,6 @@ double vanilla_american_binomial_cuda_unroll_tile(const double S, const double K
 
     double h_s_store;
     cudaMemcpy(&h_s_store, d_option_values, (1) * sizeof(double), cudaMemcpyDeviceToHost);
-
     cudaFree(d_option_values);
     cudaFree(d_option_values_next);
     cudaFree(st_buffer);

@@ -9,12 +9,14 @@
 #include "backends/cuda/vanilla_american_binomial_cuda.cuh"
 #include "constants.hpp"
 
-#define THREADS_PER_BLOCK 256
-#define UNROLL_FACTOR 4
-#define OUTPUTS_PER_THREAD 2
-#define MAX_LEVEL_SIZE (UNROLL_FACTOR + OUTPUTS_PER_THREAD - 1)
+/*
+ * TpB 128, UF 128, OpT 1 <5 ms on 10K
+ */
 
-#define FULL_MASK 0xffffffff
+#define THREADS_PER_BLOCK 128
+#define UNROLL_FACTOR 128
+#define OUTPUTS_PER_THREAD 1
+#define MAX_LEVEL_SIZE (UNROLL_FACTOR + OUTPUTS_PER_THREAD - 1)
 
 #define IMPL_NAME x_y_unroll_tile
 #define CONCAT_IMPL(a, b) a##_##b
@@ -26,7 +28,7 @@ __global__ void KERNEL_NAME(fill_pricing)(double* __restrict__ buffer, const dou
                                           const int n) {
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
     if (threadId > 2 * n) return;
-    buffer[threadId] = fmax(sign * fma(S, pow(u, (double)threadId - n), -K), 0.0);
+    buffer[threadId] = fmax(sign * (S * pow(u, (double)threadId - n) - K), 0.0);
 }
 
 __global__ void KERNEL_NAME(first_layer)(double* d_option_values, double* __restrict__ st_buffer,
@@ -42,14 +44,13 @@ __global__ void KERNEL_NAME(vanilla_american_binomial_cuda_kernel)(
     const double* __restrict__ st_buffer, const double prob_up, const double prob_down,
     const int level, const int n) {
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
-
     constexpr int values_tile_size = OUTPUTS_PER_THREAD * THREADS_PER_BLOCK + UNROLL_FACTOR;
     __shared__ double values_tile[values_tile_size];
     constexpr int prices_tile_size =
         2 * (OUTPUTS_PER_THREAD * THREADS_PER_BLOCK + UNROLL_FACTOR - 1);
     __shared__ double prices_tile[prices_tile_size];
 
-    const int value_bl_off = blockIdx.x * blockDim.x;
+    const int value_bl_off = OUTPUTS_PER_THREAD * blockIdx.x * blockDim.x;
     for (int i = threadIdx.x; i < values_tile_size; i += THREADS_PER_BLOCK) {
         if (value_bl_off + i <= level + UNROLL_FACTOR)
             values_tile[i] = d_option_values[value_bl_off + i];
@@ -68,32 +69,57 @@ __global__ void KERNEL_NAME(vanilla_american_binomial_cuda_kernel)(
     __syncthreads();
 
     threadId *= OUTPUTS_PER_THREAD;
-    if (threadId - OUTPUTS_PER_THREAD + 1 > level) return;
+    const int adjustedLocalId = OUTPUTS_PER_THREAD * threadIdx.x;
 
-    unsigned int act_warp_mask = __activemask();
-
-    double res[UNROLL_FACTOR + OUTPUTS_PER_THREAD];
-    for (int i = 0; i <= UNROLL_FACTOR + OUTPUTS_PER_THREAD - 1; i++) {
-        if (OUTPUTS_PER_THREAD * threadIdx.x + i < values_tile_size)
-            res[i] = values_tile[OUTPUTS_PER_THREAD * threadIdx.x + i];
-    }
-
+    double partial_res[OUTPUTS_PER_THREAD + UNROLL_FACTOR];
+    int end;
 #pragma unroll
     for (int delta_level = UNROLL_FACTOR - 1; delta_level >= 0; delta_level--) {
-        for (int delta_id = 0; delta_id <= delta_level + OUTPUTS_PER_THREAD - 1; delta_id++) {
-            const int p_tile_idx =
-                2 * (delta_id + OUTPUTS_PER_THREAD * threadIdx.x) - delta_level + UNROLL_FACTOR - 1;
-            if (p_tile_idx < prices_tile_size) {
-                double exponent = prices_tile[p_tile_idx];
-                res[delta_id] = fmax(
-                    exponent, fma(prob_up, res[delta_id + 1], fma(prob_down, res[delta_id], 0.0)));
+        end = 0;
+        for (int offset = adjustedLocalId; offset < values_tile_size;
+             offset += OUTPUTS_PER_THREAD * THREADS_PER_BLOCK) {
+#pragma unroll
+            for (int delta_id = 0; delta_id < OUTPUTS_PER_THREAD; delta_id++) {
+                int v_tile_idx = delta_id + offset;
+                int p_tile_idx = 2 * (v_tile_idx)-delta_level + UNROLL_FACTOR - 1;
+                if (v_tile_idx + 1 < values_tile_size - UNROLL_FACTOR + 1 + delta_level) {
+                    double exponent = prices_tile[p_tile_idx];
+                    partial_res[end] =
+                        fmax(exponent, fma(prob_up, values_tile[v_tile_idx + 1],
+                                           fma(prob_down, values_tile[v_tile_idx], 0.0)));
+                    end++;
+                }
             }
         }
-    }
+        __syncthreads();
+
+        int start = 0;
+        for (int offset = adjustedLocalId; offset < values_tile_size;
+             offset += OUTPUTS_PER_THREAD * THREADS_PER_BLOCK) {
 #pragma unroll
-    for (int i = 0; i < OUTPUTS_PER_THREAD; i++) {
-        if (threadId + i - OUTPUTS_PER_THREAD + 1 <= level)
-            d_option_values_next[threadId + i] = res[i];
+            for (int i = 0; i < OUTPUTS_PER_THREAD; i++) {
+                if (start < end) {
+                    values_tile[offset + i] = partial_res[start];
+                    start++;
+                }
+            }
+        }
+        __syncthreads();
+    }
+
+    int start = 0;
+    for (int offset = adjustedLocalId; offset < values_tile_size;
+         offset += OUTPUTS_PER_THREAD * THREADS_PER_BLOCK) {
+#pragma unroll
+        for (int i = 0; i < OUTPUTS_PER_THREAD; i++) {
+            int gmem_idx = offset + OUTPUTS_PER_THREAD * blockIdx.x * blockDim.x;
+            if (gmem_idx + i <= level && start < end) {
+                d_option_values_next[gmem_idx + i] = partial_res[start];
+                start++;
+                // printf("[xy_tile] level %d, wrote %f at %d\n", level,
+                // d_option_values_next[gmem_idx + i], gmem_idx+i);
+            }
+        }
     }
 }
 
@@ -127,11 +153,12 @@ double vanilla_american_binomial_cuda_x_y_unroll_tile(const double S, const doub
 
     double *d_option_values, *d_option_values_next;
     // int buffer_dim = std::ceil((n+1)*1.0 / OUTPUTS_PER_THREAD)*OUTPUTS_PER_THREAD;
-    int buffer_dim = n + 1;
+    int buffer_dim = (n + 1);
     cudaMalloc(&d_option_values, buffer_dim * sizeof(double));
     cudaMalloc(&d_option_values_next, buffer_dim * sizeof(double));
     double* st_buffer;
-    cudaMalloc(&st_buffer, (2 * n + 1) * sizeof(double));
+    cudaMalloc(&st_buffer, (2 * n + 2) * sizeof(double));
+    cudaDeviceSynchronize();
 
     int fill_num_blocks = std::ceil((2 * n + 1) * 1.0 / 1024);
     KERNEL_NAME(fill_pricing)<<<fill_num_blocks, 1024>>>(st_buffer, S, K, u, sign, n);
@@ -139,7 +166,9 @@ double vanilla_american_binomial_cuda_x_y_unroll_tile(const double S, const doub
     KERNEL_NAME(first_layer)<<<num_blocks, thread_per_block>>>(d_option_values, st_buffer, n);
     int level = n;
     int _iter = 0;
-    bool profiling = true;
+    bool profiling = false;
+    cudaDeviceSynchronize();
+
     for (; level >= UNROLL_FACTOR && level > OUTPUTS_PER_THREAD; level -= UNROLL_FACTOR) {
         num_blocks =
             std::ceil((level - UNROLL_FACTOR + 1) * 1.0 / (thread_per_block * OUTPUTS_PER_THREAD));

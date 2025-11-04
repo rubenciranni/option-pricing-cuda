@@ -5,7 +5,8 @@
 #include "constants.hpp"
 
 /**
- * @brief Prices an American option using the Cox–Ross–Rubinstein (CRR) binomial model.
+ * @brief Prices an American option using the Cox–Ross–Rubinstein (CRR) binomial
+ * model.
  *
  * @param S       Current underlying asset price.
  * @param K       Strike price of the option.

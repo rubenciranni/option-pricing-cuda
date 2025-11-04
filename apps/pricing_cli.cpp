@@ -15,9 +15,9 @@
 int main(int argc, char** argv) {
     CLI::App app{"CLI for Option Pricing and Benchmarking"};
 
+    // Pricing subcommand
     std::string option_type_str, exercise_type_str, pricing_method_str, backend_str;
     double S, K, T, r, sigma, q;
-    bool no_verify = false;
     int n;
 
     auto price_subcommand = app.add_subcommand("price", "Run a single pricing query");
@@ -40,17 +40,30 @@ int main(int argc, char** argv) {
     price_subcommand->add_option("--backend", backend_str, "Backend (cpu|openmp|cuda)")
         ->default_val("cpu")
         ->check(CLI::IsMember({"cpu", "openmp", "cuda"}));
+
+    // Benchmarking subcommand
     std::string filter_name;
     std::string benchmark_parameters;
+    std::string reference_function_name;
+    bool skip_sanity_checks;
 
-    auto bench = app.add_subcommand("benchmark", "Run benchmark on benchmark_parameters");
-    bench->add_option("--filter-by-name", filter_name, "Filter by benchmark name")->default_val("");
-    bench->add_option("--parameters", benchmark_parameters, "Parameters identifier")
+    auto benchmark_subcommand =
+        app.add_subcommand("benchmark", "Run benchmark on benchmark parameters");
+    benchmark_subcommand->add_option("--filter-by-name", filter_name, "Filter functions by name")
+        ->default_val("");
+    benchmark_subcommand->add_option("--parameters", benchmark_parameters, "Parameters identifier")
         ->default_val("easy");
-    bench->add_flag("--no-verify", no_verify, "Skip verification");
+    benchmark_subcommand
+        ->add_option("--reference-function", reference_function_name,
+                     "Reference function name for sanity checks")
+        ->default_val("vanilla_american_binomial_cpu_naive");
+    benchmark_subcommand
+        ->add_flag("--skip-sanity-checks", skip_sanity_checks, "Skip sanity checks.")
+        ->default_val(false);
 
-    auto list =
-        app.add_subcommand("parameters", "List available benchmark parameters and their config");
+    // List parameters subcommand
+    auto list_parameters_subcommand = app.add_subcommand(
+        "benchmark-parameters", "List available benchmark parameters and their config");
 
     try {
         app.require_subcommand(1);
@@ -75,38 +88,95 @@ int main(int argc, char** argv) {
         }
 
         printf("Option Price: %.4f\n", price);
-    } else if (*bench) {
-        auto results = benchmark(filter_name, benchmark_parameters, no_verify);
-        std::cout << "Benchmark Parameters:\n";
+    } else if (*benchmark_subcommand) {
+        if (!skip_sanity_checks) {
+            std::cout << rang::style::bold << rang::fg::red << "=== SANITY CHECKS LOGS ===\n\n"
+                      << rang::style::reset;
+        }
+
+        // Run benchmark
+        auto results = benchmark(filter_name, benchmark_parameters, reference_function_name,
+                                 skip_sanity_checks);
+
+        // ==========================================
+        // Sanity Check Summary
+        // ==========================================
+        if (!skip_sanity_checks) {
+            std::cout << "\n"
+                      << rang::style::bold << "=== SANITY CHECKS SUMMARY ===" << rang::style::reset
+                      << "\n\n";
+
+            const int name_width = 65;
+            const int status_width = 10;
+
+            std::cout << std::left << std::setw(name_width) << "Function" << std::right
+                      << std::setw(status_width) << "Status"
+                      << "\n";
+            std::cout << std::string(name_width + status_width, '-') << "\n";
+
+            for (const auto& res : results) {
+                bool pass = res.pass_sanity_check;
+                std::string status = pass ? "✅" : "❌";
+
+                if (pass)
+                    std::cout << rang::fg::green;
+                else
+                    std::cout << rang::fg::red;
+
+                std::cout << std::left << std::setw(name_width) << res.function_name << std::right
+                          << std::setw(status_width) << status << rang::fg::reset << "\n";
+            }
+
+            std::cout << std::string(name_width + status_width, '-') << "\n\n";
+        }
+
+        // ==========================================
+        // Benchmark Parameters
+        // ==========================================
         if (results.empty()) {
             std::cout << rang::fg::yellow
-                      << "No benchmarks matched the given filter: " << filter_name
-                      << rang::fg::reset << "\n";
+                      << "No functions matched the given filter: " << filter_name << rang::fg::reset
+                      << "\n";
             return 0;
         }
-        std::cout << to_string(results[0].run) << "\n";
-        for (const auto& res : results) {
-            if (res.pass_sanity_check) {
-                std::cout << rang::fg::green;
-            } else {
-                std::cout << rang::fg::red;
-            }
-            std::cout << res.function_name << ":\n" << rang::fg::reset;
 
-            for (const auto& [n_steps, time] : res.execution_times) {
-                std::cout << "  n=" << n_steps << ": " << time << " ms\n";
-            }
-        }
+        // ==========================================
+        // Results Per Function
+        // ==========================================
+        std::cout << "\n"
+                  << rang::style::bold << "=== BENCHMARK RESULTS ===" << rang::style::reset << "\n";
+        std::cout << "Benchmark Parameters: " << to_string(results[0].run) << "\n\n";
         for (const auto& res : results) {
-            if (!res.pass_sanity_check) {
+            std::cout << std::string(80, '=') << "\n";
+            std::cout << rang::style::bold;
+
+            if (res.pass_sanity_check)
+                std::cout << rang::fg::green;
+            else
                 std::cout << rang::fg::red;
-                std::cout << "Sanity check failed for function: " << res.function_name << "\n";
-                std::cout << rang::fg::reset;
+
+            std::cout << "Function: " << res.function_name << rang::style::reset << "\n";
+            std::cout << std::string(80, '-') << "\n";
+
+            // Table header
+            std::cout << std::left << std::setw(12) << "n" << std::right << std::setw(15)
+                      << "Time (ms)" << std::right << std::setw(20) << "Output"
+                      << "\n";
+            std::cout << std::string(50, '-') << "\n";
+
+            // Table body
+            for (const auto& [n_steps, time] : res.execution_times) {
+                double price = res.prices.at(n_steps);
+                std::cout << std::left << std::setw(12) << n_steps << std::right << std::setw(15)
+                          << std::fixed << std::setprecision(3) << time << std::right
+                          << std::setw(20) << std::fixed << std::setprecision(6) << price << "\n";
             }
+
+            std::cout << std::string(80, '=') << "\n\n";
         }
-    } else if (*list) {
+
+    } else if (*list_parameters_subcommand) {
         list_benchmark_parameters();
     }
-
     return 0;
 }
