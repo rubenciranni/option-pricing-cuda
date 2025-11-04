@@ -146,7 +146,7 @@ double vanilla_american_binomial_cuda_x_y_unroll_tile(const double S, const doub
         num_blocks =
             std::ceil((level - UNROLL_FACTOR + 1) * 1.0 / (thread_per_block * OUTPUTS_PER_THREAD));
 #ifdef PROFILING
-        if ((_iter % 100) == 0) {
+        if ((_iter % 4) == 0) {
             std::string kernel_label = "lvl_" + std::to_string(level);
             nvtxRangePushA(kernel_label.c_str());
             cudaProfilerStart();
