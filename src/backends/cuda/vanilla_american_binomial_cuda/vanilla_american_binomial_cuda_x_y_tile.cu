@@ -10,7 +10,7 @@
 #include "constants.hpp"
 
 /*
- * TpB 128, UF 128, OpT 1 <5 ms on 10K
+ * TpB 128, UF 128, OpT 1 <3.6 ms on 10K
  */
 
 #define THREADS_PER_BLOCK 128
@@ -29,7 +29,7 @@ __global__ void KERNEL_NAME(fill_pricing)(double* __restrict__ buffer, const dou
                                           const int n) {
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
     if (threadId > 2 * n) return;
-    buffer[threadId] = fmax(sign * (S * pow(u, (double)threadId - n) - K), 0.0);
+    buffer[threadId] = fmax(sign * fma(S, pow(u, (double)threadId - n), -K), 0.0);
 }
 
 __global__ void KERNEL_NAME(first_layer)(double* d_option_values, double* __restrict__ st_buffer,
@@ -73,49 +73,27 @@ __global__ void KERNEL_NAME(vanilla_american_binomial_cuda_kernel)(
 
     __syncthreads();
 
-    const int adjustedLocalId = OUTPUTS_PER_THREAD * threadIdx.x;
-
-    int end;
 #pragma unroll
     for (int delta_level = UNROLL_FACTOR - 1; delta_level >= 0; delta_level--) {
-        end = 0;
-
-        for (int offset = adjustedLocalId; offset < values_tile_size;
-             offset += OUTPUTS_PER_THREAD * THREADS_PER_BLOCK) {
+        const int active_work_size = values_tile_size - UNROLL_FACTOR + delta_level;
 #pragma unroll
-            for (int delta_id = 0; delta_id < OUTPUTS_PER_THREAD; delta_id++) {
-                int v_tile_idx = delta_id + offset;
-                int p_tile_idx = 2 * (v_tile_idx)-delta_level + UNROLL_FACTOR - 1;
-                if (v_tile_idx + 1 < values_tile_size - UNROLL_FACTOR + 1 + delta_level) {
-                    double exercise = prices_tile[p_tile_idx % 2][p_tile_idx / 2];
-                    values_tile_write[v_tile_idx] =
-                        fmax(exercise, fma(prob_up, values_tile_read[v_tile_idx + 1],
-                                           fma(prob_down, values_tile_read[v_tile_idx], 0.0)));
-                    end++;
-                }
-            }
+        for (int v_tile_idx = threadIdx.x; v_tile_idx < active_work_size;
+             v_tile_idx += THREADS_PER_BLOCK) {
+            int p_tile_idx = 2 * v_tile_idx - delta_level + UNROLL_FACTOR - 1;
+            double exercise = prices_tile[p_tile_idx % 2][p_tile_idx / 2];
+            values_tile_write[v_tile_idx] =
+                fmax(exercise, fma(prob_up, values_tile_read[v_tile_idx + 1],
+                                   fma(prob_down, values_tile_read[v_tile_idx], 0.0)));
         }
 
         __syncthreads();
 
         double* tmp = values_tile_read;
         values_tile_read = values_tile_write;
-        values_tile_write = tmp;
-    }
-
-    int start = 0;
-    for (int offset = adjustedLocalId; offset < values_tile_size;
-         offset += OUTPUTS_PER_THREAD * THREADS_PER_BLOCK) {
-#pragma unroll
-        for (int i = 0; i < OUTPUTS_PER_THREAD; i++) {
-            int gmem_idx = offset + OUTPUTS_PER_THREAD * blockIdx.x * blockDim.x;
-            if (gmem_idx + i <= level && start < end) {
-                d_option_values_next[gmem_idx + i] = values_tile_read[offset + i];
-                start++;
-                // printf("[xy_tile] level %d, wrote %f at %d\n", level,
-                // d_option_values_next[gmem_idx + i], gmem_idx+i);
-            }
-        }
+        if (delta_level == 1)
+            values_tile_write = d_option_values_next + OUTPUTS_PER_THREAD * blockIdx.x * blockDim.x;
+        else
+            values_tile_write = tmp;
     }
 }
 
