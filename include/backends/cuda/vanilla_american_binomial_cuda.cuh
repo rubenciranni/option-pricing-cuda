@@ -14,6 +14,11 @@ double vanilla_american_binomial_cuda_fill(const double S, const double K, const
                                            const double r, const double sigma, const double q,
                                            const int n, const OptionType type);
 
+double vanilla_american_binomial_cuda_fill_banked(const double S, const double K, const double T,
+                                                  const double r, const double sigma,
+                                                  const double q, const int n,
+                                                  const OptionType type);
+
 double vanilla_american_binomial_cuda_tile(const double S, const double K, const double T,
                                            const double r, const double sigma, const double q,
                                            const int n, const OptionType type);
@@ -21,6 +26,7 @@ double vanilla_american_binomial_cuda_tile(const double S, const double K, const
 double vanilla_american_binomial_cuda_unroll(const double S, const double K, const double T,
                                              const double r, const double sigma, const double q,
                                              const int n, const OptionType type);
+
 double vanilla_american_binomial_cuda_precomputed_stock_price(const double S, const double K,
                                                               const double T, const double r,
                                                               const double sigma, const double q,
