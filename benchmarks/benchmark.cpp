@@ -4,9 +4,13 @@
 
 #include "backends/cpu/vanilla_american_binomial_cpu.hpp"
 #include "backends/cuda/vanilla_american_binomial_cuda.cuh"
+#include "backends/hyperparams.hpp"
 #include "benchmark_parameters.hpp"
 #include "function_registry.hpp"
 #include "sanity_checker.hpp"
+
+
+
 
 std::map<std::string, Run> BENCHMARK_PARAMETERS = {
     {"debug", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 20, 20, 20, OptionType::Put)},
@@ -18,21 +22,19 @@ std::map<std::string, Run> BENCHMARK_PARAMETERS = {
 
 std::map<std::string, PricingFunction> FUNCTION_REGISTRY = {
     {"vanilla_american_binomial_cpu_naive", vanilla_american_binomial_cpu_naive},
-    {"vanilla_american_binomial_cpu_remove_zeros_cache",
-     vanilla_american_binomial_cpu_remove_zeros_cache},
+    {"vanilla_american_binomial_cpu_remove_zeros_cache", vanilla_american_binomial_cpu_remove_zeros_cache},
     {"vanilla_american_binomial_openmp_naive", vanilla_american_binomial_openmp_naive},
     {"vanilla_american_binomial_cpu_remove_zeros", vanilla_american_binomial_cpu_remove_zeros},
     {"vanilla_american_binomial_cuda_naive", vanilla_american_binomial_cuda_naive},
     {"vanilla_american_binomial_cuda_no_sync", vanilla_american_binomial_cuda_no_sync},
     {"vanilla_american_binomial_cuda_fill", vanilla_american_binomial_cuda_fill},
-    {"vanilla_american_binomial_cuda_tile", vanilla_american_binomial_cuda_tile},
-    {"vanilla_american_binomial_cuda_unroll", vanilla_american_binomial_cuda_unroll},
-    {"vanilla_american_binomial_cuda_precomputed_stock_price",
-     vanilla_american_binomial_cuda_precomputed_stock_price},
-    {"vanilla_american_binomial_cuda_x_y_unroll", vanilla_american_binomial_cuda_x_y_unroll},
-    {"vanilla_american_binomial_cuda_unroll_tile", vanilla_american_binomial_cuda_unroll_tile},
-    {"vanilla_american_binomial_cuda_x_y_unroll_new",
-     vanilla_american_binomial_cuda_x_y_unroll_new}};
+    {"vanilla_american_binomial_cuda_precomputed_stock_price", vanilla_american_binomial_cuda_precomputed_stock_price},
+    {"vanilla_american_binomial_cuda_tile", vanilla_american_binomial_cuda_tile<DEFAULT_HYPERPARAMS_CUDA_TILE>},
+    {"vanilla_american_binomial_cuda_unroll", vanilla_american_binomial_cuda_unroll<DEFAULT_HYPERPARAMS_CUDA_UNROLL>},
+    {"vanilla_american_binomial_cuda_x_y_unroll_H1", vanilla_american_binomial_cuda_x_y_unroll<DEFAULT_HYPERPARAMS_CUDA_XY_UNROLL>},
+    {"vanilla_american_binomial_cuda_unroll_tile", vanilla_american_binomial_cuda_unroll_tile<DEFAULT_HYPERPARAMS_CUDA_UNROLL_TILE>},
+    {"vanilla_american_binomial_cuda_x_y_unroll_new_H1", vanilla_american_binomial_cuda_x_y_unroll_new<DEFAULT_HYPERPARAMS_CUDA_XY_UNROLL_NEW>}
+};
 
 std::vector<BenchmarkResult> benchmark(const std::string& filter_function_name,
                                        const std::string& benchmark_parameters,
