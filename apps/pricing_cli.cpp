@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
     std::string filter_name;
     std::string benchmark_parameters;
     std::string reference_function_name;
-    bool skip_sanity_checks;
+    int skip_sanity_checks;
 
     auto benchmark_subcommand =
         app.add_subcommand("benchmark", "Run benchmark on benchmark parameters");
@@ -60,7 +60,9 @@ int main(int argc, char** argv) {
     benchmark_subcommand
         ->add_flag("--skip-sanity-checks", skip_sanity_checks, "Skip sanity checks.")
         ->default_val(false);
-    skip_sanity_checks = false;
+
+    std::cout << "bench params: " << benchmark_parameters << "\n";
+    std::cout << "sanity checks: " << skip_sanity_checks << "\n";
 
     // List parameters subcommand
     auto list_parameters_subcommand = app.add_subcommand(

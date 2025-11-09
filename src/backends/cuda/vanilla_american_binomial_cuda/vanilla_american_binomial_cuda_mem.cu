@@ -7,6 +7,8 @@
 #include "backends/cuda/vanilla_american_binomial_cuda.cuh"
 #include "constants.hpp"
 
+// TpB 128 UF 64 OpT 64 ~2.8ms on 10k
+
 #define THREADS_PER_BLOCK 128
 #define UNROLL_FACTOR 64
 #define OUTPUTS_PER_BLOCK 64
@@ -29,8 +31,6 @@ __global__ void compute_next_layers_kernel(double* layer_values_read, double* la
     constexpr int TILE_SIZE = OUTPUTS_PER_BLOCK + UNROLL_FACTOR;
     __shared__ double layer_values_tile_read_array[TILE_SIZE];
     __shared__ double layer_values_tile_write_array[TILE_SIZE];
-
-    constexpr int EXPONENT_TILE_SIZE = 2 * (OUTPUTS_PER_BLOCK + UNROLL_FACTOR - 1);
 
     double* layer_values_tile_read = layer_values_tile_read_array;
     double* layer_values_tile_write = layer_values_tile_write_array;
