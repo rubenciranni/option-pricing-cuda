@@ -22,6 +22,10 @@ std::map<std::string, PricingFunction> FUNCTION_REGISTRY = {
      vanilla_american_binomial_cpu_remove_zeros_cache},
     {"vanilla_american_binomial_openmp_naive", vanilla_american_binomial_openmp_naive},
     {"vanilla_american_binomial_cpu_remove_zeros", vanilla_american_binomial_cpu_remove_zeros},
+    {"vanilla_american_binomial_cpu_remove_zeros_red_cache",
+     vanilla_american_binomial_cpu_remove_zeros_red_cache},
+    {"vanilla_american_binomial_cpu_remove_zeros_follow_red_cache",
+     vanilla_american_binomial_cpu_remove_zeros_follow_red_cache},
     {"vanilla_american_binomial_cuda_naive", vanilla_american_binomial_cuda_naive},
     {"vanilla_american_binomial_cuda_no_sync", vanilla_american_binomial_cuda_no_sync},
     {"vanilla_american_binomial_cuda_fill", vanilla_american_binomial_cuda_fill},
@@ -36,7 +40,12 @@ std::map<std::string, PricingFunction> FUNCTION_REGISTRY = {
     {"vanilla_american_binomial_cuda_x_y_unroll_tile",
      vanilla_american_binomial_cuda_x_y_unroll_tile},
     {"vanilla_american_binomial_cuda_x_y_unroll_tile_banked",
-     vanilla_american_binomial_cuda_x_y_unroll_tile_banked}};
+     vanilla_american_binomial_cuda_x_y_unroll_tile_banked},
+     {"vanilla_american_binomial_cuda_x_y_unroll_tile_banked",
+vanilla_american_binomial_cuda_x_y_unroll_tile_banked}
+    
+    };
+
 std::vector<BenchmarkResult> benchmark(const std::string& filter_function_name,
                                        const std::string& benchmark_parameters,
                                        const std::string& reference_function_name,
