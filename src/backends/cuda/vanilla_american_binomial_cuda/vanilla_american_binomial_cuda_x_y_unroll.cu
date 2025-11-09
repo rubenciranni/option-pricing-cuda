@@ -37,7 +37,6 @@ __global__ void vanilla_american_binomial_cuda_kernel_x_y_unroll(
     if (threadId - OUTPUTS_PER_THREAD + 1 > level) return;
     threadId = min(threadId, level - OUTPUTS_PER_THREAD + 1);
 
-    const int last_layer_size = UNROLL_FACTOR + OUTPUTS_PER_THREAD - 1;
     double res[MAX_LEVEL_SIZE + 1];
 #pragma unroll
     for (int i = 0; i <= MAX_LEVEL_SIZE; i++) {

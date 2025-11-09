@@ -55,14 +55,18 @@ double vanilla_american_binomial_cuda_x_y_unroll_tile(const double S, const doub
                                                       const double sigma, const double q,
                                                       const int n, const OptionType type);
 
-double vanilla_american_binomial_cuda_x_y_unroll_tile_banked(const double S, const double K,
-                                                             const double T, const double r,
-                                                             const double sigma, const double q,
-                                                             const int n, const OptionType type);
+double vanilla_american_binomial_cuda_overlap_unroll(const double S, const double K, const double T,
+                                                     const double r, const double sigma,
+                                                     const double q, const int n,
+                                                     const OptionType type);
+
+double vanilla_american_binomial_cuda_mem(const double S, const double K, const double T,
+                                          const double r, const double sigma, const double q,
+                                          const int n, const OptionType type);
 
 inline double vanilla_american_binomial_cuda(const double S, const double K, const double T,
                                              const double r, const double sigma, const double q,
                                              const int n, const OptionType type) {
     // Choose the current best backend here:
-    return vanilla_american_binomial_cuda_x_y_unroll_tile(S, K, T, r, sigma, q, n, type);
+    return vanilla_american_binomial_cuda_overlap_unroll(S, K, T, r, sigma, q, n, type);
 }
