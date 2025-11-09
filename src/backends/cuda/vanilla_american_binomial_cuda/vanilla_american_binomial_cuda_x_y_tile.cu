@@ -14,9 +14,10 @@
  */
 
 #define THREADS_PER_BLOCK 128
-#define UNROLL_FACTOR 128
+#define UNROLL_FACTOR 64
 #define OUTPUTS_PER_THREAD 1
-#define MAX_LEVEL_SIZE (UNROLL_FACTOR + OUTPUTS_PER_THREAD - 1)
+#define PREFETCH_FACTOR 2
+#define OUTPUTS_PER_BLOCK 128
 #define CEIL_DIV(A, B) (((A) + (B)-1) / (B))
 
 #define IMPL_NAME x_y_unroll_tile
@@ -76,14 +77,31 @@ __global__ void KERNEL_NAME(vanilla_american_binomial_cuda_kernel)(
 #pragma unroll
     for (int delta_level = UNROLL_FACTOR - 1; delta_level >= 0; delta_level--) {
         const int active_work_size = values_tile_size - UNROLL_FACTOR + delta_level;
+        double prefetch_values[2 * PREFETCH_FACTOR];
+        int v_tile_idx = threadIdx.x;
 #pragma unroll
-        for (int v_tile_idx = threadIdx.x; v_tile_idx < active_work_size;
+        for (int j = 0;
+             j < PREFETCH_FACTOR && v_tile_idx + j * THREADS_PER_BLOCK < active_work_size; j++) {
+            int pre_tile_idx = v_tile_idx + j * THREADS_PER_BLOCK;
+            prefetch_values[2 * j] = values_tile_read[pre_tile_idx];
+            prefetch_values[2 * j + 1] = values_tile_read[pre_tile_idx + 1];
+        }
+        int pref_off = 0;
+#pragma unroll
+        for (v_tile_idx = threadIdx.x; v_tile_idx < active_work_size;
              v_tile_idx += THREADS_PER_BLOCK) {
-            int p_tile_idx = 2 * v_tile_idx - delta_level + UNROLL_FACTOR - 1;
+            int p_tile_idx = 2 * (v_tile_idx)-delta_level + (UNROLL_FACTOR - 1);
             double exercise = prices_tile[p_tile_idx % 2][p_tile_idx / 2];
             values_tile_write[v_tile_idx] =
-                fmax(exercise, fma(prob_up, values_tile_read[v_tile_idx + 1],
-                                   fma(prob_down, values_tile_read[v_tile_idx], 0.0)));
+                fmax(exercise, fma(prob_up, prefetch_values[pref_off + 1],
+                                   fma(prob_down, prefetch_values[pref_off], 0.0)));
+
+            int v_tile_idx_next = v_tile_idx + THREADS_PER_BLOCK;
+            if (v_tile_idx_next < active_work_size) {
+                prefetch_values[pref_off] = values_tile_read[v_tile_idx_next];
+                prefetch_values[pref_off + 1] = values_tile_read[v_tile_idx_next + 1];
+            }
+            pref_off = (pref_off + 2) % (2 * PREFETCH_FACTOR);
         }
 
         __syncthreads();

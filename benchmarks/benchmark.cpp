@@ -34,8 +34,9 @@ std::map<std::string, PricingFunction> FUNCTION_REGISTRY = {
     {"vanilla_american_binomial_cuda_x_y_unroll_new",
      vanilla_american_binomial_cuda_x_y_unroll_new},
     {"vanilla_american_binomial_cuda_x_y_unroll_tile",
-     vanilla_american_binomial_cuda_x_y_unroll_tile}};
-
+     vanilla_american_binomial_cuda_x_y_unroll_tile},
+    {"vanilla_american_binomial_cuda_x_y_unroll_tile_banked",
+     vanilla_american_binomial_cuda_x_y_unroll_tile_banked}};
 std::vector<BenchmarkResult> benchmark(const std::string& filter_function_name,
                                        const std::string& benchmark_parameters,
                                        const std::string& reference_function_name,

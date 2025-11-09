@@ -60,6 +60,7 @@ int main(int argc, char** argv) {
     benchmark_subcommand
         ->add_flag("--skip-sanity-checks", skip_sanity_checks, "Skip sanity checks.")
         ->default_val(false);
+    skip_sanity_checks = false;
 
     // List parameters subcommand
     auto list_parameters_subcommand = app.add_subcommand(

@@ -13,5 +13,5 @@ make -j 4 || exit 1
 srun --pty -A dphpc -t 60 \
   ncu --target-processes all --nvtx --set full \
     -f -o ../profile_res/profile_kernel \
- ./bin/pricing_cli benchmark --parameters cuda_debug --filter-by-name $FUNCTION_NAME --no-verify
+ ./bin/pricing_cli benchmark --parameters cuda_debug --filter-by-name $FUNCTION_NAME --skip-sanity-checks
 # here we run only the cuda implementation benchmarks
