@@ -44,11 +44,11 @@ __global__ void compute_next_layers_kernel_overlap_unroll(
         int current_level = level + i;
         double* st_buffer_bank = (n - current_level) % 2 ? st_buffer_bank1 : st_buffer_bank0;
 
-        double hold = up * layer_values_tile_read[threadIdx.x + 1] +
-                      down * layer_values_tile_read[threadIdx.x];
+        double hold = fma(up, layer_values_tile_read[threadIdx.x + 1],
+                          down * layer_values_tile_read[threadIdx.x]);
         int st_index = node_id + (n - current_level) / 2;
         double exercise = st_buffer_bank[st_index];
-        layer_values_tile_write[threadIdx.x] = max(hold, exercise);
+        layer_values_tile_write[threadIdx.x] = fmax(hold, exercise);
 
         __syncthreads();
 
@@ -80,7 +80,7 @@ __global__ void compute_next_layer_kernel_overlap_unroll(
     double hold = up * layer_values_read[threadId + 1] + down * layer_values_read[threadId];
     double* st_buffer_bank = (n - level) % 2 ? st_buffer_bank1 : st_buffer_bank0;
     double exercise = st_buffer_bank[threadId + (n - level) / 2];
-    layer_values_write[threadId] = max(hold, exercise);
+    layer_values_write[threadId] = fmax(hold, exercise);
 }
 
 double vanilla_american_binomial_cuda_overlap_unroll(const double S, const double K, const double T,
