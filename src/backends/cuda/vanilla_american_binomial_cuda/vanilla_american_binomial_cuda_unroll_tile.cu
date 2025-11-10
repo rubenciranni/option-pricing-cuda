@@ -25,7 +25,7 @@ __global__ void first_layer_kernel_unroll_tile(double* d_option_values,
     d_option_values[threadId] = st_buffer[INDEX_BUFFER(2 * threadId, n)];
 }
 
-template<const int THREADS_PER_BLOCK, const int UNROLL_FACTOR>
+template <const int THREADS_PER_BLOCK, const int UNROLL_FACTOR>
 __device__ __forceinline__ double calc_idx_tile(const double* past_values, const double* st_buffer,
                                                 const double prob_up, const double prob_down,
                                                 const int idx_tile, const int idx, const int level,
@@ -42,14 +42,13 @@ __device__ __forceinline__ double calc_idx_tile(const double* past_values, const
             int exponent = 2 * (delta_id + idx) - delta_level + UNROLL_FACTOR - 1;
             res[delta_id] =
                 fmax(st_buffer[INDEX_BUFFER(exponent, THREADS_PER_BLOCK + UNROLL_FACTOR)],
-                     prob_up * res[delta_id + 1] + prob_down * res[delta_id]);
+                     fma(prob_up, res[delta_id + 1], prob_down * res[delta_id]));
         }
     }
-
     return res[0];
 }
 
-template<const int THREADS_PER_BLOCK, const int UNROLL_FACTOR>
+template <const int THREADS_PER_BLOCK, const int UNROLL_FACTOR>
 __global__ void vanilla_american_binomial_cuda_kernel_unroll_tile(
     const double* d_option_values, double* d_option_values_next,
     const double* __restrict__ st_buffer, const double prob_up, const double prob_down,
@@ -77,8 +76,8 @@ __global__ void vanilla_american_binomial_cuda_kernel_unroll_tile(
 
     if (threadId > level) return;
 
-    double res =
-        calc_idx_tile<THREADS_PER_BLOCK, UNROLL_FACTOR>(tile, pow_tile, prob_up, prob_down, threadIdx.x, threadIdx.x, level, n);
+    double res = calc_idx_tile<THREADS_PER_BLOCK, UNROLL_FACTOR>(
+        tile, pow_tile, prob_up, prob_down, threadIdx.x, threadIdx.x, level, n);
     d_option_values_next[threadId] = res;
 }
 
@@ -113,7 +112,6 @@ double vanilla_american_binomial_cuda_unroll_tile(const double S, const double K
 
     const int thread_per_block = THREADS_PER_BLOCK;
     int num_blocks = std::ceil((n + 1) * 1.0 / thread_per_block);
-
     double *d_option_values, *d_option_values_next;
     cudaMalloc(&d_option_values, (n + 1) * sizeof(double));
     cudaMalloc(&d_option_values_next, (n + 1) * sizeof(double));
@@ -127,8 +125,9 @@ double vanilla_american_binomial_cuda_unroll_tile(const double S, const double K
     int level = n;
     for (; level >= UNROLL_FACTOR; level -= UNROLL_FACTOR) {
         num_blocks = std::ceil((level - UNROLL_FACTOR + 1) * 1.0 / thread_per_block);
-        vanilla_american_binomial_cuda_kernel_unroll_tile<THREADS_PER_BLOCK, UNROLL_FACTOR><<<num_blocks, thread_per_block>>>(
-            d_option_values, d_option_values_next, st_buffer, up, down, level - UNROLL_FACTOR, n);
+        vanilla_american_binomial_cuda_kernel_unroll_tile<THREADS_PER_BLOCK, UNROLL_FACTOR>
+            <<<num_blocks, thread_per_block>>>(d_option_values, d_option_values_next, st_buffer, up,
+                                               down, level - UNROLL_FACTOR, n);
         std::swap(d_option_values, d_option_values_next);
     }
 
@@ -142,13 +141,12 @@ double vanilla_american_binomial_cuda_unroll_tile(const double S, const double K
 
     double h_s_store;
     cudaMemcpy(&h_s_store, d_option_values, (1) * sizeof(double), cudaMemcpyDeviceToHost);
-
     cudaFree(d_option_values);
     cudaFree(d_option_values_next);
     cudaFree(st_buffer);
     return h_s_store;
 }
 
-template double vanilla_american_binomial_cuda_unroll_tile<DEFAULT_HYPERPARAMS_CUDA_UNROLL_TILE>(const double S, const double K, const double T,
-                                                 const double r, const double sigma, const double q,
-                                                 const int n, const OptionType type);
+template double vanilla_american_binomial_cuda_unroll_tile<DEFAULT_HYPERPARAMS_CUDA_UNROLL_TILE>(
+    const double S, const double K, const double T, const double r, const double sigma,
+    const double q, const int n, const OptionType type);

@@ -8,7 +8,6 @@
 #include "backends/hyperparams.hpp"
 #include "constants.hpp"
 
-
 __global__ void fill_pricing_unroll(double* __restrict__ buffer, const double S, const double K,
                                     const double u, const int sign, const int n) {
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
@@ -25,7 +24,7 @@ __global__ void first_layer_kernel_unroll(double* d_option_values, double* __res
     d_option_values[threadId] = st_buffer[((idx_uns - n) & 1) * (n + 1) + idx_uns / 2];
 }
 
-template<const int UNROLL_FACTOR>
+template <const int UNROLL_FACTOR>
 __device__ inline double calc_idx(const double* past_values, const double* st_buffer,
                                   const double prob_up, const double prob_down, const int idx,
                                   const int level, const int n) {
@@ -39,15 +38,15 @@ __device__ inline double calc_idx(const double* past_values, const double* st_bu
         for (int delta_id = 0; delta_id <= delta_level; delta_id++) {
             int exponent = 2 * (idx + delta_id) - level - delta_level + n;
             int buf_idx = ((exponent - n) & 1) * (n + 1) + (exponent / 2);
-            res[delta_id] =
-                fmax(st_buffer[buf_idx], prob_up * res[delta_id + 1] + prob_down * res[delta_id]);
+            res[delta_id] = fmax(st_buffer[buf_idx],
+                                 fma(prob_up, res[delta_id + 1], prob_down * res[delta_id]));
         }
     }
 
     return res[0];
 }
 
-template<const int UNROLL_FACTOR>
+template <const int UNROLL_FACTOR>
 __global__ void vanilla_american_binomial_cuda_kernel_unroll(const double* d_option_values,
                                                              double* d_option_values_next,
                                                              const double* __restrict__ st_buffer,
@@ -57,7 +56,8 @@ __global__ void vanilla_american_binomial_cuda_kernel_unroll(const double* d_opt
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
     if (threadId > level) return;
 
-    double res = calc_idx<UNROLL_FACTOR>(d_option_values, st_buffer, prob_up, prob_down, threadId, level, n);
+    double res =
+        calc_idx<UNROLL_FACTOR>(d_option_values, st_buffer, prob_up, prob_down, threadId, level, n);
     d_option_values_next[threadId] = res;
 }
 
@@ -105,8 +105,9 @@ double vanilla_american_binomial_cuda_unroll(const double S, const double K, con
     int level = n;
     for (; level >= UNROLL_FACTOR; level -= UNROLL_FACTOR) {
         num_blocks = std::ceil((level - UNROLL_FACTOR + 1) * 1.0 / thread_per_block);
-        vanilla_american_binomial_cuda_kernel_unroll<UNROLL_FACTOR><<<num_blocks, thread_per_block>>>(
-            d_option_values, d_option_values_next, st_buffer, up, down, level - UNROLL_FACTOR, n);
+        vanilla_american_binomial_cuda_kernel_unroll<UNROLL_FACTOR>
+            <<<num_blocks, thread_per_block>>>(d_option_values, d_option_values_next, st_buffer, up,
+                                               down, level - UNROLL_FACTOR, n);
         std::swap(d_option_values, d_option_values_next);
     }
 
@@ -128,7 +129,6 @@ double vanilla_american_binomial_cuda_unroll(const double S, const double K, con
     return h_s_store;
 }
 
-
-template double vanilla_american_binomial_cuda_unroll<DEFAULT_HYPERPARAMS_CUDA_UNROLL>(const double S, const double K, const double T,
-                                                 const double r, const double sigma, const double q,
-                                                 const int n, const OptionType type);
+template double vanilla_american_binomial_cuda_unroll<DEFAULT_HYPERPARAMS_CUDA_UNROLL>(
+    const double S, const double K, const double T, const double r, const double sigma,
+    const double q, const int n, const OptionType type);

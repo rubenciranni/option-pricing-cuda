@@ -1,1 +1,4 @@
 profile*
+*.sqlite
+*.nsys-rep
+*.ncu-rep

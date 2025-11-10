@@ -5,9 +5,6 @@
 #include "backends/hyperparams.hpp"
 #include "constants.hpp"
 
-#define THREADS_PER_BLOCK 1024
-#define OUTPUTS_PER_THREAD 2
-
 __global__ void fill_pricing_tile(double* __restrict__ buffer, const double S, const double K,
                                   const double u, const int sign, const int n) {
     int threadId = (blockIdx.x * blockDim.x + threadIdx.x);  // offset of result idx
@@ -15,7 +12,7 @@ __global__ void fill_pricing_tile(double* __restrict__ buffer, const double S, c
     buffer[threadId] = max(sign * (S * pow(u, threadId - n) - K), 0.0);
 }
 
-template<const int OUTPUTS_PER_THREAD>
+template <const int OUTPUTS_PER_THREAD>
 __global__ void first_layer_kernel_tile(double* __restrict__ d_option_values,
                                         double* __restrict__ st_buffer, const int n) {
     int threadId = OUTPUTS_PER_THREAD * (blockIdx.x * blockDim.x + threadIdx.x);
@@ -26,7 +23,7 @@ __global__ void first_layer_kernel_tile(double* __restrict__ d_option_values,
     }
 }
 
-template<const int THREADS_PER_BLOCK, const int OUTPUTS_PER_THREAD>
+template <const int THREADS_PER_BLOCK, const int OUTPUTS_PER_THREAD>
 __global__ void vanilla_american_binomial_cuda_kernel_tile(
     double* __restrict__ d_option_values, double* __restrict__ d_option_values_next,
     double* __restrict__ st_buffer, const double prob_up, const double prob_down, const int level,
@@ -85,11 +82,13 @@ double vanilla_american_binomial_cuda_tile(const double S, const double K, const
     int fill_num_blocks = std::ceil((2 * n + 1) * 1.0 / thread_per_block);
     fill_pricing_tile<<<fill_num_blocks, thread_per_block>>>(st_buffer, S, K, u, sign, n);
 
-    first_layer_kernel_tile<OUTPUTS_PER_THREAD><<<num_blocks, thread_per_block>>>(d_option_values, st_buffer, n);
+    first_layer_kernel_tile<OUTPUTS_PER_THREAD>
+        <<<num_blocks, thread_per_block>>>(d_option_values, st_buffer, n);
     for (int level = n - 1; level >= 0; level--) {
         num_blocks = std::ceil((level + 1) * 1.0 / (thread_per_block * OUTPUTS_PER_THREAD));
-        vanilla_american_binomial_cuda_kernel_tile<THREADS_PER_BLOCK, OUTPUTS_PER_THREAD><<<num_blocks, thread_per_block>>>(
-            d_option_values, d_option_values_next, st_buffer, up, down, level, n);
+        vanilla_american_binomial_cuda_kernel_tile<THREADS_PER_BLOCK, OUTPUTS_PER_THREAD>
+            <<<num_blocks, thread_per_block>>>(d_option_values, d_option_values_next, st_buffer, up,
+                                               down, level, n);
         std::swap(d_option_values, d_option_values_next);
     }
     cudaDeviceSynchronize();
@@ -101,7 +100,6 @@ double vanilla_american_binomial_cuda_tile(const double S, const double K, const
     return h_s_store;
 }
 
-template double vanilla_american_binomial_cuda_unroll<DEFAULT_HYPERPARAMS_CUDA_UNROLL>(const double S, const double K, const double T,
-                                                 const double r, const double sigma, const double q,
-                                                 const int n, const OptionType type);
-
+template double vanilla_american_binomial_cuda_tile<DEFAULT_HYPERPARAMS_CUDA_TILE>(
+    const double S, const double K, const double T, const double r, const double sigma,
+    const double q, const int n, const OptionType type);

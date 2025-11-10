@@ -30,5 +30,7 @@ set_target_properties(cuda_impl PROPERTIES
 target_compile_features(cuda_impl PUBLIC cxx_std_17)
 target_compile_options(cuda_impl PRIVATE
     --ptxas-options=-v
+    --use_fast_math
+    -lnvToolsExt
 )
 target_link_libraries(cuda_impl PUBLIC CUDA::cudart)

@@ -34,7 +34,6 @@ __global__ void vanilla_american_binomial_cuda_kernel_x_y_unroll(
     if (threadId - OUTPUTS_PER_THREAD + 1 > level) return;
     threadId = min(threadId, level - OUTPUTS_PER_THREAD + 1);
 
-    const int last_layer_size = UNROLL_FACTOR + OUTPUTS_PER_THREAD - 1;
     double res[MAX_LEVEL_SIZE + 1];
 #pragma unroll
     for (int i = 0; i <= MAX_LEVEL_SIZE; i++) {
@@ -67,7 +66,7 @@ __global__ void single_vanilla_american_binomial_cuda_kernel_x_y_unroll(
     d_option_values_next[threadId] = max(hold, exercise);
 }
 
-template<const Hyperparams& h>
+template <const Hyperparams& h>
 double vanilla_american_binomial_cuda_x_y_unroll(const double S, const double K, const double T,
                                                  const double r, const double sigma, const double q,
                                                  const int n, const OptionType type) {
@@ -103,8 +102,10 @@ double vanilla_american_binomial_cuda_x_y_unroll(const double S, const double K,
     for (; level >= UNROLL_FACTOR && level > OUTPUTS_PER_THREAD; level -= UNROLL_FACTOR) {
         num_blocks =
             std::ceil((level - UNROLL_FACTOR + 1) * 1.0 / (thread_per_block * OUTPUTS_PER_THREAD));
-        vanilla_american_binomial_cuda_kernel_x_y_unroll<UNROLL_FACTOR, OUTPUTS_PER_THREAD, MAX_LEVEL_SIZE><<<num_blocks, thread_per_block>>>(
-            d_option_values, d_option_values_next, st_buffer, up, down, level - UNROLL_FACTOR, n);
+        vanilla_american_binomial_cuda_kernel_x_y_unroll<UNROLL_FACTOR, OUTPUTS_PER_THREAD,
+                                                         MAX_LEVEL_SIZE>
+            <<<num_blocks, thread_per_block>>>(d_option_values, d_option_values_next, st_buffer, up,
+                                               down, level - UNROLL_FACTOR, n);
         std::swap(d_option_values, d_option_values_next);
     }
 
@@ -126,6 +127,6 @@ double vanilla_american_binomial_cuda_x_y_unroll(const double S, const double K,
     return h_s_store;
 }
 
-template double vanilla_american_binomial_cuda_x_y_unroll<DEFAULT_HYPERPARAMS_CUDA_XY_UNROLL>(const double S, const double K, const double T,
-                                                 const double r, const double sigma, const double q,
-                                                 const int n, const OptionType type);
+template double vanilla_american_binomial_cuda_x_y_unroll<DEFAULT_HYPERPARAMS_CUDA_XY_UNROLL>(
+    const double S, const double K, const double T, const double r, const double sigma,
+    const double q, const int n, const OptionType type);
