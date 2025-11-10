@@ -6,10 +6,10 @@
 #include "backends/cuda/vanilla_american_binomial_cuda.cuh"
 #include "constants.hpp"
 
-// TPB 128 UF 32 ~2.7ms on 10k
+// TPB 128 UF 35 ~2.6ms on 10k
 
 #define THREADS_PER_BLOCK 128
-#define UNROLL_FACTOR 32
+#define UNROLL_FACTOR 35
 
 __global__ void fill_st_buffers_kernel_overlap_unroll(double* __restrict__ st_buffer_bank0,
                                                       double* __restrict__ st_buffer_bank1,
