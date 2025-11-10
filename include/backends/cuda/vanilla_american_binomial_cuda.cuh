@@ -60,7 +60,7 @@ double vanilla_american_binomial_cuda_x_y_unroll_tile_banked(const double S, con
                                                              const double sigma, const double q,
                                                              const int n, const OptionType type);
 
-double vanilla_american_binomial_cuda_x_y_unroll_tile_banked(const double S, const double K,
+double vanilla_american_binomial_cuda_x_y_unroll_tile_banked_ignore(const double S, const double K,
                                                              const double T, const double r,
                                                              const double sigma, const double q,
                                                              const int n, const OptionType type);
