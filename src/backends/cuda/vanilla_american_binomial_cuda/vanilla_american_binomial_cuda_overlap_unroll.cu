@@ -28,9 +28,12 @@ __global__ void fill_st_buffers_kernel_overlap_unroll(double* __restrict__ st_bu
     st_buffer_bank1[threadId] = fmax(sign * fma(S, u_pow_2_threadId * u_pow_minus_n * u, -K), 0.0);
 }
 
-__global__ void compute_next_layers_kernel_overlap_unroll(
-    double* layer_values_read, double* layer_values_write, double* st_buffer_bank0,
-    double* st_buffer_bank1, const double up, const double down, const int level, const int n) {
+__global__ void compute_next_layers_kernel_overlap_unroll(double* __restrict__ layer_values_read,
+                                                          double* __restrict__ layer_values_write,
+                                                          double* __restrict__ st_buffer_bank0,
+                                                          double* __restrict__ st_buffer_bank1,
+                                                          const double up, const double down,
+                                                          const int level, const int n) {
     __shared__ double layer_values_tile[2][THREADS_PER_BLOCK + 1];
 
     int tile_stride = THREADS_PER_BLOCK - UNROLL_FACTOR;
@@ -73,9 +76,12 @@ __global__ void compute_next_layers_kernel_overlap_unroll(
     2*i - l = 2 * (i + (n - l - 1) / 2) - n + 1   if (n - l) odd
     the correspoding value is stored at st_buffer_bank1[i + (n - l) / 2]
 */
-__global__ void compute_next_layer_kernel_overlap_unroll(
-    double* layer_values_read, double* layer_values_write, double* st_buffer_bank0,
-    double* st_buffer_bank1, const double up, const double down, const int level, const int n) {
+__global__ void compute_next_layer_kernel_overlap_unroll(double* __restrict__ layer_values_read,
+                                                         double* __restrict__ layer_values_write,
+                                                         double* __restrict__ st_buffer_bank0,
+                                                         double* __restrict__ st_buffer_bank1,
+                                                         const double up, const double down,
+                                                         const int level, const int n) {
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
     if (threadId >= level + 1) return;
 
