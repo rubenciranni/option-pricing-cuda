@@ -7,6 +7,7 @@
 #include "constants.hpp"
 
 // TPB 128 UF 35 ~2.6ms on 10k
+// TPB 256 UF 32 ~660ms on 250k
 
 #define THREADS_PER_BLOCK 128
 #define UNROLL_FACTOR 35
