@@ -70,8 +70,8 @@ __global__ void compute_next_layer_kernel_overlap_unroll(
 
     /*
     At each layer l exercise value of node i (from the bottom) is calculated with the following
-    exponent: 2*i - l = 2 * (i + (n - l) / 2) - n           if (n - l) even the correspoding value
-    is stored at st_buffer_bank0[i + (n - l) / 2]
+    exponent: 2*i - l = 2 * (i + (n - l) / 2) - n           if (n - l) even
+    the correspoding value is stored at st_buffer_bank0[i + (n - l) / 2]
 
     2*i - l = 2 * (i + (n - l - 1) / 2) - n + 1   if (n - l) odd
     the correspoding value is stored at st_buffer_bank1[i + (n - l) / 2]
