@@ -50,18 +50,13 @@ double vanilla_american_binomial_cuda_fill_banked(const double S, const double K
 
     int num_blocks = std::ceil((2 * n + 2) * 1.0 / THREADS_PER_BLOCK);
     fill_st_buffer_kernel<<<num_blocks, THREADS_PER_BLOCK>>>(st_buffer_d, S, K, u, sign, n);
+
     // Layer n is the first n + 1 entries of st_buffer
+    cudaMemcpy(layer_values_read_d, st_buffer_d, (n + 1) * sizeof(double),
+               cudaMemcpyDeviceToDevice);
 
-    // Layer n - 1
-    int level = n - 1;
-    int st_buffer_offset = n + 1;
-    num_blocks = std::ceil((level + 1) * 1.0 / THREADS_PER_BLOCK);
-    compute_next_layer_kernel<<<num_blocks, THREADS_PER_BLOCK>>>(
-        st_buffer_d, layer_values_read_d, st_buffer_d + st_buffer_offset, up, down, level, n);
-    level--;
-
-    // Layers n - 2 to 0
-    for (; level >= 0; level--) {
+    // Layers n - 1 to 0
+    for (int level = n - 1; level >= 0; level--) {
         num_blocks = std::ceil((level + 1) * 1.0 / THREADS_PER_BLOCK);
         int st_buffer_offset = ((n - level) % 2) * (n + 1) + (n - level) / 2;
         compute_next_layer_kernel<<<num_blocks, THREADS_PER_BLOCK>>>(

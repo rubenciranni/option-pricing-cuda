@@ -9,9 +9,9 @@
 #include "backends/openmp/vanilla_american_binomial_openmp.hpp"
 #include "constants.hpp"
 
-typedef std::function<double(const double S, const double K, const double T, const double r,
-                             const double sigma, const double q, const int n,
-                             const OptionType type)>
-    PricingFunction;
+
+typedef double (*PricingFunction)(const double S, const double K, const double T, const double r,
+                                const double sigma, const double q, const int n,
+                                const OptionType type);
 
 extern std::map<std::string, PricingFunction> FUNCTION_REGISTRY;
