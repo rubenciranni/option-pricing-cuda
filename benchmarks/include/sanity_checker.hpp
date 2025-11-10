@@ -18,7 +18,7 @@ std::vector<PricingInput> SANITY_CHECK_PRICING_INPUTS = {
                  "Negative interest rate put"),
     PricingInput(100, 100, 1.0, 0.03, 0.2, 0.0, 100, OptionType::Put, "Zero dividend put"),
     PricingInput(100, 100, 1.0, 0.03, 0.2, 0.1, 100, OptionType::Put, "High dividend yield put"),
-    // PricingInput(100, 100, 1.0, 0.03, 0.2, 0.01, 1, OptionType::Put, "Very small time step put"),
+    PricingInput(100, 100, 1.0, 0.03, 0.2, 0.01, 1, OptionType::Put, "Very small time step put"),
     PricingInput(1000, 100, 1.0, 0.03, 0.3, 0.01, 100, OptionType::Put,
                  "Extreme spot vs strike put"),
     PricingInput(100, 100, 1.0, 0.0, 0.0, 0.0, 100, OptionType::Put, "Near zero vol and rate put"),
