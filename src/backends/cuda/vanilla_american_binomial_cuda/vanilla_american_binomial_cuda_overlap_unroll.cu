@@ -4,13 +4,12 @@
 #include <iostream>
 
 #include "backends/cuda/vanilla_american_binomial_cuda.cuh"
+#include "backends/hyperparams.hpp"
 #include "constants.hpp"
 
 // TPB 128 UF 35 ~2.6ms on 10k
 // TPB 256 UF 32 ~660ms on 250k
 
-#define THREADS_PER_BLOCK 128
-#define UNROLL_FACTOR 35
 
 __global__ void fill_st_buffers_kernel_overlap_unroll(double* __restrict__ st_buffer_bank0,
                                                       double* __restrict__ st_buffer_bank1,
@@ -29,6 +28,7 @@ __global__ void fill_st_buffers_kernel_overlap_unroll(double* __restrict__ st_bu
     st_buffer_bank1[threadId] = fmax(sign * fma(S, u_pow_2_threadId * u_pow_minus_n * u, -K), 0.0);
 }
 
+template <const int THREADS_PER_BLOCK, const int UNROLL_FACTOR>
 __global__ void compute_next_layers_kernel_overlap_unroll(double* __restrict__ layer_values_read,
                                                           double* __restrict__ layer_values_write,
                                                           double* __restrict__ st_buffer_bank0,
@@ -92,6 +92,7 @@ __global__ void compute_next_layer_kernel_overlap_unroll(double* __restrict__ la
     layer_values_write[threadId] = fmax(hold, exercise);
 }
 
+template <const Hyperparams& h>
 double vanilla_american_binomial_cuda_overlap_unroll(const double S, const double K, const double T,
                                                      const double r, const double sigma,
                                                      const double q, const int n,
@@ -104,6 +105,9 @@ double vanilla_american_binomial_cuda_overlap_unroll(const double S, const doubl
     const double up = p * discount;
     const double down = (1.0 - p) * discount;
     const int sign = option_type_sign(type);
+
+    constexpr int THREADS_PER_BLOCK = h.THREADS_PER_BLOCK;
+    constexpr int UNROLL_FACTOR = h.UNROLL_FACTOR;
 
     double *layer_values_read_d, *layer_values_write_d;
     cudaMalloc(&layer_values_read_d, (n + 1) * sizeof(double));
@@ -124,7 +128,7 @@ double vanilla_american_binomial_cuda_overlap_unroll(const double S, const doubl
     int level = n - 1 - (UNROLL_FACTOR - 1);
     for (; level >= 0; level -= UNROLL_FACTOR) {
         num_blocks = std::ceil((level + UNROLL_FACTOR) * 1.0 / (THREADS_PER_BLOCK - UNROLL_FACTOR));
-        compute_next_layers_kernel_overlap_unroll<<<num_blocks, THREADS_PER_BLOCK>>>(
+        compute_next_layers_kernel_overlap_unroll<THREADS_PER_BLOCK, UNROLL_FACTOR><<<num_blocks, THREADS_PER_BLOCK>>>(
             layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d, up,
             down, level, n);
         std::swap(layer_values_read_d, layer_values_write_d);
@@ -150,3 +154,17 @@ double vanilla_american_binomial_cuda_overlap_unroll(const double S, const doubl
 
     return value_h;
 }
+
+template double vanilla_american_binomial_cuda_overlap_unroll<DEFAULT_HYPERPARAMS_CUDA_OVERLAP_UNROLL>(
+    const double S, const double K, const double T, const double r, const double sigma,
+    const double q, const int n, const OptionType type);
+
+    
+#ifdef CARTESIAN_PRODUCT 
+#ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_OVERLAP_UNROLL
+    
+    #define PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_OVERLAP_UNROLL(ID, A, B, C, D, E, Y) template double vanilla_american_binomial_cuda_overlap_unroll<GRID_SEARCH_HYPERPARAMS_##ID>(const double S, const double K, const double T, const double r, const double sigma, const double q, const int n, const OptionType type);
+    APPLY_FUNCTION(PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_OVERLAP_UNROLL, HYPERPARAMS_CART_PRODUCT, NULL)
+
+#endif 
+#endif

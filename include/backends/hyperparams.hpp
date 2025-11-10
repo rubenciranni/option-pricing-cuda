@@ -20,3 +20,60 @@ inline constexpr Hyperparams DEFAULT_HYPERPARAMS_CUDA_UNROLL_TILE(128, 7, -1);
 inline constexpr Hyperparams DEFAULT_HYPERPARAMS_CUDA_UNROLL(256, 7, -1);
 inline constexpr Hyperparams DEFAULT_HYPERPARAMS_CUDA_XY_UNROLL(256, 16, 2);
 inline constexpr Hyperparams DEFAULT_HYPERPARAMS_CUDA_XY_UNROLL_NEW(512, 2, 2);
+inline constexpr Hyperparams DEFAULT_HYPERPARAMS_CUDA_OVERLAP_UNROLL_10000(128, 37, -1);
+
+// End General Hyperparameters section
+
+
+
+
+
+
+// Start Grid-Search section
+
+#define CARTESIAN_PRODUCT
+// #define DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_TILE
+// #define DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_UNROLL_TILE
+#define DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_OVERLAP_UNROLL
+// #define DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_UNROLL
+// #define DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_X_Y_UNROLL_NEW
+// #define DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_X_Y_UNROLL
+
+#ifdef CARTESIAN_PRODUCT
+    #define HYPERPARAMS_CART_PRODUCT(X, Y)   \
+        CART_PROD_1(X,Y)
+
+    #define CART_PROD_1(X,Y)             \
+        CART_PROD_2(A, 1024, X, Y)       \
+        CART_PROD_2(B, 512, X, Y)        \
+        CART_PROD_2(C, 256, X, Y)        \
+        CART_PROD_2(D, 128, X, Y)        \
+
+    #define CART_PROD_2(ID, A, X, Y)         \
+        CART_PROD_3(ID##0, A, 8, X, Y)       \
+        CART_PROD_3(ID##1, A, 9, X, Y)       \
+        CART_PROD_3(ID##2, A, 10, X, Y)      \
+        CART_PROD_3(ID##3, A, 11, X, Y)      \
+        CART_PROD_3(ID##4, A, 12, X, Y)      \
+
+    #define CART_PROD_3(ID, A, B, X, Y)      \
+        CART_PROD_4(ID/*##0*/, A, B, 0, X, Y) 
+        
+    #define CART_PROD_4(ID, A, B, C, X, Y)        \
+        CART_PROD_5(ID/*##0*/, A, B, C, 0, X, Y)  \
+
+    #define CART_PROD_5(ID, A, B, C, D, X, Y)     \
+        X(ID/*##0*/, A, B, C, D, 0, Y)            \
+
+
+    #define STR(x) #x
+    #define APPLY_FUNCTION(FUNC, PROD, FUNC_PARAM) PROD(FUNC, FUNC_PARAM)
+
+    #define PRODUCE_HYPERPARAMS_INSTANCES_3(ID, A, B, C, D, E, Y) inline constexpr Hyperparams GRID_SEARCH_HYPERPARAMS_##ID(A, B, C);
+    #define PRODUCE_HYPERPARAMS_INSTANCES_4(ID, A, B, C, D, E, Y) inline constexpr Hyperparams GRID_SEARCH_HYPERPARAMS_##ID(A, B, C, D);
+    #define PRODUCE_HYPERPARAMS_INSTANCES_5(ID, A, B, C, D, E, Y) inline constexpr Hyperparams GRID_SEARCH_HYPERPARAMS_##ID(A, B, C, D, E);
+    
+    #define PRODUCE_FUNCTIONS_FOR_REGISTRY(ID, A, B, C, D, E, Y) { STR(Y##_@H##ID##_##A##_##B##_##C##_##D##_##E), Y<GRID_SEARCH_HYPERPARAMS_##ID> },
+
+    APPLY_FUNCTION(PRODUCE_HYPERPARAMS_INSTANCES_3, HYPERPARAMS_CART_PRODUCT, NULL)
+#endif

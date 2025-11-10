@@ -8,6 +8,7 @@ enum class OptionType { Call, Put };
 enum class ExerciseType { European, American };
 enum class PricingMethod { Binomial };
 enum class Backend { CPU, OpenMP, CUDA };
+enum class OutputFormat { PPRINT, JSON };
 
 constexpr int option_type_sign(OptionType type) noexcept {
     return (type == OptionType::Call) ? 1 : -1;
@@ -90,6 +91,16 @@ inline PricingMethod pricing_method_from_string(std::string& method) {
         return PricingMethod::Binomial;
     else
         throw std::invalid_argument("Invalid PricingMethod: " + method);
+}
+
+inline OutputFormat output_format_from_string(std::string& type) {
+    lowercase_transform(type);
+    if (type == "pprint")
+        return OutputFormat::PPRINT;
+    else if (type == "json")
+        return OutputFormat::JSON;
+    else
+        throw std::invalid_argument("Invalid OutputFormat: " + type);
 }
 
 inline ExerciseType exercise_type_from_string(std::string& style) {

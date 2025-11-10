@@ -13,7 +13,7 @@ std::map<std::string, Run> BENCHMARK_PARAMETERS = {
     {"debug", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 8, 8, 8, OptionType::Put)},
     {"easy", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1000, 2000, 1000, OptionType::Put)},
     {"cuda_debug", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 10001, 10000, OptionType::Put)},
-    {"hard", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 20000, 10000, OptionType::Put)},
+    {"hard", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 300000, 10000, OptionType::Put)},
     {"super_hard", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 250000, 250000, 30000, OptionType::Put)},
 };
 
@@ -38,7 +38,28 @@ std::map<std::string, PricingFunction> FUNCTION_REGISTRY = {
     {"vanilla_american_binomial_cuda_x_y_unroll_new", vanilla_american_binomial_cuda_x_y_unroll_new<DEFAULT_HYPERPARAMS_CUDA_XY_UNROLL_NEW>},
     {"vanilla_american_binomial_cuda_x_y_unroll_tile_banked_ignore", vanilla_american_binomial_cuda_x_y_unroll_tile_banked_ignore},
     {"vanilla_american_binomial_cuda_mem", vanilla_american_binomial_cuda_mem},
-    {"vanilla_american_binomial_cuda_overlap_unroll", vanilla_american_binomial_cuda_overlap_unroll},
+    {"vanilla_american_binomial_cuda_overlap_unroll", vanilla_american_binomial_cuda_overlap_unroll<DEFAULT_HYPERPARAMS_CUDA_OVERLAP_UNROLL>},
+    
+    #ifdef CARTESIAN_PRODUCT
+        #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_TILE             
+            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_tile)             
+        #endif
+        #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_UNROLL_TILE      
+            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_unroll_tile)      
+        #endif
+        #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_UNROLL           
+            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_unroll)           
+        #endif
+        #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_X_Y_UNROLL_NEW   
+            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_x_y_unroll_new)   
+        #endif
+        #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_X_Y_UNROLL       
+            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_x_y_unroll)       
+        #endif
+        #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_OVERLAP_UNROLL
+            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_overlap_unroll)       
+        #endif
+    #endif            
 };
 // clang-format on
 
