@@ -155,7 +155,7 @@ double vanilla_american_binomial_cuda_overlap_unroll(const double S, const doubl
     return value_h;
 }
 
-template double vanilla_american_binomial_cuda_overlap_unroll<DEFAULT_HYPERPARAMS_CUDA_OVERLAP_UNROLL>(
+template double vanilla_american_binomial_cuda_overlap_unroll<DEFAULT_HYPERPARAMS_CUDA_OVERLAP_UNROLL_10000>(
     const double S, const double K, const double T, const double r, const double sigma,
     const double q, const int n, const OptionType type);
 

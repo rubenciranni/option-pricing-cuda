@@ -82,5 +82,5 @@ inline double vanilla_american_binomial_cuda(const double S, const double K, con
                                              const double r, const double sigma, const double q,
                                              const int n, const OptionType type) {
     // Choose the current best backend here:
-    return vanilla_american_binomial_cuda_overlap_unroll<DEFAULT_HYPERPARAMS_CUDA_OVERLAP_UNROLL>(S, K, T, r, sigma, q, n, type);
+    return vanilla_american_binomial_cuda_overlap_unroll<DEFAULT_HYPERPARAMS_CUDA_OVERLAP_UNROLL_10000>(S, K, T, r, sigma, q, n, type);
 }
