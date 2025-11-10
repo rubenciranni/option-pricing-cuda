@@ -1,5 +1,9 @@
 #pragma once
 
+// ==========================================
+// General Hyperparameters
+// ==========================================
+
 struct Hyperparams {
     const int THREADS_PER_BLOCK;
     const int UNROLL_FACTOR;
@@ -21,9 +25,9 @@ inline constexpr Hyperparams DEFAULT_HYPERPARAMS_CUDA_XY_UNROLL(256, 16, 2);
 inline constexpr Hyperparams DEFAULT_HYPERPARAMS_CUDA_XY_UNROLL_NEW(512, 2, 2);
 inline constexpr Hyperparams DEFAULT_HYPERPARAMS_CUDA_OVERLAP_UNROLL_10000(128, 37, -1);
 
-// End General Hyperparameters section
-
-// Start Grid-Search section
+// ==========================================
+// Grid Search
+// ==========================================
 
 // #define CARTESIAN_PRODUCT
 // #define DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_TILE
