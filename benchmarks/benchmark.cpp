@@ -4,6 +4,7 @@
 
 #include "backends/cpu/vanilla_american_binomial_cpu.hpp"
 #include "backends/cuda/vanilla_american_binomial_cuda.cuh"
+#include "backends/hyperparams.hpp"
 #include "benchmark_parameters.hpp"
 #include "function_registry.hpp"
 #include "sanity_checker.hpp"
@@ -26,12 +27,12 @@ std::map<std::string, PricingFunction> FUNCTION_REGISTRY = {
     {"vanilla_american_binomial_cuda_no_sync", vanilla_american_binomial_cuda_no_sync},
     {"vanilla_american_binomial_cuda_fill", vanilla_american_binomial_cuda_fill},
     {"vanilla_american_binomial_cuda_fill_banked", vanilla_american_binomial_cuda_fill_banked},
-    {"vanilla_american_binomial_cuda_tile", vanilla_american_binomial_cuda_tile},
-    {"vanilla_american_binomial_cuda_unroll", vanilla_american_binomial_cuda_unroll},
+    {"vanilla_american_binomial_cuda_tile", vanilla_american_binomial_cuda_tile<DEFAULT_HYPERPARAMS_CUDA_TILE>},
+    {"vanilla_american_binomial_cuda_unroll", vanilla_american_binomial_cuda_unroll<DEFAULT_HYPERPARAMS_CUDA_UNROLL>},
     {"vanilla_american_binomial_cuda_precomputed_stock_price", vanilla_american_binomial_cuda_precomputed_stock_price},
-    {"vanilla_american_binomial_cuda_x_y_unroll", vanilla_american_binomial_cuda_x_y_unroll},
-    {"vanilla_american_binomial_cuda_unroll_tile", vanilla_american_binomial_cuda_unroll_tile},
-    {"vanilla_american_binomial_cuda_x_y_unroll_new", vanilla_american_binomial_cuda_x_y_unroll_new},
+    {"vanilla_american_binomial_cuda_x_y_unroll", vanilla_american_binomial_cuda_x_y_unroll<DEFAULT_HYPERPARAMS_CUDA_XY_UNROLL>},
+    {"vanilla_american_binomial_cuda_unroll_tile", vanilla_american_binomial_cuda_unroll_tile<DEFAULT_HYPERPARAMS_CUDA_UNROLL_TILE>},
+    {"vanilla_american_binomial_cuda_x_y_unroll_new", vanilla_american_binomial_cuda_x_y_unroll_new<DEFAULT_HYPERPARAMS_CUDA_XY_UNROLL_NEW>},
     {"vanilla_american_binomial_cuda_x_y_unroll_tile", vanilla_american_binomial_cuda_x_y_unroll_tile},
     {"vanilla_american_binomial_cuda_mem", vanilla_american_binomial_cuda_mem},
     {"vanilla_american_binomial_cuda_overlap_unroll", vanilla_american_binomial_cuda_overlap_unroll},
