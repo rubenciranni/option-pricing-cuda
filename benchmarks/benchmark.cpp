@@ -12,8 +12,10 @@
 std::map<std::string, Run> BENCHMARK_PARAMETERS = {
     {"debug", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 8, 8, 8, OptionType::Put)},
     {"easy", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1000, 2000, 1000, OptionType::Put)},
+    {"reasy", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1000, 1001, 1000, 5, OptionType::Put)},
     {"cuda_debug", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 10001, 10000, OptionType::Put)},
-    {"hard", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 100000, 10000, OptionType::Put)},
+    {"hard", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 20000, 10000, OptionType::Put)},
+    {"rhard", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 260000, 50000, 10, OptionType::Put)},
     {"super_hard", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 250000, 250000, 30000, OptionType::Put)},
 };
 
@@ -90,15 +92,18 @@ std::vector<BenchmarkResult> benchmark(const std::string& filter_function_name,
             // Measure execution time
             bool sanity_check =
                 skip_sanity_checks || sanity_checker.run_single_all_sanity_checks(name, func);
+            
             BenchmarkResult result(data, benchmark_parameters, {}, name, sanity_check);
             for (int n = data.nstart; n <= data.nend; n += data.nstep) {
-                auto start = std::chrono::high_resolution_clock::now();
-                double price =
-                    func(data.S, data.K, data.T, data.r, data.sigma, data.q, n, data.type);
-                auto end = std::chrono::high_resolution_clock::now();
-                std::chrono::duration<double, std::milli> duration = end - start;
-                result.execution_times[n] = duration.count();
-                result.prices[n] = price;
+                for (int _ = 0; _ < data.nrepetition_at_step; _++) {
+                    auto start = std::chrono::high_resolution_clock::now();
+                    double price = func(data.S, data.K, data.T, data.r, data.sigma, data.q, n, data.type);
+                    auto end = std::chrono::high_resolution_clock::now();
+                    std::chrono::duration<double, std::milli> duration = end - start;
+                    
+                    result.execution_times[n].push_back(duration.count());
+                    result.prices[n].push_back(price);
+                }
             }
             results.push_back(result);
         }

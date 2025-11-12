@@ -3,20 +3,47 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <sstream>
 
 #include "benchmark_parameters.hpp"
+
+inline std::string to_string(const std::vector<double>& v) {
+    std::ostringstream oss;
+    oss << "[";
+    for (size_t i = 0; i < v.size(); ++i) {
+        oss << v[i];
+        if (i + 1 != v.size())
+            oss << ", ";
+    }
+    oss << "]";
+    return oss.str();
+}
+
+
+inline std::ostream& operator<< (std::ostream& out, const std::vector<double>& v) {
+    if (v.size() == 1) {
+        out << v[0];
+    }
+    else if ( !v.empty() ) {
+        out << '[';
+        for (double i: v)
+            out << i << ", ";
+        out << "\b\b]"; // use two ANSI backspace characters '\b' to overwrite final ", "
+    }
+    return out;
+}
 
 class BenchmarkResult {
    public:
     Run run;
     std::string benchmark_parameters_name;
-    std::map<int, double> execution_times;
-    std::map<int, double> prices;
+    std::map<int, std::vector<double>> execution_times;
+    std::map<int, std::vector<double>> prices;
     std::string function_name;
     bool pass_sanity_check;
 
     BenchmarkResult(Run run, const std::string& benchmark_parameters_name,
-                    const std::map<int, double>& execution_times, const std::string& function_name)
+                    const std::map<int, std::vector<double>>& execution_times, const std::string& function_name)
         : run(run),
           benchmark_parameters_name(benchmark_parameters_name),
           execution_times(execution_times),
@@ -24,7 +51,7 @@ class BenchmarkResult {
           pass_sanity_check(true) {}
 
     BenchmarkResult(Run run, const std::string& benchmark_parameters_name,
-                    const std::map<int, double>& execution_times, const std::string& function_name,
+                    const std::map<int, std::vector<double>>& execution_times, const std::string& function_name,
                     bool pass_sanity_check)
         : run(run),
           benchmark_parameters_name(benchmark_parameters_name),
@@ -41,7 +68,7 @@ inline std::string to_string(const BenchmarkResult& result) {
     output += "Sanity check" + std::string(result.pass_sanity_check ? "passed" : "failed") + "\n";
     output += "Execution times (ms):\n";
     for (const auto& [n, time] : result.execution_times) {
-        output += "  n=" + std::to_string(n) + ": " + std::to_string(time) + " ms\n";
+        output += "  n=" + std::to_string(n) + ": " + to_string(time) + " ms\n";
     }
     return output;
 }

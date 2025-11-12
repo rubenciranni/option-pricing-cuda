@@ -6,11 +6,27 @@
 #include <rang.hpp>
 #include <string>
 #include <unordered_map>
+#include <cmath>
 
 #include "benchmark_parameters.hpp"
 #include "constants.hpp"
 #include "models/vanilla_american_binomial.hpp"
 #include "models/vanilla_european_binomial.hpp"
+
+
+std::pair<double, double> mean_and_std(const std::vector<double>& v) {
+    double mean = 0., std=0.;
+    for (size_t i = 0; i<v.size(); i++)
+        mean += v[i];
+    mean /= v.size();
+
+    for (size_t i = 0; i<v.size(); i++)
+        std += (v[i] - mean)*(v[i] - mean);
+    std /= (v.size() - 1);
+    
+    std = std::sqrt(std);
+    return {mean, std};
+}
 
 template <typename T>
 std::string to_string_with_precision(const T a_value, const int n = 6)
@@ -180,14 +196,19 @@ int main(int argc, char** argv) {
                 std::cout << std::left << std::setw(12) << "n" << std::right << std::setw(15)
                         << "Time (ms)" << std::right << std::setw(20) << "Output"
                         << "\n";
-                std::cout << std::string(50, '-') << "\n";
+                std::cout << std::string(70, '-') << "\n";
 
                 // Table body
                 for (const auto& [n_steps, time] : res.execution_times) {
-                    double price = res.prices.at(n_steps);
-                    std::cout << std::left << std::setw(12) << n_steps << std::right << std::setw(15)
-                            << std::fixed << std::setprecision(3) << time << std::right
-                            << std::setw(20) << std::fixed << std::setprecision(6) << price << "\n";
+                    std::vector<double> price = res.prices.at(n_steps);
+                    double mean_price, std_price, mean_time, std_time;
+                    
+                    std::tie(mean_time, std_time) = mean_and_std(time);
+                    std::tie(mean_price, std_price) = mean_and_std(price);
+
+                    std::cout << std::left << std::setw(8) << n_steps << std::right << std::setw(15)
+                            << std::fixed << std::setprecision(3) << mean_time << "±" << std::setprecision(5) << std_time <<  std::right
+                            << std::setw(18) << std::fixed << std::setprecision(6) << mean_price << "±" << 3*std_price << "\n";
                 }
 
                 std::cout << std::string(80, '=') << "\n\n";
@@ -251,7 +272,7 @@ int main(int argc, char** argv) {
                 
                 std::string json_nsteps_string = "", json_time_string = "", json_price_string = "";
                 for (const auto& [n_steps, time] : res.execution_times) {
-                    double price = res.prices.at(n_steps);
+                    std::vector<double> price = res.prices.at(n_steps);
                     json_nsteps_string += (", " + std::to_string(n_steps));
                     json_time_string += (", " + to_string_with_precision(time, 3));
                     json_price_string += (", " + to_string_with_precision(price, 6));

@@ -138,10 +138,14 @@ inline constexpr Hyperparams GRID_SEARCH_HYPERPARAMS_11(128, 61, 4);
 
 ### Json Output
 
-One additional functionality that this project has is the possibility of doing a grid-search at compile time of the 
+The `pricing_cli.cpp` application can output results in json for simpler analysis. Just do:
 
-`include/backends/hyperparams.hpp`. 
-The following macro will define a grid search of possible Hyperparams instances based on the hyperparameters you have added in the CART_PROD_i macros. Each instance will be called GRID_SEARCH_HYPERPARAMS_ID, with ID,  
+```bash
+srun -A dphpc  bin/pricing_cli benchmark [...] --output-format=json
+```
+
+
+
 
 ## CLI Tool Usage
 ### Price an option

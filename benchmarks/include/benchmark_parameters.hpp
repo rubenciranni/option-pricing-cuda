@@ -40,6 +40,7 @@ class Run {
     int nstart;
     int nend;
     int nstep;
+    int nrepetition_at_step;
     OptionType type;
 
     Run()
@@ -52,6 +53,7 @@ class Run {
           nstart(0),
           nend(0),
           nstep(0),
+          nrepetition_at_step(1),
           type(OptionType::Call) {}
 
     Run(double S, double K, double T, double r, double sigma, double q, int nstart, int nend,
@@ -65,6 +67,21 @@ class Run {
           nstart(nstart),
           nend(nend),
           nstep(nstep),
+          nrepetition_at_step(1),
+          type(type) {}
+        
+    Run(double S, double K, double T, double r, double sigma, double q, int nstart, int nend,
+        int nstep, int nrepetition_at_step, OptionType type)
+        : S(S),
+          K(K),
+          T(T),
+          r(r),
+          sigma(sigma),
+          q(q),
+          nstart(nstart),
+          nend(nend),
+          nstep(nstep),
+          nrepetition_at_step(nrepetition_at_step),
           type(type) {}
 };
 
@@ -73,7 +90,8 @@ inline std::string to_string(Run run) {
            ", T=" + std::to_string(run.T) + ", r=" + std::to_string(run.r) +
            ", sigma=" + std::to_string(run.sigma) + ", q=" + std::to_string(run.q) +
            ", nstart=" + std::to_string(run.nstart) + ", nend=" + std::to_string(run.nend) +
-           ", nstep=" + std::to_string(run.nstep) + ", type=" + to_string(run.type);
+           ", nstep=" + std::to_string(run.nstep) + ", nrepetition_at_step=" + std::to_string(run.nrepetition_at_step) +
+           ", type=" + to_string(run.type);
 }
 
 extern std::map<std::string, Run> BENCHMARK_PARAMETERS;
