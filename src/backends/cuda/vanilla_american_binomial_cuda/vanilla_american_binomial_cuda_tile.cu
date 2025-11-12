@@ -105,7 +105,7 @@ template double vanilla_american_binomial_cuda_tile<DEFAULT_HYPERPARAMS_CUDA_TIL
     const double q, const int n, const OptionType type);
 
     
-#ifdef CARTESIAN_PRODUCT 
+#ifdef DO_CARTESIAN_PRODUCT 
 #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_TILE
     
     #define PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_TILE(ID, A, B, C, D, E, Y) template double vanilla_american_binomial_cuda_tile<GRID_SEARCH_HYPERPARAMS_##ID>(const double S, const double K, const double T, const double r, const double sigma, const double q, const int n, const OptionType type);

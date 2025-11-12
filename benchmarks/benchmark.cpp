@@ -40,7 +40,7 @@ std::map<std::string, PricingFunction> FUNCTION_REGISTRY = {
     {"vanilla_american_binomial_cuda_mem", vanilla_american_binomial_cuda_mem},
     {"vanilla_american_binomial_cuda_overlap_unroll", vanilla_american_binomial_cuda_overlap_unroll<DEFAULT_HYPERPARAMS_CUDA_OVERLAP_UNROLL_10000>},
     
-    #ifdef CARTESIAN_PRODUCT
+    #ifdef DO_CARTESIAN_PRODUCT
         #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_TILE             
             APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_tile)             
         #endif

@@ -132,7 +132,7 @@ template double vanilla_american_binomial_cuda_x_y_unroll<DEFAULT_HYPERPARAMS_CU
     const double q, const int n, const OptionType type);
 
 
-#ifdef CARTESIAN_PRODUCT 
+#ifdef DO_CARTESIAN_PRODUCT 
 #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_X_Y_UNROLL
     
     #define PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_X_Y_UNROLL(ID, A, B, C, D, E, Y) template double vanilla_american_binomial_cuda_x_y_unroll<GRID_SEARCH_HYPERPARAMS_##ID>(const double S, const double K, const double T, const double r, const double sigma, const double q, const int n, const OptionType type);
