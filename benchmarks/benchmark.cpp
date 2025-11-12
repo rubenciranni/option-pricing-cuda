@@ -22,10 +22,10 @@ std::map<std::string, Run> BENCHMARK_PARAMETERS = {
 // clang-format off
 std::map<std::string, PricingFunction> FUNCTION_REGISTRY = {
     {"vanilla_american_binomial_cpu_naive", vanilla_american_binomial_cpu_naive},
-    {"vanilla_american_binomial_cpu_remove_zeros", vanilla_american_binomial_cpu_remove_zeros},
-    {"vanilla_american_binomial_cpu_remove_zeros_cache", vanilla_american_binomial_cpu_remove_zeros_cache},
-    {"vanilla_american_binomial_cpu_remove_zeros_red_cache", vanilla_american_binomial_cpu_remove_zeros_red_cache},
-    {"vanilla_american_binomial_cpu_remove_zeros_follow_red_cache", vanilla_american_binomial_cpu_remove_zeros_follow_red_cache},
+    {"vanilla_american_binomial_cpu_trimotm", vanilla_american_binomial_cpu_trimotm},
+    {"vanilla_american_binomial_cpu_trimotm_stprecomp", vanilla_american_binomial_cpu_trimotm_stprecomp},
+    {"vanilla_american_binomial_cpu_trimotm_trimeeoff_stprecomp", vanilla_american_binomial_cpu_trimotm_trimeeoff_stprecomp},
+    {"vanilla_american_binomial_cpu_trimotm_trimeeon_stprecomp", vanilla_american_binomial_cpu_trimotm_trimeeon_stprecomp},
     {"vanilla_american_binomial_openmp_naive", vanilla_american_binomial_openmp_naive},
     {"vanilla_american_binomial_cuda_naive", vanilla_american_binomial_cuda_naive},
     {"vanilla_american_binomial_cuda_no_sync", vanilla_american_binomial_cuda_no_sync},
@@ -41,27 +41,28 @@ std::map<std::string, PricingFunction> FUNCTION_REGISTRY = {
     {"vanilla_american_binomial_cuda_x_y_unroll_tile_banked_ignore", vanilla_american_binomial_cuda_x_y_unroll_tile_banked_ignore},
     {"vanilla_american_binomial_cuda_mem", vanilla_american_binomial_cuda_mem},
     {"vanilla_american_binomial_cuda_overlap_unroll", vanilla_american_binomial_cuda_overlap_unroll<DEFAULT_HYPERPARAMS_CUDA_OVERLAP_UNROLL_10000>},
-    
+    {"vanilla_american_binomial_cuda_overlap_unroll_trimotm", vanilla_american_binomial_cuda_overlap_unroll_trimotm},
+
     #ifdef DO_CARTESIAN_PRODUCT
-        #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_TILE             
-            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_tile)             
+        #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_TILE
+            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_tile)
         #endif
-        #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_UNROLL_TILE      
-            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_unroll_tile)      
+        #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_UNROLL_TILE
+            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_unroll_tile)
         #endif
-        #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_UNROLL           
-            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_unroll)           
+        #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_UNROLL
+            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_unroll)
         #endif
-        #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_X_Y_UNROLL_NEW   
-            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_x_y_unroll_new)   
+        #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_X_Y_UNROLL_NEW
+            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_x_y_unroll_new)
         #endif
-        #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_X_Y_UNROLL       
-            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_x_y_unroll)       
+        #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_X_Y_UNROLL
+            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_x_y_unroll)
         #endif
         #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_OVERLAP_UNROLL
-            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_overlap_unroll)       
+            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_overlap_unroll)
         #endif
-    #endif            
+    #endif
 };
 // clang-format on
 

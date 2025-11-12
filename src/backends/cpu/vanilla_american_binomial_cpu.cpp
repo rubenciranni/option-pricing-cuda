@@ -1,19 +1,7 @@
 #include "backends/cpu/vanilla_american_binomial_cpu.hpp"
 
-#include <omp.h>
-
 #include <algorithm>
-#include <cassert>
 #include <cmath>
-#include <iostream>
-#include <vector>
-
-#include <omp.h>
-
-#include <algorithm>
-#include <cassert>
-#include <cmath>
-#include <iostream>
 #include <vector>
 
 double vanilla_american_binomial_cpu_naive(const double S, const double K, const double T,
@@ -44,12 +32,12 @@ double vanilla_american_binomial_cpu_naive(const double S, const double K, const
     return p[0];
 }
 
-int bin_search_zeros(int n, double S, double K, double u) {
+int bin_search_zeros(const int n, const double S, const double K, const double u, const int sign) {
     int lower = 0;
     int upper = n;
     while (lower < upper - 1) {
         int mid = (upper + lower) / 2;
-        double S_i_n = -1 * (S * std::pow(u, mid * 2 - n) - K);
+        double S_i_n = sign * (S * std::pow(u, mid * 2 - n) - K);
         if (S_i_n < 0) {
             upper = mid;
         } else {
@@ -59,14 +47,15 @@ int bin_search_zeros(int n, double S, double K, double u) {
     return lower;
 }
 
-int bin_search_red(int n, double S, double K, double u, double up, double down) {
+int bin_search_red(const int n, const double S, const double K, const double u, const double up,
+                   const double down, const int sign) {
     int lower = 0;
     int upper = n - 1;
     while (lower < upper - 1) {
         int mid = (upper + lower) / 2;
-        double S_i_n = -1 * (S * std::pow(u, mid * 2 - n) - K);
-        double S_i1_n = -1 * (S * std::pow(u, (mid + 1) * 2 - n) - K);
-        double S_i_n_2 = -1 * (S * std::pow(u, mid * 2 - (n - 1)) - K);
+        double S_i_n = sign * (S * std::pow(u, mid * 2 - n) - K);
+        double S_i1_n = sign * (S * std::pow(u, (mid + 1) * 2 - n) - K);
+        double S_i_n_2 = sign * (S * std::pow(u, mid * 2 - (n - 1)) - K);
         if (S_i1_n < 0 || S_i_n_2 < 0 || S_i_n < 0) {
             upper = mid;
         } else if (up * S_i1_n + down * S_i_n < S_i_n_2) {
@@ -78,10 +67,13 @@ int bin_search_red(int n, double S, double K, double u, double up, double down) 
     return lower;
 }
 
-double vanilla_american_binomial_cpu_remove_zeros(const double S, const double K, const double T,
-                                                  const double r, const double sigma,
-                                                  const double q, const int n,
-                                                  const OptionType type) {
+double vanilla_american_binomial_cpu_trimotm(const double S, const double K, const double T,
+                                             const double r, const double sigma, const double q,
+                                             const int n, const OptionType type) {
+    if (type == OptionType::Call) {
+        return vanilla_american_binomial_cpu_naive(S, K, T, r, sigma, q, n, type);
+    }
+
     const double deltaT = T / n;
     const double up = std::exp(sigma * std::sqrt(deltaT));
 
@@ -89,13 +81,9 @@ double vanilla_american_binomial_cpu_remove_zeros(const double S, const double K
     const double p0 = (up * std::exp(-q * deltaT) - disc) / (up * up - 1.0);
     const double p1 = disc - p0;
 
-    int last_non_zero = bin_search_zeros(n, S, K, up);
-
     int sign = option_type_sign(type);
-    if (sign > 0) {
-        // TODO: implement the other direction (call)
-        return 0.0;
-    }
+    int last_non_zero = bin_search_zeros(n, S, K, up, sign);
+
     std::vector<double> p(last_non_zero * 2 + 1);
     for (int i = 0; i <= std::min(last_non_zero, n); ++i) {
         double ST = S * std::pow(up, 2.0 * i - n);
@@ -114,10 +102,14 @@ double vanilla_american_binomial_cpu_remove_zeros(const double S, const double K
     return p[0];
 }
 
-double vanilla_american_binomial_cpu_remove_zeros_cache(const double S, const double K,
-                                                        const double T, const double r,
-                                                        const double sigma, const double q,
-                                                        const int n, const OptionType type) {
+double vanilla_american_binomial_cpu_trimotm_stprecomp(const double S, const double K,
+                                                       const double T, const double r,
+                                                       const double sigma, const double q,
+                                                       const int n, const OptionType type) {
+    if (type == OptionType::Call) {
+        return vanilla_american_binomial_cpu_naive(S, K, T, r, sigma, q, n, type);
+    }
+
     const double deltaT = T / n;
     const double u = std::exp(sigma * std::sqrt(deltaT));
     const double d = 1.0 / u;
@@ -130,15 +122,11 @@ double vanilla_american_binomial_cpu_remove_zeros_cache(const double S, const do
 
     int sign = option_type_sign(type);
 
-    if (sign != -1) {
-        // TODO: implement the other direction (call)
-        return 0.0;
-    }
-    int last_non_zero = bin_search_zeros(n, S, K, u);
+    int last_non_zero = bin_search_zeros(n, S, K, u, sign);
     std::vector<double> p_store(n * 2, 0);
     std::vector<double> s_store(n * 2, 0);
     for (int i = 0; i <= last_non_zero * 2; ++i) {
-        s_store[i] = -1 * (S * std::pow(u, i - n) - K);
+        s_store[i] = sign * (S * std::pow(u, i - n) - K);
     }
     auto get_index = [n](int i, int j) { return (2 * i - j) + n; };
 
@@ -156,10 +144,14 @@ double vanilla_american_binomial_cpu_remove_zeros_cache(const double S, const do
     return p_store[0];
 }
 
-double vanilla_american_binomial_cpu_remove_zeros_red_cache(const double S, const double K,
-                                                            const double T, const double r,
-                                                            const double sigma, const double q,
-                                                            const int n, const OptionType type) {
+double vanilla_american_binomial_cpu_trimotm_trimeeoff_stprecomp(const double S, const double K,
+                                                                 const double T, const double r,
+                                                                 const double sigma, const double q,
+                                                                 const int n,
+                                                                 const OptionType type) {
+    if (type == OptionType::Call || n == 1) {
+        return vanilla_american_binomial_cpu_naive(S, K, T, r, sigma, q, n, type);
+    }
     const double deltaT = T / n;
     const double u = std::exp(sigma * std::sqrt(deltaT));
     const double d = 1.0 / u;
@@ -172,17 +164,13 @@ double vanilla_american_binomial_cpu_remove_zeros_red_cache(const double S, cons
 
     int sign = option_type_sign(type);
 
-    if (sign != -1) {
-        // TODO: implement the other direction (call)
-        return 0.0;
-    }
-    int last_non_zero = bin_search_zeros(n, S, K, u);
-    int red_last_index = std::max(bin_search_red(n, S, K, u, up, down), 0);
+    int last_non_zero = bin_search_zeros(n, S, K, u, sign);
+    int red_last_index = std::max(bin_search_red(n, S, K, u, up, down, sign), 0);
 
     std::vector<double> p_store(n * 2, 0);
     std::vector<double> s_store(n * 2, 0);
     for (int i = 0; i <= last_non_zero * 2; ++i) {
-        s_store[i] = -1 * (S * std::pow(u, i - n) - K);
+        s_store[i] = sign * (S * std::pow(u, i - n) - K);
     }
     auto get_index = [n](int i, int j) { return (2 * i - j) + n; };
 
@@ -201,16 +189,17 @@ double vanilla_american_binomial_cpu_remove_zeros_red_cache(const double S, cons
             red_last_index--;
         }
     }
-
-    // return std::max(p_store[0],s_store[get_index(0,0)]);
     return p_store[0];
 }
 
-double vanilla_american_binomial_cpu_remove_zeros_follow_red_cache(const double S, const double K,
-                                                                   const double T, const double r,
-                                                                   const double sigma,
-                                                                   const double q, const int n,
-                                                                   const OptionType type) {
+double vanilla_american_binomial_cpu_trimotm_trimeeon_stprecomp(const double S, const double K,
+                                                                const double T, const double r,
+                                                                const double sigma, const double q,
+                                                                const int n,
+                                                                const OptionType type) {
+    if (type == OptionType::Call || n == 1) {
+        return vanilla_american_binomial_cpu_naive(S, K, T, r, sigma, q, n, type);
+    }
     const double deltaT = T / n;
     const double u = std::exp(sigma * std::sqrt(deltaT));
     const double d = 1.0 / u;
@@ -223,17 +212,13 @@ double vanilla_american_binomial_cpu_remove_zeros_follow_red_cache(const double 
 
     int sign = option_type_sign(type);
 
-    if (sign != -1) {
-        // TODO: implement the other direction (call)
-        return 0.0;
-    }
-    int last_non_zero = bin_search_zeros(n, S, K, u);
-    int red_last_index = std::max(bin_search_red(n, S, K, u, up, down), 0);
+    int last_non_zero = bin_search_zeros(n, S, K, u, sign);
+    int red_last_index = std::max(bin_search_red(n, S, K, u, up, down, sign), 0);
 
     std::vector<double> p_store(n * 2, 0);
     std::vector<double> s_store(n * 2, 0);
     for (int i = 0; i <= last_non_zero * 2; ++i) {
-        s_store[i] = -1 * (S * std::pow(u, i - n) - K);
+        s_store[i] = sign * (S * std::pow(u, i - n) - K);
     }
     auto get_index = [n](int i, int j) { return (2 * i - j) + n; };
 

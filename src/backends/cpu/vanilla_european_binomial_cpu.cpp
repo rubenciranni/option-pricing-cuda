@@ -1,7 +1,6 @@
 #include "backends/cpu/vanilla_european_binomial_cpu.hpp"
 
 #include <cmath>
-#include <iostream>
 #include <vector>
 
 double vanilla_european_binomial_cpu_naive(const double S, const double K, const double T,
