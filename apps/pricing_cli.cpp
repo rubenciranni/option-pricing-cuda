@@ -201,14 +201,23 @@ int main(int argc, char** argv) {
                 // Table body
                 for (const auto& [n_steps, time] : res.execution_times) {
                     std::vector<double> price = res.prices.at(n_steps);
-                    double mean_price, std_price, mean_time, std_time;
                     
-                    std::tie(mean_time, std_time) = mean_and_std(time);
-                    std::tie(mean_price, std_price) = mean_and_std(price);
+                    if (time.size() > 1) {
+                        double mean_price=0., mean_time=0., std_price=0., std_time=0.;
+                        std::tie(mean_time, std_time) = mean_and_std(time);
+                        std::tie(mean_price, std_price) = mean_and_std(price);
 
-                    std::cout << std::left << std::setw(8) << n_steps << std::right << std::setw(15)
+                        std::cout << std::left << std::setw(8) << n_steps << std::right << std::setw(15)
                             << std::fixed << std::setprecision(3) << mean_time << "±" << std::setprecision(5) << std_time <<  std::right
                             << std::setw(18) << std::fixed << std::setprecision(6) << mean_price << "±" << 3*std_price << "\n";
+                    }
+                    if (time.size() == 1) {
+                        double mean_time = time[0], mean_price = price[0];
+
+                        std::cout << std::left << std::setw(12) << n_steps << std::right << std::setw(15)
+                            << std::fixed << std::setprecision(3) << mean_time << std::right
+                            << std::setw(20) << std::fixed << std::setprecision(6) << mean_price << "\n";
+                    }
                 }
 
                 std::cout << std::string(80, '=') << "\n\n";
@@ -218,11 +227,13 @@ int main(int argc, char** argv) {
             list_benchmark_parameters();
         }       
         if (output_format == OutputFormat::JSON) {
-
-            auto results = benchmark(filter_name, benchmark_parameters, reference_function_name, skip_sanity_checks);
-
+            
             int json_depth = 1;
-            std::string json_output = "[\n";
+            std::string json_output = "{\n";
+            json_output += std::string(json_depth, '\t') + "\"Errors\": [\n"; json_depth++;
+            
+            auto results = benchmark(filter_name, benchmark_parameters, reference_function_name, skip_sanity_checks);
+            
             bool first = true;
             for (const auto& res : results) {
                 if (first == true) first = false;
