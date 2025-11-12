@@ -3,13 +3,13 @@
 #include "backends/hyperparams.hpp"
 #include "constants.hpp"
 
+#define CONCAT_IMPL(a, b) a##_##b
+#define EXPAND_AND_CONCAT(a, b) CONCAT_IMPL(a, b)
+#define FUNC_NAME(func) EXPAND_AND_CONCAT(func, IMPL_NAME)
+
 double vanilla_american_binomial_cuda_naive(const double S, const double K, const double T,
                                             const double r, const double sigma, const double q,
                                             const int n, const OptionType type);
-
-double vanilla_american_binomial_cuda_no_sync(const double S, const double K, const double T,
-                                              const double r, const double sigma, const double q,
-                                              const int n, const OptionType type);
 
 double vanilla_american_binomial_cuda_fill(const double S, const double K, const double T,
                                            const double r, const double sigma, const double q,

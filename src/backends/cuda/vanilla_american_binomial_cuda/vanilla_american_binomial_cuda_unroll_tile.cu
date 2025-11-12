@@ -8,28 +8,29 @@
 #include "backends/hyperparams.hpp"
 #include "constants.hpp"
 
+#define IMPL_NAME unroll_tile
+
 #define INDEX_BUFFER(idx, buffer_size) idx
 
-__global__ void fill_pricing_unroll_tile(double* __restrict__ buffer, const double S,
-                                         const double K, const double u, const int sign,
-                                         const int n) {
+__global__ void FUNC_NAME(fill_st_buffer_kernel)(double* __restrict__ buffer, const double S,
+                                                 const double K, const double u, const int sign,
+                                                 const int n) {
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
     if (threadId > 2 * n) return;
     buffer[INDEX_BUFFER(threadId, n)] = fmax(sign * (S * pow(u, threadId - n) - K), 0.0);
 }
 
-__global__ void first_layer_kernel_unroll_tile(double* d_option_values,
-                                               double* __restrict__ st_buffer, const int n) {
+__global__ void FUNC_NAME(compute_first_layer_kernel)(double* d_option_values,
+                                                      double* __restrict__ st_buffer, const int n) {
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
     if (threadId > n) return;
     d_option_values[threadId] = st_buffer[INDEX_BUFFER(2 * threadId, n)];
 }
 
 template <const int THREADS_PER_BLOCK, const int UNROLL_FACTOR>
-__device__ __forceinline__ double calc_idx_tile(const double* past_values, const double* st_buffer,
-                                                const double prob_up, const double prob_down,
-                                                const int idx_tile, const int idx, const int level,
-                                                const int n) {
+__device__ __forceinline__ double FUNC_NAME(compute_index)(
+    const double* past_values, const double* st_buffer, const double prob_up,
+    const double prob_down, const int idx_tile, const int idx, const int level, const int n) {
     double res[UNROLL_FACTOR + 1];
 #pragma unroll
     for (int i = 0; i <= UNROLL_FACTOR; i++) {
@@ -49,10 +50,11 @@ __device__ __forceinline__ double calc_idx_tile(const double* past_values, const
 }
 
 template <const int THREADS_PER_BLOCK, const int UNROLL_FACTOR>
-__global__ void vanilla_american_binomial_cuda_kernel_unroll_tile(
-    const double* d_option_values, double* d_option_values_next,
-    const double* __restrict__ st_buffer, const double prob_up, const double prob_down,
-    const int level, const int n) {
+__global__ void FUNC_NAME(compute_next_layers_kernel)(const double* d_option_values,
+                                                      double* d_option_values_next,
+                                                      const double* __restrict__ st_buffer,
+                                                      const double prob_up, const double prob_down,
+                                                      const int level, const int n) {
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
 
     __shared__ double tile[UNROLL_FACTOR + THREADS_PER_BLOCK];
@@ -76,14 +78,16 @@ __global__ void vanilla_american_binomial_cuda_kernel_unroll_tile(
 
     if (threadId > level) return;
 
-    double res = calc_idx_tile<THREADS_PER_BLOCK, UNROLL_FACTOR>(
+    double res = FUNC_NAME(compute_index)<THREADS_PER_BLOCK, UNROLL_FACTOR>(
         tile, pow_tile, prob_up, prob_down, threadIdx.x, threadIdx.x, level, n);
     d_option_values_next[threadId] = res;
 }
 
-__global__ void single_vanilla_american_binomial_cuda_kernel_tile(
-    double* d_option_values, double* d_option_values_next, double* st_buffer, const double prob_up,
-    const double prob_down, const int level, const int n) {
+__global__ void FUNC_NAME(compute_next_layer_kernel)(double* d_option_values,
+                                                     double* d_option_values_next,
+                                                     double* st_buffer, const double prob_up,
+                                                     const double prob_down, const int level,
+                                                     const int n) {
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (threadId > level) return;
@@ -93,10 +97,9 @@ __global__ void single_vanilla_american_binomial_cuda_kernel_tile(
 }
 
 template <const Hyperparams& h>
-double vanilla_american_binomial_cuda_unroll_tile(const double S, const double K, const double T,
-                                                  const double r, const double sigma,
-                                                  const double q, const int n,
-                                                  const OptionType type) {
+double FUNC_NAME(vanilla_american_binomial_cuda)(const double S, const double K, const double T,
+                                                 const double r, const double sigma, const double q,
+                                                 const int n, const OptionType type) {
     const double deltaT = T / n;
     const double u = std::exp(sigma * std::sqrt(deltaT));
     const double d = 1.0 / u;
@@ -119,13 +122,14 @@ double vanilla_american_binomial_cuda_unroll_tile(const double S, const double K
     cudaMalloc(&st_buffer, (2 * n + 1) * sizeof(double));
 
     int fill_num_blocks = std::ceil((2 * n + 1) * 1.0 / 1024);
-    fill_pricing_unroll_tile<<<fill_num_blocks, 1024>>>(st_buffer, S, K, u, sign, n);
+    FUNC_NAME(fill_st_buffer_kernel)<<<fill_num_blocks, 1024>>>(st_buffer, S, K, u, sign, n);
 
-    first_layer_kernel_unroll_tile<<<num_blocks, thread_per_block>>>(d_option_values, st_buffer, n);
+    FUNC_NAME(compute_first_layer_kernel)<<<num_blocks, thread_per_block>>>(d_option_values,
+                                                                            st_buffer, n);
     int level = n;
     for (; level >= UNROLL_FACTOR; level -= UNROLL_FACTOR) {
         num_blocks = std::ceil((level - UNROLL_FACTOR + 1) * 1.0 / thread_per_block);
-        vanilla_american_binomial_cuda_kernel_unroll_tile<THREADS_PER_BLOCK, UNROLL_FACTOR>
+        FUNC_NAME(compute_next_layers_kernel)<THREADS_PER_BLOCK, UNROLL_FACTOR>
             <<<num_blocks, thread_per_block>>>(d_option_values, d_option_values_next, st_buffer, up,
                                                down, level - UNROLL_FACTOR, n);
         std::swap(d_option_values, d_option_values_next);
@@ -133,7 +137,7 @@ double vanilla_american_binomial_cuda_unroll_tile(const double S, const double K
 
     for (; level >= 1; level--) {
         num_blocks = std::ceil((level)*1.0 / thread_per_block);
-        single_vanilla_american_binomial_cuda_kernel_tile<<<num_blocks, thread_per_block>>>(
+        FUNC_NAME(compute_next_layer_kernel)<<<num_blocks, thread_per_block>>>(
             d_option_values, d_option_values_next, st_buffer, up, down, level - 1, n);
         std::swap(d_option_values, d_option_values_next);
     }
@@ -147,16 +151,19 @@ double vanilla_american_binomial_cuda_unroll_tile(const double S, const double K
     return h_s_store;
 }
 
-template double vanilla_american_binomial_cuda_unroll_tile<DEFAULT_HYPERPARAMS_CUDA_UNROLL_TILE>(
+template double FUNC_NAME(vanilla_american_binomial_cuda)<DEFAULT_HYPERPARAMS_CUDA_UNROLL_TILE>(
     const double S, const double K, const double T, const double r, const double sigma,
     const double q, const int n, const OptionType type);
 
-    
-#ifdef DO_CARTESIAN_PRODUCT 
+#ifdef DO_CARTESIAN_PRODUCT
 #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_UNROLL_TILE
-    
-    #define PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_UNROLL_TILE(ID, A, B, C, D, E, Y) template double vanilla_american_binomial_cuda_unroll_tile<GRID_SEARCH_HYPERPARAMS_##ID>(const double S, const double K, const double T, const double r, const double sigma, const double q, const int n, const OptionType type);
-    APPLY_FUNCTION(PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_UNROLL_TILE, HYPERPARAMS_CART_PRODUCT, NULL)
+
+#define PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_UNROLL_TILE(ID, A, B, C, D, E, Y)         \
+    template double FUNC_NAME(vanilla_american_binomial_cuda)<GRID_SEARCH_HYPERPARAMS_##ID>( \
+        const double S, const double K, const double T, const double r, const double sigma,  \
+        const double q, const int n, const OptionType type);
+APPLY_FUNCTION(PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_UNROLL_TILE, HYPERPARAMS_CART_PRODUCT,
+               NULL)
 
 #endif
 #endif

@@ -10,14 +10,15 @@
 // TPB 128 UF 35 ~2.6ms on 10k
 // TPB 256 UF 32 ~660ms on 250k
 
+#define IMPL_NAME overlap_unroll_trimotm
+
 #define THREADS_PER_BLOCK 128
 #define UNROLL_FACTOR 37
 
-__global__ void fill_st_buffers_kernel_overlap_unroll_trimotm(double* __restrict__ st_buffer_bank0,
-                                                              double* __restrict__ st_buffer_bank1,
-                                                              const double S, const double K,
-                                                              const double u, const int sign,
-                                                              const int n) {
+__global__ void FUNC_NAME(fill_st_buffers_kernel)(double* __restrict__ st_buffer_bank0,
+                                                  double* __restrict__ st_buffer_bank1,
+                                                  const double S, const double K, const double u,
+                                                  const int sign, const int n) {
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
     if (threadId >= n + 1) return;
 
@@ -31,7 +32,7 @@ __global__ void fill_st_buffers_kernel_overlap_unroll_trimotm(double* __restrict
     st_buffer_bank1[threadId] = fmax(sign * fma(S, u_pow_2_threadId * u_pow_minus_n * u, -K), 0.0);
 }
 
-__global__ void compute_next_layers_kernel_overlap_unroll_trimotm(
+__global__ void FUNC_NAME(compute_next_layers_kernel)(
     double* __restrict__ layer_values_read, double* __restrict__ layer_values_write,
     double* __restrict__ st_buffer_bank0, double* __restrict__ st_buffer_bank1, const double up,
     const double down, const int level, const int n, const int last) {
@@ -77,10 +78,12 @@ __global__ void compute_next_layers_kernel_overlap_unroll_trimotm(
     2*i - l = 2 * (i + (n - l - 1) / 2) - n + 1   if (n - l) odd
     the correspoding value is stored at st_buffer_bank1[i + (n - l) / 2]
 */
-__global__ void compute_next_layer_kernel_overlap_unroll_trimotm(
-    double* __restrict__ layer_values_read, double* __restrict__ layer_values_write,
-    double* __restrict__ st_buffer_bank0, double* __restrict__ st_buffer_bank1, const double up,
-    const double down, const int level, const int n) {
+__global__ void FUNC_NAME(compute_next_layer_kernel)(double* __restrict__ layer_values_read,
+                                                     double* __restrict__ layer_values_write,
+                                                     double* __restrict__ st_buffer_bank0,
+                                                     double* __restrict__ st_buffer_bank1,
+                                                     const double up, const double down,
+                                                     const int level, const int n) {
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
     if (threadId >= level + 1) return;
 
@@ -90,7 +93,8 @@ __global__ void compute_next_layer_kernel_overlap_unroll_trimotm(
     layer_values_write[threadId] = fmax(hold, exercise);
 }
 
-int search_bound(const int n, const double S, const double K, const double u, const int sign) {
+int FUNC_NAME(search_bound)(const int n, const double S, const double K, const double u,
+                            const int sign) {
     if (sign == 1) return n;
 
     int lower = 0;
@@ -106,10 +110,9 @@ int search_bound(const int n, const double S, const double K, const double u, co
     return lower;
 }
 
-double vanilla_american_binomial_cuda_overlap_unroll_trimotm(const double S, const double K,
-                                                             const double T, const double r,
-                                                             const double sigma, const double q,
-                                                             const int n, const OptionType type) {
+double FUNC_NAME(vanilla_american_binomial_cuda)(const double S, const double K, const double T,
+                                                 const double r, const double sigma, const double q,
+                                                 const int n, const OptionType type) {
     const double delta_t = T / n;
     const double u = std::exp(sigma * std::sqrt(delta_t));
     const double d = 1.0 / u;
@@ -128,20 +131,20 @@ double vanilla_american_binomial_cuda_overlap_unroll_trimotm(const double S, con
     cudaMalloc(&st_buffer_bank1_d, (n + 1) * sizeof(double));
 
     int num_blocks = std::ceil((n + 1) * 1.0 / THREADS_PER_BLOCK);
-    fill_st_buffers_kernel_overlap_unroll_trimotm<<<num_blocks, THREADS_PER_BLOCK>>>(
+    FUNC_NAME(fill_st_buffers_kernel)<<<num_blocks, THREADS_PER_BLOCK>>>(
         st_buffer_bank0_d, st_buffer_bank1_d, S, K, u, sign, n);
 
     // Layer n is the first n + 1 entries of st_buffer_bank0_d
     cudaMemcpy(layer_values_read_d, st_buffer_bank0_d, (n + 1) * sizeof(double),
                cudaMemcpyDeviceToDevice);
 
-    int bound = search_bound(n, S, K, u, sign);
+    int bound = FUNC_NAME(search_bound)(n, S, K, u, sign);
     int level = n - 1 - (UNROLL_FACTOR - 1);
     for (; level >= 0; level -= UNROLL_FACTOR) {
         int num_nodes = std::min(level, bound);
         num_blocks =
             std::ceil((num_nodes + UNROLL_FACTOR) * 1.0 / (THREADS_PER_BLOCK - UNROLL_FACTOR));
-        compute_next_layers_kernel_overlap_unroll_trimotm<<<num_blocks, THREADS_PER_BLOCK>>>(
+        FUNC_NAME(compute_next_layers_kernel)<<<num_blocks, THREADS_PER_BLOCK>>>(
             layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d, up,
             down, level, n, num_nodes);
         std::swap(layer_values_read_d, layer_values_write_d);
@@ -149,7 +152,7 @@ double vanilla_american_binomial_cuda_overlap_unroll_trimotm(const double S, con
     level += (UNROLL_FACTOR - 1);
     for (; level >= 0; level -= 1) {
         num_blocks = std::ceil((level + 1) * 1.0 / THREADS_PER_BLOCK);
-        compute_next_layer_kernel_overlap_unroll_trimotm<<<num_blocks, THREADS_PER_BLOCK>>>(
+        FUNC_NAME(compute_next_layer_kernel)<<<num_blocks, THREADS_PER_BLOCK>>>(
             layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d, up,
             down, level, n);
         std::swap(layer_values_read_d, layer_values_write_d);

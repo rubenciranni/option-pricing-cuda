@@ -9,23 +9,26 @@
 
 // TpB 128 UF 64 OpT 64 ~2.8ms on 10k
 
+#define IMPL_NAME mem
+
 #define THREADS_PER_BLOCK 128
 #define UNROLL_FACTOR 64
 #define OUTPUTS_PER_BLOCK 64
 
-__global__ void fill_st_buffer_kernel_mem(double* __restrict__ st_buffer, const double S,
-                                          const double K, const double u, const int sign,
-                                          const int n, const int parity) {
+__global__ void FUNC_NAME(fill_st_buffer_kernel)(double* __restrict__ st_buffer, const double S,
+                                                 const double K, const double u, const int sign,
+                                                 const int n, const int parity) {
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
     if (threadId >= n + 1) return;
 
     st_buffer[threadId] = fmax(sign * fma(S, pow(u, (double)(2 * threadId - n + parity)), -K), 0.0);
 }
 
-__global__ void compute_next_layers_kernel_mem(double* layer_values_read,
-                                               double* layer_values_write, double* st_buffer_bank0,
-                                               double* st_buffer_bank1, const double up,
-                                               const double down, int level, int n) {
+__global__ void FUNC_NAME(compute_next_layers_kernel)(double* layer_values_read,
+                                                      double* layer_values_write,
+                                                      double* st_buffer_bank0,
+                                                      double* st_buffer_bank1, const double up,
+                                                      const double down, int level, int n) {
     const int block_write_off = OUTPUTS_PER_BLOCK;
     int threadId = blockIdx.x * block_write_off + threadIdx.x;
 
@@ -73,10 +76,9 @@ __global__ void compute_next_layers_kernel_mem(double* layer_values_read,
     }
 }
 
-__global__ void compute_next_layer_kernel_mem(double* layer_values_read, double* layer_values_write,
-                                              double* st_buffer_bank0, double* st_buffer_bank1,
-                                              const double up, const double down, const int level,
-                                              const int n) {
+__global__ void FUNC_NAME(compute_next_layer_kernel)(
+    double* layer_values_read, double* layer_values_write, double* st_buffer_bank0,
+    double* st_buffer_bank1, const double up, const double down, const int level, const int n) {
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
     if (threadId >= level + 1) return;
 
@@ -95,9 +97,9 @@ __global__ void compute_next_layer_kernel_mem(double* layer_values_read, double*
     layer_values_write[threadId] = fmax(hold, exercise);
 }
 
-double vanilla_american_binomial_cuda_mem(const double S, const double K, const double T,
-                                          const double r, const double sigma, const double q,
-                                          const int n, const OptionType type) {
+double FUNC_NAME(vanilla_american_binomial_cuda)(const double S, const double K, const double T,
+                                                 const double r, const double sigma, const double q,
+                                                 const int n, const OptionType type) {
     const double delta_t = T / n;
     const double u = std::exp(sigma * std::sqrt(delta_t));
     const double d = 1.0 / u;
@@ -116,10 +118,10 @@ double vanilla_american_binomial_cuda_mem(const double S, const double K, const 
     cudaMalloc(&st_buffer_bank1_d, (n + 1) * sizeof(double));
 
     int num_blocks = std::ceil((n + 1) * 1.0 / THREADS_PER_BLOCK);
-    fill_st_buffer_kernel_mem<<<num_blocks, THREADS_PER_BLOCK>>>(st_buffer_bank0_d, S, K, u, sign,
-                                                                 n, 0);
-    fill_st_buffer_kernel_mem<<<num_blocks, THREADS_PER_BLOCK>>>(st_buffer_bank1_d, S, K, u, sign,
-                                                                 n, 1);
+    FUNC_NAME(fill_st_buffer_kernel)<<<num_blocks, THREADS_PER_BLOCK>>>(st_buffer_bank0_d, S, K, u,
+                                                                        sign, n, 0);
+    FUNC_NAME(fill_st_buffer_kernel)<<<num_blocks, THREADS_PER_BLOCK>>>(st_buffer_bank1_d, S, K, u,
+                                                                        sign, n, 1);
 
     // Layer n is the first n + 1 entries of st_buffer
     cudaMemcpy(layer_values_read_d, st_buffer_bank0_d, (n + 1) * sizeof(double),
@@ -128,7 +130,7 @@ double vanilla_american_binomial_cuda_mem(const double S, const double K, const 
     int level = n;
     for (; level >= UNROLL_FACTOR && level > 1; level -= UNROLL_FACTOR) {
         num_blocks = std::ceil((level - UNROLL_FACTOR + 1) * 1.0 / OUTPUTS_PER_BLOCK);
-        compute_next_layers_kernel_mem<<<num_blocks, THREADS_PER_BLOCK>>>(
+        FUNC_NAME(compute_next_layers_kernel)<<<num_blocks, THREADS_PER_BLOCK>>>(
             layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d, up,
             down, level - UNROLL_FACTOR, n);
         std::swap(layer_values_read_d, layer_values_write_d);
@@ -136,7 +138,7 @@ double vanilla_american_binomial_cuda_mem(const double S, const double K, const 
 
     for (; level >= 1; level -= 1) {
         num_blocks = std::ceil((level + 1) * 1.0 / THREADS_PER_BLOCK);
-        compute_next_layer_kernel_mem<<<num_blocks, THREADS_PER_BLOCK>>>(
+        FUNC_NAME(compute_next_layer_kernel)<<<num_blocks, THREADS_PER_BLOCK>>>(
             layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d, up,
             down, level - 1, n);
         std::swap(layer_values_read_d, layer_values_write_d);

@@ -28,7 +28,6 @@ std::map<std::string, PricingFunction> FUNCTION_REGISTRY = {
     {"vanilla_american_binomial_cpu_trimotm_trimeeon_stprecomp", vanilla_american_binomial_cpu_trimotm_trimeeon_stprecomp},
     {"vanilla_american_binomial_openmp_naive", vanilla_american_binomial_openmp_naive},
     {"vanilla_american_binomial_cuda_naive", vanilla_american_binomial_cuda_naive},
-    {"vanilla_american_binomial_cuda_no_sync", vanilla_american_binomial_cuda_no_sync},
     {"vanilla_american_binomial_cuda_precomputed_stock_price", vanilla_american_binomial_cuda_precomputed_stock_price},
     {"vanilla_american_binomial_cuda_fill", vanilla_american_binomial_cuda_fill},
     {"vanilla_american_binomial_cuda_fill_banked", vanilla_american_binomial_cuda_fill_banked},
@@ -93,15 +92,16 @@ std::vector<BenchmarkResult> benchmark(const std::string& filter_function_name,
             // Measure execution time
             bool sanity_check =
                 skip_sanity_checks || sanity_checker.run_single_all_sanity_checks(name, func);
-            
+
             BenchmarkResult result(data, benchmark_parameters, {}, name, sanity_check);
             for (int n = data.nstart; n <= data.nend; n += data.nstep) {
                 for (int _ = 0; _ < data.nrepetition_at_step; _++) {
                     auto start = std::chrono::high_resolution_clock::now();
-                    double price = func(data.S, data.K, data.T, data.r, data.sigma, data.q, n, data.type);
+                    double price =
+                        func(data.S, data.K, data.T, data.r, data.sigma, data.q, n, data.type);
                     auto end = std::chrono::high_resolution_clock::now();
                     std::chrono::duration<double, std::milli> duration = end - start;
-                    
+
                     result.execution_times[n].push_back(duration.count());
                     result.prices[n].push_back(price);
                 }
