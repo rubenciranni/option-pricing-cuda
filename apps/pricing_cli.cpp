@@ -3,6 +3,7 @@
 #include <benchmark.hpp>
 #include <cstdlib>
 #include <iostream>
+#include <streambuf>
 #include <rang.hpp>
 #include <string>
 #include <unordered_map>
@@ -12,6 +13,62 @@
 #include "constants.hpp"
 #include "models/vanilla_american_binomial.hpp"
 #include "models/vanilla_european_binomial.hpp"
+
+class JsonStreamBuf : public std::streambuf {
+    std::streambuf* original;
+    std::string buffer;
+    bool first = true;
+    int json_depth;
+
+protected:
+    // Called whenever a character is inserted
+    int overflow(int c) override {
+        if (c != EOF) {
+            buffer += static_cast<char>(c);
+            if (c == '\n') {
+                // flush a full line
+                flushBuffer();
+            }
+        }
+        return c;
+    }
+
+    int sync() override {
+        flushBuffer();
+        return 0;
+    }
+
+    void flushBuffer() {
+        if (!buffer.empty()) {
+            // Example: wrap each line in quotes
+            std::string formatted = "";
+            if (first)  first = false;
+            else        formatted += ",\n";
+            formatted += std::string(json_depth, '\t') + "{\"message\": \"" + escapeJson(buffer) + "\"}";
+            original->sputn(formatted.c_str(), formatted.size());
+            buffer.clear();
+        }
+    }
+
+    static std::string escapeJson(const std::string& s) {
+        std::string out;
+        for (char c : s) {
+            switch (c) {
+                case '\"': out += "\\\""; break;
+                case '\\': out += "\\\\"; break;
+                case '\n': out += "\\n"; break;
+                case '\r': out += "\\r"; break;
+                case '\t': out += "\\t"; break;
+                default: out += c;
+            }
+        }
+        return out;
+    }
+
+public:
+    explicit JsonStreamBuf(std::streambuf* buf, int json_depth) : original(buf), json_depth(json_depth) {}
+};
+
 
 
 std::pair<double, double> mean_and_std(const std::vector<double>& v) {
@@ -230,10 +287,18 @@ int main(int argc, char** argv) {
             
             int json_depth = 1;
             std::string json_output = "{\n";
-            json_output += std::string(json_depth, '\t') + "\"Errors\": [\n"; json_depth++;
+            json_output += std::string(json_depth, '\t') + "\"errors\": ["; json_depth++;
+            std::cout << json_output << std::endl; json_output = "";
             
+            std::streambuf* originalBuf = std::cout.rdbuf();
+            JsonStreamBuf jsonBuf(std::cout.rdbuf(), json_depth);
+            std::cout.rdbuf(&jsonBuf);
             auto results = benchmark(filter_name, benchmark_parameters, reference_function_name, skip_sanity_checks);
-            
+            std::cout.rdbuf(originalBuf);
+
+            json_depth -= 1; json_output += '\n' + std::string(json_depth, '\t') + "],\n";
+            json_output += std::string(json_depth, '\t') + "\"runs\": [\n"; json_depth++;
+
             bool first = true;
             for (const auto& res : results) {
                 if (first == true) first = false;
@@ -297,6 +362,7 @@ int main(int argc, char** argv) {
                 std::cout << json_output; json_output = "";
             }
             json_depth -= 1; json_output += '\n' + std::string(json_depth, '\t') + "]\n";
+            json_depth -= 1; json_output += std::string(json_depth, '\t') + "}\n";
             std::cout << json_output << std::endl;
         } 
     }
