@@ -44,7 +44,7 @@ Everything should now work.
 
 ### Grid Search
 
-The Hyperparams class that we have analyzed in the previous section is made to effectively and rapidly create more instances of the same backend to test multiple hyperparameter combinations. In this section, we take this idea to its limit, by defining a procedure that **at compile time**, produces exponentially many instances of a template class, to make testing as easy as possible. Since we are working at compile time, we must make use of Macros and, in particular, X macros. X Macros are a powerful tool that C++ employs to reduce dependencies among files. In this section, we are not going to explore how X Macros work, but I'd be happy to explain them to you if you really want to know (contact Luigi). 
+The Hyperparams class that we have analyzed in the previous section is made to effectively and rapidly create more instances of the same backend to test multiple hyperparameter combinations. In this section, we take this idea to its limit, by defining a procedure that **at compile time**, produces exponentially many instances of a template class, to make testing as easy as possible. Since we are working at compile time, we must make use of Macros and, in particular, X macros. X Macros are a powerful tool that C++ employs to reduce dependencies among files. In this section, we are not going to explore how X Macros work, but I'd be happy to explain them to you if you really want to know (contact Luigi). Basically, they are macros that takes parameters.
 
 To begin our analysis, let us split our problem ("implement a grid search method for our prooject") into simpler subproblems. These subproblems are:
 1. **Define hyperparams instances.** First, we need to define instances of the Hyperparams class. These instances will be used to parametrize our backends.
@@ -103,7 +103,7 @@ So let me break this down in the only compents you need to understand to impleme
 6. `APPLY_FUNCTION(PRODUCE_HYPERPARAMS_INSTANCES_3, HYPERPARAMS_CART_PRODUCT, NULL)` finally generates as many strings `inline constexpr Hyperparams GRID_SEARCH_HYPERPARAMS_{ID}({A}, {B}, {C});` as needed in the grid search, where ID is the ID of the hyperparam instance, A is the first hyperparam, B is the second, C is the third.
 7. If you ever need 4 hyperparameters, in the constructor of the hyperparams class, just add the IDs and wanted hyperparams to `CART_PROD_4`. Then, do `APPLY_FUNCTION(PRODUCE_HYPERPARAMS_INSTANCES_4, HYPERPARAMS_CART_PRODUCT, NULL)` where we switched `PRODUCE_HYPERPARAMS_INSTANCES_4` to `PRODUCE_HYPERPARAMS_INSTANCES_3`.
 
-#### Stop Here
+#### Stop Here if your backend is already setup
 
 You can stop reading here if you just wanted to run grid search and grid search was already implemented in your backend. To check if grid search was implemented in your backend, go to `include/backends/hyperparams.hpp` and see if there is a commented line like:
 ```c++
@@ -117,23 +117,46 @@ If yes, you're in luck! Just uncomment the following 2 lines and grid search wil
 ```
 
 #### What to do if your backend is not already setup
-    TODO
 
-<!-- Now we need to generate backend instances. We proceed with an example.
+If your backend is not already setup, you need to: (2) **Define backend instances**;
+(3) **Add backend instances to function registry for testing.**
 
-**Example:** Suppose we have generated `GRID_SEARCH_HYPERPARAMS_00`,
-`GRID_SEARCH_HYPERPARAMS_01`,
-`GRID_SEARCH_HYPERPARAMS_10`,
-`GRID_SEARCH_HYPERPARAMS_11`. We need to generate the following strings to generate backend instances of `vanilla_american_cuda_backend`:
+#### Define backend instances
+
+Go to the file where your backend is defined and paste this lines in its bottom part:
 
 ```c++
-inline constexpr Hyperparams GRID_SEARCH_HYPERPARAMS_00(256, 37, 4); 
-inline constexpr Hyperparams GRID_SEARCH_HYPERPARAMS_01(256, 61, 4); 
-inline constexpr Hyperparams GRID_SEARCH_HYPERPARAMS_10(128, 37, 4); 
-inline constexpr Hyperparams GRID_SEARCH_HYPERPARAMS_11(128, 61, 4);
-``` -->
+#ifdef DO_CARTESIAN_PRODUCT 
+#ifdef DO_CARTESIAN_PRODUCT_OF_MY_BACKEND
+    
+    #define PRODUCE_INSTANCES_OF_MY_BACKEND(ID, A, B, C, D, E, Y) template double vanilla_american_binomial_cuda_MY_BACKEND<GRID_SEARCH_HYPERPARAMS_##ID>(const double S, const double K, const double T, const double r, const double sigma, const double q, const int n, const OptionType type);
+    APPLY_FUNCTION(PRODUCE_INSTANCES_OF_MY_BACKEND, HYPERPARAMS_CART_PRODUCT, NULL)
+
+#endif
+#endif
+```
+
+Please modify `MY_BACKEND` with the actual name of your backend
+
+It is a best practise to be able to choose if you have to compile all backends at compile time. This is why we have `DO_CARTESIAN_PRODUCT`, `DO_CARTESIAN_PRODUCT_OF_MY_BACKEND`, where:
+1. `DO_CARTESIAN_PRODUCT` if undefined makes it so that nothing relative to hyperparameters is compiled. If defined, this makes it so that all hyperparameter instances `GRID_SEARCH_HYPERPARAMS_ID` are compiled. if you want to define `DO_CARTESIAN_PRODUCT_OF_MY_BACKEND` uncomment the line for it in `include/backends/hyperparams.hpp` 
+2.  If `DO_CARTESIAN_PRODUCT_OF_MY_BACKEND` is defined, your backend will be compiled with grid-search. If undefined, it will not. Please, if you want to define `DO_CARTESIAN_PRODUCT_OF_MY_BACKEND` uncomment/create the line for it in `include/backends/hyperparams.hpp` 
 
 
+#### Add backend instances to function registry for testing
+
+Go to `benchmarks/benchmark.cpp`. Add the following lines inside the function registry:
+
+```c++
+#ifdef DO_CARTESIAN_PRODUCT
+    #ifdef DO_CARTESIAN_PRODUCT_OF_MY_BACKEND           
+        APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_MY_BACKEND)             
+    #endif
+#endif
+```
+Please modify `MY_BACKEND` with the actual name of your backend.
+
+At this point you are done, everything should work neatly.
 
 
 ### Json Output
