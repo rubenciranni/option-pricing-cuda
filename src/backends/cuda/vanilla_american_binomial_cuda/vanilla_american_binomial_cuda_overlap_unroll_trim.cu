@@ -20,7 +20,6 @@ __global__ void FUNC_NAME(fill_st_buffers_kernel)(double* __restrict__ st_buffer
                                                   const double S, const double K, const double u,
                                                   const int sign, const int n) {
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
-    if (threadId >= n + 1) return;
 
     double u_pow_2_threadId = pow(u, (double)2 * threadId);
     double u_pow_minus_n = pow(u, (double)-n);
@@ -35,14 +34,12 @@ __global__ void FUNC_NAME(fill_st_buffers_kernel)(double* __restrict__ st_buffer
 __global__ void FUNC_NAME(compute_next_layers_kernel)(
     double* __restrict__ layer_values_read, double* __restrict__ layer_values_write,
     double* __restrict__ st_buffer_bank0, double* __restrict__ st_buffer_bank1, const double up,
-    const double down, const int level, const int n, const int last) {
+    const double down, const int level, const int n, const int upper_bound) {
     __shared__ double layer_values_tile[2][THREADS_PER_BLOCK + 1];
 
     int tile_stride = THREADS_PER_BLOCK - UNROLL_FACTOR;
     int tile_base = tile_stride * blockIdx.x;
     int node_id = tile_base + threadIdx.x;
-
-    if (node_id >= n + 1) return;
 
     layer_values_tile[0][threadIdx.x] = layer_values_read[node_id];
 
@@ -65,7 +62,7 @@ __global__ void FUNC_NAME(compute_next_layers_kernel)(
         __syncthreads();
     }
 
-    if (node_id <= n && threadIdx.x < THREADS_PER_BLOCK - UNROLL_FACTOR) {
+    if (threadIdx.x < THREADS_PER_BLOCK - UNROLL_FACTOR) {
         layer_values_write[node_id] = layer_values_tile[UNROLL_FACTOR % 2][threadIdx.x];
     }
 }
@@ -85,7 +82,6 @@ __global__ void FUNC_NAME(compute_next_layer_kernel)(double* __restrict__ layer_
                                                      const double up, const double down,
                                                      const int level, const int n) {
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
-    if (threadId >= level + 1) return;
 
     double hold = up * layer_values_read[threadId + 1] + down * layer_values_read[threadId];
     double* st_buffer_bank = (n - level) % 2 ? st_buffer_bank1 : st_buffer_bank0;
@@ -123,12 +119,12 @@ double FUNC_NAME(vanilla_american_binomial_cuda)(const double S, const double K,
     const int sign = option_type_sign(type);
 
     double *layer_values_read_d, *layer_values_write_d;
-    cudaMalloc(&layer_values_read_d, (n + 1) * sizeof(double));
-    cudaMalloc(&layer_values_write_d, (n + 1) * sizeof(double));
+    cudaMalloc(&layer_values_read_d, (n + THREADS_PER_BLOCK) * sizeof(double));
+    cudaMalloc(&layer_values_write_d, (n + THREADS_PER_BLOCK) * sizeof(double));
 
     double *st_buffer_bank0_d, *st_buffer_bank1_d;
-    cudaMalloc(&st_buffer_bank0_d, (n + 1) * sizeof(double));
-    cudaMalloc(&st_buffer_bank1_d, (n + 1) * sizeof(double));
+    cudaMalloc(&st_buffer_bank0_d, (n + THREADS_PER_BLOCK + UNROLL_FACTOR) * sizeof(double));
+    cudaMalloc(&st_buffer_bank1_d, (n + THREADS_PER_BLOCK + UNROLL_FACTOR) * sizeof(double));
 
     int num_blocks = std::ceil((n + 1) * 1.0 / THREADS_PER_BLOCK);
     FUNC_NAME(fill_st_buffers_kernel)<<<num_blocks, THREADS_PER_BLOCK>>>(
