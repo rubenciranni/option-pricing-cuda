@@ -26,9 +26,13 @@ inline std::ostream& operator<< (std::ostream& out, const std::vector<double>& v
     }
     else if ( !v.empty() ) {
         out << '[';
-        for (double i: v)
-            out << i << ", ";
-        out << "\b\b]"; // use two ANSI backspace characters '\b' to overwrite final ", "
+        bool first = true;
+        for (double i: v) {
+            if (first) first = false;
+            else       out << ", ";
+            out << i;
+        }
+        out << "]"; 
     }
     return out;
 }
