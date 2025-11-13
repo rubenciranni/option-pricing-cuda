@@ -114,8 +114,8 @@ double FUNC_NAME(vanilla_american_binomial_cuda)(const double S, const double K,
     cudaMalloc(&layer_values_write_d, (n + 1) * sizeof(double));
 
     double *st_buffer_bank0_d, *st_buffer_bank1_d;
-    cudaMalloc(&st_buffer_bank0_d, (n + 1) * sizeof(double));
-    cudaMalloc(&st_buffer_bank1_d, (n + 1) * sizeof(double));
+    cudaMalloc(&st_buffer_bank0_d, (n + UNROLL_FACTOR) * sizeof(double));
+    cudaMalloc(&st_buffer_bank1_d, (n + UNROLL_FACTOR) * sizeof(double));
 
     int num_blocks = std::ceil((n + 1) * 1.0 / THREADS_PER_BLOCK);
     FUNC_NAME(fill_st_buffers_kernel)<<<num_blocks, THREADS_PER_BLOCK>>>(
