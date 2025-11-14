@@ -177,7 +177,7 @@ void print_benchmark_results_json(const std::vector<BenchmarkResult>& results) {
         }
         // json::array_t sanity_check_res =  res.sanity_check_results;
         json::array_t hyper_params;
-        for (auto hparam : hparams) {
+        for (const auto& hparam : hparams) {
             hyper_params.push_back(hparam);
         }
         json::array_t sanity_checks;
