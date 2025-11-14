@@ -65,7 +65,7 @@ inline std::string to_string(const BenchmarkResult& result) {
         "Benchmark result for benchmark parameters: " + result.benchmark_parameters_name +
         ", function: " + result.function_name + "\n";
     output += to_string(result.run) + "\n";
-    output += "Sanity check" + std::string(result.pass_sanity_check() ? "passed" : "failed") + "\n";
+    output += "Sanity check " + std::string(result.pass_sanity_check() ? "passed" : "failed") + "\n";
     output += "Execution times (ms):\n";
     for (const auto& [n, time] : result.execution_times) {
         output += "  n=" + std::to_string(n) + ": " + to_string(time) + " ms\n";
