@@ -90,10 +90,13 @@ std::vector<BenchmarkResult> benchmark(const std::string& filter_function_name,
         // filter_function_name is a substring match
         if (name.find(filter_function_name) != std::string::npos || filter_function_name.empty()) {
             // Measure execution time
-            bool sanity_check =
-                skip_sanity_checks || sanity_checker.run_single_all_sanity_checks(name, func);
+            SanityCheckResults sanity_check;
+            if (!skip_sanity_checks) {
+                sanity_check = sanity_checker.run_single_all_sanity_checks(name, func);
+            }
 
-            BenchmarkResult result(data, benchmark_parameters, {}, name, sanity_check);
+            BenchmarkResult result(data, benchmark_parameters, {}, name, reference_function_name,
+                                   sanity_check);
             for (int n = data.nstart; n <= data.nend; n += data.nstep) {
                 for (int _ = 0; _ < data.nrepetition_at_step; _++) {
                     auto start = std::chrono::high_resolution_clock::now();
