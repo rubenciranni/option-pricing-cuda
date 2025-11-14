@@ -144,6 +144,66 @@ std::pair<std::string, std::vector<std::string>> parse_hyperparams(const std::st
     return std::make_pair(func_id, hyperparams);
 }
 
+void print_benchmark_results_json(const std::vector<BenchmarkResult>& results) {
+    using json = nlohmann::json;
+    json output;
+    output["runs"] = json::array();
+
+    if (!results.empty()) {
+        auto run = results[0].run;
+        output["benchmark_parameters"] = {{"S", run.S},
+                                          {"K", run.K},
+                                          {"T", run.T},
+                                          {"r", run.r},
+                                          {"sigma", run.sigma},
+                                          {"q", run.q},
+                                          {"nstart", run.nstart},
+                                          {"nend", run.nend},
+                                          {"nstep", run.nstep},
+                                          {"nrepetition_at_step", run.nrepetition_at_step},
+                                          {"type", to_string(run.type)}};
+    }
+
+    for (const auto& res : results) {
+        auto [func_id, hparams] = parse_hyperparams(res.function_name);
+        json::array_t n_vals, time_vals_mean, price_vals, hyper, time_vals_std;
+        double std_time = 0., mean_time = 0.;
+        for (const auto& [n_steps, time] : res.execution_times) {
+            n_vals.push_back(n_steps);
+            std::tie(mean_time, std_time) = mean_and_std(time);
+            time_vals_mean.push_back(mean_time);
+            time_vals_std.push_back(std_time);
+            price_vals.push_back(std::round(res.prices.at(n_steps)[0] * 1e6) / 1e6);
+        }
+        // json::array_t sanity_check_res =  res.sanity_check_results;
+        json::array_t hyper_params;
+        for (auto hparam : hparams) {
+            hyper_params.push_back(hparam);
+        }
+        json::array_t sanity_checks;
+        for (auto& [pricing_input, expected, price] : res.sanity_check_results) {
+            json sanity_check;
+            sanity_check["test_name"] = pricing_input.name;
+            sanity_check["expected"] = expected;
+            sanity_check["price"] = price;
+            sanity_checks.push_back(sanity_check);
+        }
+
+        output["runs"].push_back(
+            {{"id", res.function_name},
+             {"function_id", func_id},
+             {"do_pass_sanity_check", res.pass_sanity_check() ? "true" : "false"},
+             {"sanity_check", sanity_checks},
+             {"hyperparams", hyper_params},
+             {"runs",
+              {{"n", n_vals},
+               {"time_ms_mean", time_vals_mean},
+               {"time_ms_std", time_vals_std},
+               {"price", price_vals}}}});
+    }
+    std::cout << output.dump(1, '\t') << std::endl;
+}
+
 int main(int argc, char** argv) {
     CLI::App app{"CLI for Option Pricing and Benchmarking"};
 
@@ -246,49 +306,7 @@ int main(int argc, char** argv) {
             print_sanity_checks(results, skip_sanity_checks);
             print_benchmark_results_pprint(results);
         } else if (output_format == OutputFormat::JSON) {
-            using json = nlohmann::json;
-            json output;
-            output["runs"] = json::array();
-
-            for (const auto& res : results) {
-                auto [func_id, hparams] = parse_hyperparams(res.function_name);
-                json::array_t n_vals, time_vals_mean, price_vals, hyper, time_vals_std;
-                double std_time = 0., mean_time = 0.;
-                for (const auto& [n_steps, time] : res.execution_times) {
-                    n_vals.push_back(n_steps);
-
-                    std::tie(mean_time, std_time) = mean_and_std(time);
-                    time_vals_mean.push_back(mean_time);
-                    time_vals_std.push_back(std_time);
-                    price_vals.push_back(std::round(res.prices.at(n_steps)[0] * 1e6) / 1e6);
-                }
-                // json::array_t sanity_check_res =  res.sanity_check_results;
-                json::array_t hyper_params;
-                for (auto hparam : hparams) {
-                    hyper_params.push_back(hparam);
-                }
-                json::array_t sanity_checks;
-                for (auto& [pricing_input, expected, price] : res.sanity_check_results) {
-                    json sanity_check;
-                    sanity_check["test_name"] = pricing_input.name;
-                    sanity_check["expected"] = expected;
-                    sanity_check["price"] = price;
-                    sanity_checks.push_back(sanity_check);
-                }
-
-                output["runs"].push_back(
-                    {{"id", res.function_name},
-                     {"function_id", func_id},
-                     {"do_pass_sanity_check", res.pass_sanity_check() ? "true" : "false"},
-                     {"sanity_check", sanity_checks},
-                     {"hyperparams", hyper_params},
-                     {"runs",
-                      {{"n", n_vals},
-                       {"time_ms_mean", time_vals_mean},
-                       {"time_ms_std", time_vals_std},
-                       {"price", price_vals}}}});
-            }
-            std::cout << output.dump(1, '\t') << std::endl;
+            print_benchmark_results_json(results);
         }
 
     } else if (*list_parameters_subcommand) {
