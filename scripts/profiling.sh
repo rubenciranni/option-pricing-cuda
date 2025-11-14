@@ -72,7 +72,7 @@ while IFS= read -r KERNEL; do
   echo \"Profiling kernel \$KERNEL_NUM: \$KERNEL_NAME\"
 
   ncu --target-processes all --kernel-name \"\$KERNEL_NAME\" --set full \
-    --launch-skip 100 --launch-count 5 -f \
+    --launch-skip 10 --launch-count 5 -f \
     -o ../profile_res/profile_kernel_\${KERNEL_NUM} \
     ./bin/pricing_cli benchmark --parameters $PARAMETER --filter-by-name $FUNCTION_NAME
 done <<< \"\$MATCHING_KERNELS\"
