@@ -46,7 +46,7 @@ class SanityChecker {
         }
     }
 
-    SanityCheckResults run_single_all_sanity_checks(std::string fun_name, PricingFunction func) {
+    SanityCheckResults run_single_all_sanity_checks(PricingFunction func) {
         SanityCheckResults test_results;
         for (const auto& test : reference_function_results) {
             const PricingInput& run = test.first;

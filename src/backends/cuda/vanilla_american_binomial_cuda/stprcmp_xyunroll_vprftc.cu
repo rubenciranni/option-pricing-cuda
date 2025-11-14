@@ -8,7 +8,7 @@
 #include "backends/hyperparams.hpp"
 #include "constants.hpp"
 
-#define IMPL_NAME x_y_unroll
+#define IMPL_NAME stprcmp_xyunroll_vprftc
 
 __global__ void FUNC_NAME(fill_st_buffer_kernel)(double* __restrict__ buffer, const double S,
                                                  const double K, const double u, const int sign,
@@ -133,19 +133,20 @@ double FUNC_NAME(vanilla_american_binomial_cuda)(const double S, const double K,
     return h_s_store;
 }
 
-template double FUNC_NAME(vanilla_american_binomial_cuda)<DEFAULT_HYPERPARAMS_CUDA_XY_UNROLL>(
+template double FUNC_NAME(
+    vanilla_american_binomial_cuda)<DEFAULT_HYPERPARAMS_CUDA_STPRCMP_XYUNROLL_VPRFTC>(
     const double S, const double K, const double T, const double r, const double sigma,
     const double q, const int n, const OptionType type);
 
 #ifdef DO_CARTESIAN_PRODUCT
-#ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_X_Y_UNROLL
+#ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_STPRCMP_XYUNROLL_VPRFTC
 
-#define PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_X_Y_UNROLL(ID, A, B, C, D, E, Y)          \
+#define PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_STPRCMP_XYUNROLL(ID, A, B, C, D, E, Y)    \
     template double FUNC_NAME(vanilla_american_binomial_cuda)<GRID_SEARCH_HYPERPARAMS_##ID>( \
         const double S, const double K, const double T, const double r, const double sigma,  \
         const double q, const int n, const OptionType type);
-APPLY_FUNCTION(PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_X_Y_UNROLL, HYPERPARAMS_CART_PRODUCT,
-               NULL)
+APPLY_FUNCTION(PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_STPRCMP_XYUNROLL,
+               HYPERPARAMS_CART_PRODUCT, NULL)
 
 #endif
 #endif

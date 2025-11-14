@@ -50,7 +50,7 @@ void print_sanity_checks(const std::vector<BenchmarkResult>& results, bool skip_
         }
     }
 
-    const int name_width = 65;
+    const int name_width = 80;
     const int status_width = 10;
 
     std::cout << std::left << std::setw(name_width) << "Function" << std::right
@@ -167,13 +167,18 @@ void print_benchmark_results_json(const std::vector<BenchmarkResult>& results) {
 
     for (const auto& res : results) {
         auto [func_id, hparams] = parse_hyperparams(res.function_name);
-        json::array_t n_vals, time_vals_mean, price_vals, hyper, time_vals_std;
+        json::array_t n_vals, time_vals_mean, price_vals, hyper, time_vals_std, all_times;
         double std_time = 0., mean_time = 0.;
         for (const auto& [n_steps, time] : res.execution_times) {
             n_vals.push_back(n_steps);
             std::tie(mean_time, std_time) = mean_and_std(time);
             time_vals_mean.push_back(mean_time);
             time_vals_std.push_back(std_time);
+            json::array_t time_at_n;
+            for (auto ctime : time) {
+                time_at_n.push_back(ctime);
+            }
+            all_times.push_back(time_at_n);
             price_vals.push_back(std::round(res.prices.at(n_steps)[0] * 1e6) / 1e6);
         }
         // json::array_t sanity_check_res =  res.sanity_check_results;
@@ -196,6 +201,7 @@ void print_benchmark_results_json(const std::vector<BenchmarkResult>& results) {
              {"do_pass_sanity_check", res.pass_sanity_check() ? "true" : "false"},
              {"sanity_check", sanity_checks},
              {"hyperparams", hyper_params},
+             {"all_times", all_times},
              {"runs",
               {{"n", n_vals},
                {"time_ms_mean", time_vals_mean},
@@ -288,11 +294,6 @@ int main(int argc, char** argv) {
         printf("Option Price: %.4f\n", price);
     } else if (*benchmark_subcommand) {
         OutputFormat output_format = output_format_from_string(output_format_str);
-
-        if (!skip_sanity_checks) {
-            std::cout << rang::style::bold << rang::fg::red << "=== SANITY CHECKS LOGS ===\n\n"
-                      << rang::style::reset;
-        }
 
         auto results = benchmark(filter_name, benchmark_parameters, reference_function_name,
                                  skip_sanity_checks);

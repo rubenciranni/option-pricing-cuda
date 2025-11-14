@@ -9,7 +9,7 @@
 
 // TpB 128 UF 64 OpT 64 ~2.8ms on 10k
 
-#define IMPL_NAME mem
+#define IMPL_NAME bkdstprcmp_xdovlpunroll_vtile
 
 #define THREADS_PER_BLOCK 128
 #define UNROLL_FACTOR 64

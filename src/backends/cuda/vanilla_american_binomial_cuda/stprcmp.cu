@@ -4,7 +4,7 @@
 #include "backends/cuda/vanilla_american_binomial_cuda.cuh"
 #include "constants.hpp"
 
-#define IMPL_NAME fill
+#define IMPL_NAME stprcmp
 
 #define THREADS_PER_BLOCK 1024
 
