@@ -139,6 +139,7 @@ std::pair<std::string, std::vector<std::string>> parse_hyperparams(const std::st
             hyperparams.push_back(rest.substr(start, pos - start));
             start = pos + 1;
         }
+        if (start < rest.size()) hyperparams.push_back(rest.substr(start));
     }
 
     return std::make_pair(func_id, hyperparams);
