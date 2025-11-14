@@ -65,8 +65,10 @@ while IFS= read -r KERNEL; do
   [ -z \"\$KERNEL\" ] && continue
   KERNEL_NUM=\$((KERNEL_NUM + 1))
 
-  # Extract just the kernel name without parameters
-  KERNEL_NAME=\$(echo \"\$KERNEL\" | sed 's/(.*//')
+  # Extract just the kernel name without return type, template params, or function params
+  # For non-templated: 'kernel_name(...)' -> 'kernel_name'
+  # For templated: 'void kernel_name<T>(...)' -> 'kernel_name'
+  KERNEL_NAME=\$(echo \"\$KERNEL\" | sed 's/^void //; s/<.*//; s/(.*//')
 
   echo \"\"
   echo \"Profiling kernel \$KERNEL_NUM: \$KERNEL_NAME\"
