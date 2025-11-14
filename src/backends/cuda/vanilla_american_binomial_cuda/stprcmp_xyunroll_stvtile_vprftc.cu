@@ -13,34 +13,37 @@
 #include "backends/cuda/vanilla_american_binomial_cuda.cuh"
 #include "constants.hpp"
 
-#define IMPL_NAME x_y_unroll_tile_zero
+#define IMPL_NAME stprcmp_xyunroll_stvtile_vprftc
 
 #define THREADS_PER_BLOCK 128
-#define UNROLL_FACTOR 35
+#define UNROLL_FACTOR 64
 #define OUTPUTS_PER_THREAD 1
 #define PREFETCH_FACTOR 2
 #define OUTPUTS_PER_BLOCK 128
+
 #define CEIL_DIV(A, B) (((A) + (B)-1) / (B))
 
-__global__ void FUNC_NAME(fill_pricing)(double* __restrict__ buffer, const double S, const double K,
-                                        const double u, const int sign, const int n) {
+__global__ void FUNC_NAME(fill_st_buffer_kernel)(double* __restrict__ st_buffer, const double S,
+                                                 const double K, const double u, const int sign,
+                                                 const int n) {
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
     if (threadId > 2 * n) return;
-    buffer[threadId] = fmax(sign * fma(S, pow(u, (double)threadId - n), -K), 0.0);
+    st_buffer[threadId] = fmax(sign * fma(S, pow(u, (double)threadId - n), -K), 0.0);
 }
 
-__global__ void FUNC_NAME(first_layer)(double* d_option_values, double* __restrict__ st_buffer,
-                                       const int n) {
+__global__ void FUNC_NAME(compute_first_layer_kernel)(double* d_option_values,
+                                                      double* __restrict__ st_buffer, const int n) {
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
     if (threadId > n) return;
     int idx_uns = 2 * threadId;
     d_option_values[threadId] = st_buffer[idx_uns];
 }
 
-__global__ void FUNC_NAME(vanilla_american_binomial_cuda_kernel)(
-    const double* __restrict__ d_option_values, double* d_option_values_next,
-    const double* __restrict__ st_buffer, const double prob_up, const double prob_down,
-    const int level, const int n, int last_index) {
+__global__ void FUNC_NAME(compute_next_layers_kernel)(const double* __restrict__ d_option_values,
+                                                      double* d_option_values_next,
+                                                      const double* __restrict__ st_buffer,
+                                                      const double prob_up, const double prob_down,
+                                                      const int level, const int n) {
     constexpr int values_tile_size = OUTPUTS_PER_THREAD * THREADS_PER_BLOCK + UNROLL_FACTOR;
     __shared__ double values_tile_read_array[values_tile_size];
     __shared__ double values_tile_write_array[values_tile_size];
@@ -111,9 +114,11 @@ __global__ void FUNC_NAME(vanilla_american_binomial_cuda_kernel)(
     }
 }
 
-__global__ void FUNC_NAME(single_vanilla_american_binomial_cuda_kernel)(
-    double* d_option_values, double* d_option_values_next, double* st_buffer, const double prob_up,
-    const double prob_down, const int level, const int n) {
+__global__ void FUNC_NAME(compute_next_layer_kernel)(double* d_option_values,
+                                                     double* d_option_values_next,
+                                                     double* st_buffer, const double prob_up,
+                                                     const double prob_down, const int level,
+                                                     const int n) {
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
     if (threadId > level) return;
     double hold = prob_up * d_option_values[threadId + 1] + prob_down * d_option_values[threadId];
@@ -122,26 +127,9 @@ __global__ void FUNC_NAME(single_vanilla_american_binomial_cuda_kernel)(
     d_option_values_next[threadId] = max(hold, exercise);
 }
 
-int _bin_search_zeros(int n, double S, double K, double u) {
-    int lower = 0;
-    int upper = n;
-    while (lower < upper - 1) {
-        int mid = (upper + lower) / 2;
-        double S_i_n = -1 * (S * std::pow(u, mid * 2 - n) - K);
-        if (S_i_n < 0) {
-            upper = mid;
-        } else {
-            lower = mid;
-        }
-    }
-    return lower;
-}
-
-double vanilla_american_binomial_cuda_x_y_unroll_tile_banked_ignore(const double S, const double K,
-                                                                    const double T, const double r,
-                                                                    const double sigma,
-                                                                    const double q, const int n,
-                                                                    const OptionType type) {
+double FUNC_NAME(vanilla_american_binomial_cuda)(const double S, const double K, const double T,
+                                                 const double r, const double sigma, const double q,
+                                                 const int n, const OptionType type) {
     const double deltaT = T / n;
     const double u = std::exp(sigma * std::sqrt(deltaT));
     const double d = 1.0 / u;
@@ -164,50 +152,45 @@ double vanilla_american_binomial_cuda_x_y_unroll_tile_banked_ignore(const double
     cudaMalloc(&st_buffer, (2 * n + 2) * sizeof(double));
 
     int fill_num_blocks = std::ceil((2 * n + 1) * 1.0 / 1024);
-    FUNC_NAME(fill_pricing)<<<fill_num_blocks, 1024>>>(st_buffer, S, K, u, sign, n);
+    FUNC_NAME(fill_st_buffer_kernel)<<<fill_num_blocks, 1024>>>(st_buffer, S, K, u, sign, n);
 
-    FUNC_NAME(first_layer)<<<num_blocks, thread_per_block>>>(d_option_values, st_buffer, n);
+    FUNC_NAME(compute_first_layer_kernel)<<<num_blocks, thread_per_block>>>(d_option_values,
+                                                                            st_buffer, n);
     int level = n;
-    int last_index = _bin_search_zeros(n, S, K, u);
 #ifdef PROFILING
     int _iter = 0;
 #endif
 
-    for (;; level -= UNROLL_FACTOR) {
-        last_index = std::min(level, last_index + UNROLL_FACTOR);
-        if (!(last_index >= UNROLL_FACTOR && last_index > OUTPUTS_PER_THREAD)) {
-            break;
-        }
-        num_blocks = std::ceil((last_index - UNROLL_FACTOR + 1) * 1.0 /
-                               (thread_per_block * OUTPUTS_PER_THREAD));
+    for (; level >= UNROLL_FACTOR && level > OUTPUTS_PER_THREAD; level -= UNROLL_FACTOR) {
+        num_blocks =
+            std::ceil((level - UNROLL_FACTOR + 1) * 1.0 / (thread_per_block * OUTPUTS_PER_THREAD));
 #ifdef PROFILING
         if ((_iter % 4) == 0) {
             std::string kernel_label = "lvl_" + std::to_string(level);
             nvtxRangePushA(kernel_label.c_str());
             cudaProfilerStart();
-            FUNC_NAME(vanilla_american_binomial_cuda_kernel)<<<num_blocks, thread_per_block>>>(
+            FUNC_NAME(compute_next_layers_kernel)<<<num_blocks, thread_per_block>>>(
                 d_option_values, d_option_values_next, st_buffer, up, down, level - UNROLL_FACTOR,
                 n);
             cudaDeviceSynchronize();
             cudaProfilerStop();
             nvtxRangePop();
         } else {
-            FUNC_NAME(vanilla_american_binomial_cuda_kernel)<<<num_blocks, thread_per_block>>>(
+            FUNC_NAME(compute_next_layers_kernel)<<<num_blocks, thread_per_block>>>(
                 d_option_values, d_option_values_next, st_buffer, up, down, level - UNROLL_FACTOR,
-                n, last_index);
+                n);
         }
         _iter++;
 #else
-        FUNC_NAME(vanilla_american_binomial_cuda_kernel)<<<num_blocks, thread_per_block>>>(
-            d_option_values, d_option_values_next, st_buffer, up, down, level - UNROLL_FACTOR, n,
-            last_index);
+        FUNC_NAME(compute_next_layers_kernel)<<<num_blocks, thread_per_block>>>(
+            d_option_values, d_option_values_next, st_buffer, up, down, level - UNROLL_FACTOR, n);
 #endif
         std::swap(d_option_values, d_option_values_next);
     }
 
     for (; level >= 1; level--) {
         num_blocks = std::ceil((level)*1.0 / thread_per_block);
-        FUNC_NAME(single_vanilla_american_binomial_cuda_kernel)<<<num_blocks, thread_per_block>>>(
+        FUNC_NAME(compute_next_layer_kernel)<<<num_blocks, thread_per_block>>>(
             d_option_values, d_option_values_next, st_buffer, up, down, level - 1, n);
         std::swap(d_option_values, d_option_values_next);
     }

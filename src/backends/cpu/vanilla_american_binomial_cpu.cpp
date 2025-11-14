@@ -102,10 +102,10 @@ double vanilla_american_binomial_cpu_trimotm(const double S, const double K, con
     return p[0];
 }
 
-double vanilla_american_binomial_cpu_trimotm_stprecomp(const double S, const double K,
-                                                       const double T, const double r,
-                                                       const double sigma, const double q,
-                                                       const int n, const OptionType type) {
+double vanilla_american_binomial_cpu_trimotm_stprcmp(const double S, const double K, const double T,
+                                                     const double r, const double sigma,
+                                                     const double q, const int n,
+                                                     const OptionType type) {
     if (type == OptionType::Call) {
         return vanilla_american_binomial_cpu_naive(S, K, T, r, sigma, q, n, type);
     }
@@ -144,11 +144,10 @@ double vanilla_american_binomial_cpu_trimotm_stprecomp(const double S, const dou
     return p_store[0];
 }
 
-double vanilla_american_binomial_cpu_trimotm_trimeeoff_stprecomp(const double S, const double K,
-                                                                 const double T, const double r,
-                                                                 const double sigma, const double q,
-                                                                 const int n,
-                                                                 const OptionType type) {
+double vanilla_american_binomial_cpu_trimotm_trimeeoff_stprcmp(const double S, const double K,
+                                                               const double T, const double r,
+                                                               const double sigma, const double q,
+                                                               const int n, const OptionType type) {
     if (type == OptionType::Call || n == 1) {
         return vanilla_american_binomial_cpu_naive(S, K, T, r, sigma, q, n, type);
     }
@@ -192,11 +191,10 @@ double vanilla_american_binomial_cpu_trimotm_trimeeoff_stprecomp(const double S,
     return p_store[0];
 }
 
-double vanilla_american_binomial_cpu_trimotm_trimeeon_stprecomp(const double S, const double K,
-                                                                const double T, const double r,
-                                                                const double sigma, const double q,
-                                                                const int n,
-                                                                const OptionType type) {
+double vanilla_american_binomial_cpu_trimotm_trimeeon_stprcmp(const double S, const double K,
+                                                              const double T, const double r,
+                                                              const double sigma, const double q,
+                                                              const int n, const OptionType type) {
     if (type == OptionType::Call || n == 1) {
         return vanilla_american_binomial_cpu_naive(S, K, T, r, sigma, q, n, type);
     }
