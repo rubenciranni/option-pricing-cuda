@@ -50,8 +50,35 @@ echo '=== NSIGHT SYSTEMS PROFILING ==='
   ./bin/pricing_cli benchmark --parameters $PARAMETER --filter-by-name $FUNCTION_NAME
 
 echo ''
+echo '=== EXTRACTING MATCHING KERNELS ==='
+MATCHING_KERNELS=\$(nsys stats ../profile_res/profile_report.sqlite \
+  --report cuda_gpu_kern_sum --format csv 2>/dev/null | \
+  tail -n +2 | awk -F'\"' 'NF>=2 {print \$(NF-1)}' | grep -v '^$' | grep -E \"$REGEX_KERNEL\" | sort -u)
+
+echo \"Found matching kernels:\"
+echo \"\$MATCHING_KERNELS\"
+
+echo ''
 echo '=== NSIGHT COMPUTE PROFILING ==='
-ncu --target-processes all --kernel-name \"regex:$REGEX_KERNEL\" --set full \
-  --launch-skip 100 --launch-count 5 -f -o ../profile_res/profile_kernel \
-  ./bin/pricing_cli benchmark --parameters $PARAMETER --filter-by-name $FUNCTION_NAME
+KERNEL_NUM=0
+while IFS= read -r KERNEL; do
+  [ -z \"\$KERNEL\" ] && continue
+  KERNEL_NUM=\$((KERNEL_NUM + 1))
+
+  # Extract just the kernel name without parameters
+  KERNEL_NAME=\$(echo \"\$KERNEL\" | sed 's/(.*//')
+
+  echo \"\"
+  echo \"Profiling kernel \$KERNEL_NUM: \$KERNEL_NAME\"
+
+  ncu --target-processes all --kernel-name \"\$KERNEL_NAME\" --set full \
+    --launch-skip 100 --launch-count 5 -f \
+    -o ../profile_res/profile_kernel_\${KERNEL_NUM} \
+    ./bin/pricing_cli benchmark --parameters $PARAMETER --filter-by-name $FUNCTION_NAME
+done <<< \"\$MATCHING_KERNELS\"
+
+echo ''
+echo '=== PROFILING COMPLETE ==='
+echo \"Generated profile files:\"
+ls -lh ../profile_res/profile_kernel_*.ncu-rep 2>/dev/null || echo \"No kernel profiles generated\"
 "
