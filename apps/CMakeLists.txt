@@ -11,11 +11,21 @@ FetchContent_Declare(
     GIT_TAG        master   # you can pin a commit hash instead for reproducibility
 )
 
+FetchContent_Declare(
+    json
+    URL https://github.com/nlohmann/json/releases/download/v3.12.0/json.tar.xz
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
+
+
 FetchContent_MakeAvailable(rang)
 
 FetchContent_MakeAvailable(CLI11)
 
+FetchContent_MakeAvailable(json)
+
 add_executable(pricing_cli)
+
 
 target_sources(pricing_cli PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/pricing_cli.cpp
@@ -33,6 +43,7 @@ target_link_libraries(pricing_cli
       benchmarks
       models
       cpu_impl
+      nlohmann_json::nlohmann_json
 )
 
 if(TARGET openmp_impl)

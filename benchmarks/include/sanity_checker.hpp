@@ -6,7 +6,7 @@
 #include "function_registry.hpp"
 
 // clang-format off
-std::vector<PricingInput> SANITY_CHECK_PRICING_INPUTS = {
+inline std::vector<PricingInput> SANITY_CHECK_PRICING_INPUTS = {
     PricingInput(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, OptionType::Put, "At-the-money put"),
     PricingInput(150, 100, 1.0, 0.05, 0.25, 0.02, 100, OptionType::Put, "Deep OTM put"),
     PricingInput(50, 100, 1.0, 0.05, 0.25, 0.02, 100, OptionType::Put, "Deep ITM put"),
@@ -26,6 +26,8 @@ std::vector<PricingInput> SANITY_CHECK_PRICING_INPUTS = {
 };
 // clang-format on
 
+typedef std::vector<std::tuple<PricingInput, double, double>> SanityCheckResults;
+
 class SanityChecker {
    public:
     std::string reference_function_name;
@@ -44,22 +46,16 @@ class SanityChecker {
         }
     }
 
-    bool run_single_all_sanity_checks(std::string fun_name, PricingFunction func) {
-        bool all_passed = true;
+    SanityCheckResults run_single_all_sanity_checks(PricingFunction func) {
+        SanityCheckResults test_results;
         for (const auto& test : reference_function_results) {
             const PricingInput& run = test.first;
             double expected = test.second;
             double price = func(run.S, run.K, run.T, run.r, run.sigma, run.q, run.n, run.type);
-            if (with_logging) {
-                if (std::abs(price - expected) > 1e-5) {
-                    std::cout << "Mismatch in " << fun_name << " vs " << reference_function_name
-                              << " (parameters: '" << run.name << "'): expected " << expected
-                              << ", got " << price << " (diff = " << std::abs(price - expected)
-                              << ")\n";
-                    all_passed = false;
-                }
+            if (std::abs(price - expected) > 1e-5) {
+                test_results.emplace_back(run, expected, price);
             }
         }
-        return all_passed;
+        return test_results;
     }
 };
