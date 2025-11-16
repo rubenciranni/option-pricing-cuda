@@ -79,3 +79,7 @@ std::vector<BenchmarkResult> benchmark(const std::string& filter_function_name,
                                        const std::string& benchmark_parameters,
                                        const std::string& reference_function_name,
                                        const bool skip_sanity_checks);
+
+std::vector<std::vector<BenchmarkResult>> random_benchmark(
+    const std::string& filter_function_name, const std::string& reference_function_name,
+    const int n_random_runs, bool skip_sanity_checks);

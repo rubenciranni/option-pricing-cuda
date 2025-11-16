@@ -7,6 +7,7 @@
 #include "backends/hyperparams.hpp"
 #include "benchmark_parameters.hpp"
 #include "function_registry.hpp"
+#include "run_random_generator.hpp"
 #include "sanity_checker.hpp"
 
 // clang-format off
@@ -113,6 +114,59 @@ std::vector<BenchmarkResult> benchmark(const std::string& filter_function_name,
                 }
             }
             results.push_back(result);
+        }
+    }
+    return results;
+}
+
+std::vector<std::vector<BenchmarkResult>> random_benchmark(
+    const std::string& filter_function_name, const std::string& reference_function_name,
+    const int n_random_runs, bool skip_sanity_checks) {
+    if (FUNCTION_REGISTRY.find(reference_function_name) == FUNCTION_REGISTRY.end()) {
+        std::cerr << "Reference function '" << reference_function_name
+                  << "' not found in function registry.\n";
+        return {};
+    }
+
+    SanityChecker sanity_checker(reference_function_name,
+                                 FUNCTION_REGISTRY[reference_function_name]);
+
+    std::map<std::string, SanityCheckResults> sanity_checks_map;
+    std::vector<std::vector<BenchmarkResult>> results;
+    for (const auto& [name, func] : FUNCTION_REGISTRY) {
+        if (name.find(filter_function_name) != std::string::npos || filter_function_name.empty()) {
+            // Measure execution time
+            SanityCheckResults sanity_check;
+            if (!skip_sanity_checks) {
+                sanity_check = sanity_checker.run_single_all_sanity_checks(func);
+                sanity_checks_map[name] = sanity_check;
+            }
+        }
+    }
+    for (const auto& run :
+         RunGenerator().generateRandomRuns(n_random_runs, 1000, 2000, 100, 5, OptionType::Put)) {
+        std::vector<BenchmarkResult> results_per_run;
+        for (const auto& [name, func] : FUNCTION_REGISTRY) {
+            // filter_function_name is a substring match
+            if (name.find(filter_function_name) != std::string::npos ||
+                filter_function_name.empty()) {
+                BenchmarkResult result(run, "random_sampled", {}, name, reference_function_name,
+                                       sanity_checks_map[name]);
+                for (int n = run.nstart; n <= run.nend; n += run.nstep) {
+                    for (int _ = 0; _ < run.nrepetition_at_step; _++) {
+                        auto start = std::chrono::high_resolution_clock::now();
+                        double price =
+                            func(run.S, run.K, run.T, run.r, run.sigma, run.q, n, run.type);
+                        auto end = std::chrono::high_resolution_clock::now();
+                        std::chrono::duration<double, std::milli> duration = end - start;
+
+                        result.execution_times[n].push_back(duration.count());
+                        result.prices[n].push_back(price);
+                    }
+                }
+                results_per_run.push_back(result);
+            }
+            results.push_back(results_per_run);
         }
     }
     return results;

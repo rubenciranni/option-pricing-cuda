@@ -14,6 +14,7 @@
 #include "constants.hpp"
 #include "models/vanilla_american_binomial.hpp"
 #include "models/vanilla_european_binomial.hpp"
+using json = nlohmann::json;
 
 std::pair<double, double> mean_and_std(const std::vector<double>& v) {
     double mean = 0., std = 0.;
@@ -145,8 +146,7 @@ std::pair<std::string, std::vector<std::string>> parse_hyperparams(const std::st
     return std::make_pair(func_id, hyperparams);
 }
 
-void print_benchmark_results_json(const std::vector<BenchmarkResult>& results) {
-    using json = nlohmann::json;
+json print_benchmark_results_json(const std::vector<BenchmarkResult>& results) {
     json output;
     output["runs"] = json::array();
 
@@ -208,7 +208,7 @@ void print_benchmark_results_json(const std::vector<BenchmarkResult>& results) {
                {"time_ms_std", time_vals_std},
                {"price", price_vals}}}});
     }
-    std::cout << output.dump(1, '\t') << std::endl;
+    return output;
 }
 
 int main(int argc, char** argv) {
@@ -269,6 +269,27 @@ int main(int argc, char** argv) {
     auto list_parameters_subcommand = app.add_subcommand(
         "benchmark-parameters", "List available benchmark parameters and their config");
 
+    auto random_benchmark_subcommand =
+        app.add_subcommand("random-benchmark", "Run benchmark on randomly generated parameters");
+    random_benchmark_subcommand
+        ->add_option("--filter-by-name", filter_name, "Filter functions by name")
+        ->default_val("");
+
+    random_benchmark_subcommand
+        ->add_option("--reference-function", reference_function_name,
+                     "Reference function name for sanity checks")
+        ->default_val("vanilla_american_binomial_cpu_naive");
+    random_benchmark_subcommand
+        ->add_flag("--skip-sanity-checks", skip_sanity_checks, "Skip sanity checks.")
+        ->default_val(false);
+    random_benchmark_subcommand
+        ->add_option("--output-format", output_format_str, "Output Format (pprint|json)")
+        ->default_val("pprint")
+        ->check(CLI::IsMember({"pprint", "json"}));
+    random_benchmark_subcommand
+        ->add_option("--n-random-runs", n, "Number of random benchmark runs to perform")
+        ->default_val(5);
+
     try {
         app.require_subcommand(1);
         app.parse(argc, argv);
@@ -308,11 +329,37 @@ int main(int argc, char** argv) {
             print_sanity_checks(results, skip_sanity_checks);
             print_benchmark_results_pprint(results);
         } else if (output_format == OutputFormat::JSON) {
-            print_benchmark_results_json(results);
+            json output = print_benchmark_results_json(results);
+            std::cout << output.dump(1, '\t') << std::endl;
         }
 
     } else if (*list_parameters_subcommand) {
         list_benchmark_parameters();
+    } else if (*random_benchmark_subcommand) {
+        OutputFormat output_format = output_format_from_string(output_format_str);
+
+        auto results =
+            random_benchmark(filter_name, reference_function_name, n, skip_sanity_checks);
+
+        if (results.empty()) {
+            std::cout << rang::fg::yellow
+                      << "No functions matched the given filter: " << filter_name << rang::fg::reset
+                      << "\n";
+            return 0;
+        }
+        if (output_format == OutputFormat::PPRINT) {
+            print_sanity_checks(results[0], skip_sanity_checks);
+            for (const auto& res_per_run : results) {
+                print_benchmark_results_pprint(res_per_run);
+            }
+        } else if (output_format == OutputFormat::JSON) {
+            json output = json::array();
+
+            for (const auto& res_per_run : results) {
+                output.push_back(print_benchmark_results_json(res_per_run));
+            }
+            std::cout << output.dump(1, '\t') << std::endl;
+        }
     }
 
     return 0;
