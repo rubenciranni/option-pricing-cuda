@@ -32,14 +32,21 @@ template <const int THREADS_PER_BLOCK, const int UNROLL_FACTOR>
 __global__ void FUNC_NAME(compute_next_layers_kernel)(
     double* __restrict__ layer_values_read, double* __restrict__ layer_values_write,
     double* __restrict__ st_buffer_bank0, double* __restrict__ st_buffer_bank1, const double up,
-    const double down, const int level, const int n, const int upper_bound) {
+    const double down, const int level, const int n, const int upper_bound,const  int offset_red,const int red_count) {
     __shared__ double layer_values_tile[2][THREADS_PER_BLOCK + 1];
 
+    
     int tile_stride = THREADS_PER_BLOCK - UNROLL_FACTOR;
     int tile_base = tile_stride * blockIdx.x;
-    int node_id = tile_base + threadIdx.x;
+    int node_id = tile_base + threadIdx.x+ offset_red;
 
-    layer_values_tile[0][threadIdx.x] = layer_values_read[node_id];
+    int st_index = node_id + (n - (level + UNROLL_FACTOR)) / 2;
+    double* st_buffer_bank = (n - (level + UNROLL_FACTOR)) % 2 ? st_buffer_bank1 : st_buffer_bank0;
+    if(tile_base + threadIdx.x <red_count){
+        layer_values_tile[0][threadIdx.x] = st_buffer_bank[st_index];
+    }else{
+        layer_values_tile[0][threadIdx.x] = layer_values_read[node_id];
+    }
 
     __syncthreads();
 
@@ -49,7 +56,7 @@ __global__ void FUNC_NAME(compute_next_layers_kernel)(
         int write_idx = (i + 1) % 2;
 
         int current_level = level + UNROLL_FACTOR - 1 - i;
-        double* st_buffer_bank = (n - current_level) % 2 ? st_buffer_bank1 : st_buffer_bank0;
+        st_buffer_bank = (n - current_level) % 2 ? st_buffer_bank1 : st_buffer_bank0;
 
         double hold = fma(up, layer_values_tile[read_idx][threadIdx.x + 1],
                           down * layer_values_tile[read_idx][threadIdx.x]);
@@ -78,11 +85,21 @@ __global__ void FUNC_NAME(compute_next_layer_kernel)(double* __restrict__ layer_
                                                      double* __restrict__ st_buffer_bank0,
                                                      double* __restrict__ st_buffer_bank1,
                                                      const double up, const double down,
-                                                     const int level, const int n) {
+                                                     const int level, const int n,const int offset_red) {
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
+    double up_val = layer_values_read[threadId + 1];
+    double down_val = layer_values_read[threadId ];
+    double* st_buffer_bank = (n - level+1) % 2 ? st_buffer_bank1 : st_buffer_bank0;
+    int old_red=threadId + (n - (level + 1)) / 2;
+    if(threadId<=offset_red){
+        down_val=layer_values_read[old_red];
+    }
+    if(threadId+1<=offset_red){
+        up_val=layer_values_read[old_red+1];
+    }
 
-    double hold = up * layer_values_read[threadId + 1] + down * layer_values_read[threadId];
-    double* st_buffer_bank = (n - level) % 2 ? st_buffer_bank1 : st_buffer_bank0;
+    double hold = up * up_val + down * down_val;
+    st_buffer_bank = (n - level) % 2 ? st_buffer_bank1 : st_buffer_bank0;
     double exercise = st_buffer_bank[threadId + (n - level) / 2];
     layer_values_write[threadId] = fmax(hold, exercise);
 }
@@ -100,6 +117,26 @@ int FUNC_NAME(search_bound)(const int n, const double S, const double K, const d
             upper = mid - 1;
         else
             lower = mid;
+    }
+    return lower;
+}
+
+int FUNC_NAME(search_red)(const int n, const double S, const double K, const double u, const double up,
+                   const double down, const int sign) {
+    int lower = 0;
+    int upper = n - 1;
+    while (lower < upper - 1) {
+        int mid = (upper + lower) / 2;
+        double S_i_n = sign * (S * std::pow(u, mid * 2 - n) - K);
+        double S_i1_n = sign * (S * std::pow(u, (mid + 1) * 2 - n) - K);
+        double S_i_n_2 = sign * (S * std::pow(u, mid * 2 - (n - 1)) - K);
+        if (S_i1_n < 0 || S_i_n_2 < 0 || S_i_n < 0) {
+            upper = mid;
+        } else if (up * S_i1_n + down * S_i_n < S_i_n_2) {
+            lower = mid;
+        } else {
+            upper = mid;
+        }
     }
     return lower;
 }
@@ -137,23 +174,34 @@ double FUNC_NAME(vanilla_american_binomial_cuda)(const double S, const double K,
                cudaMemcpyDeviceToDevice);
 
     int bound = FUNC_NAME(search_bound)(n, S, K, u, sign);
+    int red = FUNC_NAME(search_red)(n, S, K, u, up, down, sign) -1 ; 
+
     int level = n - 1 - (UNROLL_FACTOR - 1);
+    int offset_red ,red_count;
     for (; level >= 0; level -= UNROLL_FACTOR) {
         int num_nodes = std::min(level, bound);
+        if(red - (n - level) >= 0){
+            offset_red = red - (n - level);
+            red_count = min(offset_red,UNROLL_FACTOR)+1;
+        }else{
+            offset_red = 0;
+            red_count = 0; 
+        }
         num_blocks =
-            std::ceil((num_nodes + UNROLL_FACTOR) * 1.0 / (THREADS_PER_BLOCK - UNROLL_FACTOR));
+            std::ceil((num_nodes - offset_red + UNROLL_FACTOR) * 1.0 / (THREADS_PER_BLOCK - UNROLL_FACTOR));
         FUNC_NAME(compute_next_layers_kernel)<THREADS_PER_BLOCK, UNROLL_FACTOR>
             <<<num_blocks, THREADS_PER_BLOCK>>>(layer_values_read_d, layer_values_write_d,
                                                 st_buffer_bank0_d, st_buffer_bank1_d, up, down,
-                                                level, n, num_nodes);
+                                                level, n, num_nodes, offset_red,red_count);
         std::swap(layer_values_read_d, layer_values_write_d);
     }
     level += (UNROLL_FACTOR - 1);
     for (; level >= 0; level -= 1) {
-        num_blocks = std::ceil((level + 1) * 1.0 / THREADS_PER_BLOCK);
+        offset_red = max(-1,red - (n - (level)));
+        num_blocks = std::ceil((level - max(offset_red,0) + 1) * 1.0 / THREADS_PER_BLOCK);
         FUNC_NAME(compute_next_layer_kernel)<<<num_blocks, THREADS_PER_BLOCK>>>(
             layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d, up,
-            down, level, n);
+            down, level, n,offset_red);
         std::swap(layer_values_read_d, layer_values_write_d);
     }
 
