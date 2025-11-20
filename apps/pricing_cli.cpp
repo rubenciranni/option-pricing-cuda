@@ -79,51 +79,84 @@ void print_benchmark_results_pprint(const std::vector<BenchmarkResult>& results)
     std::cout << "\n"
               << rang::style::bold << "=== BENCHMARK RESULTS ===" << rang::style::reset << "\n";
     std::cout << "Benchmark Parameters: " << to_string(results[0].run) << "\n\n";
-    for (const auto& res : results) {
-        std::cout << std::string(80, '=') << "\n";
-        std::cout << rang::style::bold;
+    if (results.empty()) {
+        std::cout << rang::fg::yellow << "No benchmark results to display." << rang::fg::reset
+                  << "\n";
+        return;
+    }
+    int max_functional_name_size = 50;
+    int max_witdh_step_size = 15;
+    // compute total width for separator
+    size_t n_steps_count = results.empty() ? 0 : results[0].execution_times.size();
+    size_t total_width = max_functional_name_size + n_steps_count * max_witdh_step_size;
 
+    std::cout << std::string(total_width, '=') << "\n";
+    std::cout << rang::style::bold;
+    // Header: function name column (left) then each step column (right)
+    std::cout << std::left << std::setw(max_functional_name_size) << "Function name";
+    for (const auto& [n_steps, times] : results[0].execution_times) {
+        std::string col = "n" + std::to_string(n_steps);
+        std::cout << std::right << std::setw(max_witdh_step_size) << col;
+    }
+    std::cout << rang::style::reset << "\n";
+    std::cout << std::string(total_width, '=') << "\n";
+
+    // Helper to find times vector for a given n_steps in a run (works whether execution_times is map or vector of pairs)
+    auto find_times = [](const BenchmarkResult& run, int n) -> const std::vector<double>* {
+        for (const auto& p : run.execution_times) {
+            if (p.first == n) return &p.second;
+        }
+        return nullptr;
+    };
+
+    for (const auto& res : results) {
+        // color by sanity check
         if (res.pass_sanity_check())
             std::cout << rang::fg::green;
         else
             std::cout << rang::fg::red;
 
-        std::cout << "Function: " << res.function_name << rang::style::reset << "\n";
-        std::cout << std::string(80, '-') << "\n";
+        std::string function_title = res.function_name;
+        if (function_title.rfind("vanilla_american_binomial_") != std::string::npos) {
+            function_title = function_title.substr(26);
+        }
+        if (function_title.size() > static_cast<size_t>(max_functional_name_size)) {
+            function_title = function_title.substr(0, max_functional_name_size - 3) + "...";
+        }
 
-        // Table header
-        std::cout << std::left << std::setw(12) << "n" << std::right << std::setw(15) << "Time (ms)"
-                  << std::right << std::setw(20) << "Output"
-                  << "\n";
-        std::cout << std::string(70, '-') << "\n";
+        // print function title left-aligned in fixed width
+        std::cout << std::left << std::setw(max_functional_name_size) << function_title;
 
-        // Table body
-        for (const auto& [n_steps, time] : res.execution_times) {
-            std::vector<double> price = res.prices.at(n_steps);
-
-            if (time.size() > 1) {
-                double mean_price = 0., mean_time = 0., std_price = 0., std_time = 0.;
-                std::tie(mean_time, std_time) = mean_and_std(time);
-                std::tie(mean_price, std_price) = mean_and_std(price);
-
-                std::cout << std::left << std::setw(8) << n_steps << std::right << std::setw(15)
-                          << std::fixed << std::setprecision(3) << mean_time << "±"
-                          << std::setprecision(5) << std_time << std::right << std::setw(18)
-                          << std::fixed << std::setprecision(6) << mean_price << "±"
-                          << 3 * std_price << "\n";
-            }
-            if (time.size() == 1) {
-                double mean_time = time[0], mean_price = price[0];
-
-                std::cout << std::left << std::setw(12) << n_steps << std::right << std::setw(15)
-                          << std::fixed << std::setprecision(3) << mean_time << std::right
-                          << std::setw(20) << std::fixed << std::setprecision(6) << mean_price
-                          << "\n";
+        // print each column (use the step ordering from results[0])
+        for (const auto& [n_steps, _] : results[0].execution_times) {
+            const std::vector<double>* times = find_times(res, n_steps);
+            double mean_time = 0.0, std_time = 0.0;
+            if (times && !times->empty()) {
+                if (times->size() == 1) {
+                    mean_time = (*times)[0];
+                    std_time = 0.0;
+                } else {
+                    std::tie(mean_time, std_time) = mean_and_std(*times);
+                }
+                std::ostringstream oss;
+                oss << std::fixed << std::setprecision(3) << mean_time;
+                if (std_time > 0.0) {
+                    oss << "±" << std::fixed << std::setprecision(3) << std_time;
+                } else {
+                    // keep spacing consistent when no std
+                    oss << "     ";
+                }
+                std::cout << std::right << std::setw(max_witdh_step_size) << oss.str();
+            } else {
+                // missing data for this run/step
+                std::cout << std::right << std::setw(max_witdh_step_size) << "-";
             }
         }
 
-        std::cout << std::string(80, '=') << "\n\n";
+        std::cout << rang::fg::reset << "\n";
     }
+
+    std::cout << std::string(total_width, '=') << "\n\n";
 }
 
 std::pair<std::string, std::vector<std::string>> parse_hyperparams(const std::string& name) {

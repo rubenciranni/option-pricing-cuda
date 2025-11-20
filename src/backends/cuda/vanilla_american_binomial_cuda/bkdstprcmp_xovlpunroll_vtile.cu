@@ -153,6 +153,7 @@ double FUNC_NAME(vanilla_american_binomial_cuda)(const double S, const double K,
     cudaFree(st_buffer_bank0_d);
     cudaFree(st_buffer_bank1_d);
 
+    checkCuda(cudaGetLastError());
     return value_h;
 }
 

@@ -203,5 +203,6 @@ double FUNC_NAME(vanilla_american_binomial_cuda)(const double S, const double K,
     cudaFree(d_option_values_next);
     cudaFree(st_buffer);
 
+    checkCuda(cudaGetLastError());
     return h_s_store;
 }
