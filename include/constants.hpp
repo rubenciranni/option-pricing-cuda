@@ -112,3 +112,26 @@ inline ExerciseType exercise_type_from_string(std::string& style) {
     else
         throw std::invalid_argument("Invalid ExerciseType: " + style);
 }
+
+class PricingInput {
+   public:
+    std::string name;
+    double S;
+    double K;
+    double T;
+    double r;
+    double sigma;
+    double q;
+    int n;
+    OptionType type;
+
+    PricingInput() : S(0), K(0), T(0), r(0), sigma(0), q(0), n(0), type(OptionType::Call) {}
+
+    PricingInput(double S, double K, double T, double r, double sigma, double q, int n,
+                 OptionType type)
+        : name(""), S(S), K(K), T(T), r(r), sigma(sigma), q(q), n(n), type(type) {}
+
+    PricingInput(double S, double K, double T, double r, double sigma, double q, int n,
+                 OptionType type, std::string name)
+        : name(name), S(S), K(K), T(T), r(r), sigma(sigma), q(q), n(n), type(type) {}
+};

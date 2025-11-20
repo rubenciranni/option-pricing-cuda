@@ -10,7 +10,7 @@
 // TPB 128 UF 35 ~2.6ms on 10k
 // TPB 256 UF 32 ~660ms on 250k
 
-#define IMPL_NAME bkdstprcmp_xovlpunroll_vtile_trimotm
+#define IMPL_NAME bkdstprcmp_xovlpunroll_vtile_trimotm_trimeeoff
 
 __global__ void FUNC_NAME(fill_st_buffers_kernel)(double* __restrict__ st_buffer_bank0,
                                                   double* __restrict__ st_buffer_bank1,
@@ -176,14 +176,14 @@ template double FUNC_NAME(
     const double q, const int n, const OptionType type);
 
 #ifdef DO_CARTESIAN_PRODUCT
-#ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XOVLPUNROLL_VTILE_TRIMOTM
+#ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XOVLPUNROLL_VTILE_TRIMOTM_TRIMEEOFF
 
-#define PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XOVLPUNROLL_VTILE_TRIMOTM(     \
+#define PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XOVLPUNROLL_VTILE_TRIMOTM_TRIMEOFF(     \
     ID, A, B, C, D, E, Y)                                                                    \
     template double FUNC_NAME(vanilla_american_binomial_cuda)<GRID_SEARCH_HYPERPARAMS_##ID>( \
         const double S, const double K, const double T, const double r, const double sigma,  \
         const double q, const int n, const OptionType type);
-APPLY_FUNCTION(PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XOVLPUNROLL_VTILE_TRIMOTM,
+APPLY_FUNCTION(PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XOVLPUNROLL_VTILE_TRIMOTM_TRIMEOFF,
                HYPERPARAMS_CART_PRODUCT, NULL)
 
 #endif
