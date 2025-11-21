@@ -83,6 +83,10 @@ double vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile_trimotm_trime
     const double q, const int n, const OptionType type);
 
 
+double vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_shuffle_trimotm(
+    const double S, const double K, const double T, const double r, const double sigma,
+    const double q, const int n, const OptionType type);
+
 inline double vanilla_american_binomial_cuda(const double S, const double K, const double T,
                                              const double r, const double sigma, const double q,
                                              const int n, const OptionType type) {
