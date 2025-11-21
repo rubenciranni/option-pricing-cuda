@@ -1,4 +1,5 @@
-#include <CLI/CLI.hpp>
+#include "include/pricing_cli.hpp"
+
 #include <CLI/CLI.hpp>
 #include <algorithm>
 #include <benchmark.hpp>
@@ -15,7 +16,6 @@
 #include "constants.hpp"
 #include "models/vanilla_american_binomial.hpp"
 #include "models/vanilla_european_binomial.hpp"
-#include "include/pricing_cli.hpp"
 
 int main(int argc, char** argv) {
     CLI::App app{"CLI for Option Pricing and Benchmarking"};
@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
     std::string option_type_str, exercise_type_str, pricing_method_str, backend_str,
         output_format_str;
     double S, K, T, r, sigma, q;
-    int n,random_runs;
+    int n, random_runs;
 
     auto price_subcommand = app.add_subcommand("price", "Run a single pricing query");
     price_subcommand->add_option("--type", option_type_str, "Option type (call|put)")
@@ -96,8 +96,8 @@ int main(int argc, char** argv) {
         ->add_option("--n-random-runs", random_runs, "Number of random benchmark runs to perform")
         ->default_val(5);
 
-    auto batch_random_benchmark_subcommand =
-        app.add_subcommand("batch-random-benchmark", "Run benchmark on randomly generated parameters");
+    auto batch_random_benchmark_subcommand = app.add_subcommand(
+        "batch-random-benchmark", "Run benchmark on randomly generated parameters");
     batch_random_benchmark_subcommand
         ->add_option("--filter-by-name", filter_name, "Filter functions by name")
         ->default_val("");
@@ -116,8 +116,7 @@ int main(int argc, char** argv) {
     batch_random_benchmark_subcommand
         ->add_option("--n-random-runs", random_runs, "Number of random benchmark runs to perform")
         ->default_val(5);
-    batch_random_benchmark_subcommand
-        ->add_option("-n", n, "Number of step 'n' in each random run")
+    batch_random_benchmark_subcommand->add_option("-n", n, "Number of step 'n' in each random run")
         ->default_val(1000);
     try {
         app.require_subcommand(1);
@@ -154,13 +153,13 @@ int main(int argc, char** argv) {
                       << "\n";
             return 0;
         }
-            if (output_format == OutputFormat::PPRINT) {
-                print_sanity_checks(results, skip_sanity_checks);
-                print_benchmark_results(results);
-            } else if (output_format == OutputFormat::JSON) {
-                nlohmann::json output = dump_benchmark_results_json(results);
-                std::cout << output.dump(1, '\t') << std::endl;
-            }
+        if (output_format == OutputFormat::PPRINT) {
+            print_sanity_checks(results, skip_sanity_checks);
+            print_benchmark_results(results);
+        } else if (output_format == OutputFormat::JSON) {
+            nlohmann::json output = dump_benchmark_results_json(results);
+            std::cout << output.dump(1, '\t') << std::endl;
+        }
 
     } else if (*list_parameters_subcommand) {
         list_benchmark_parameters();
@@ -189,16 +188,12 @@ int main(int argc, char** argv) {
             }
             std::cout << output.dump(1, '\t') << std::endl;
         }
-    }else if(*batch_random_benchmark_subcommand){
-        OutputFormat output_format = output_format_from_string(output_format_str);
-        auto results =
-            batch_random_benchmark(filter_name, reference_function_name,  random_runs,n, skip_sanity_checks);
-        
+    } else if (*batch_random_benchmark_subcommand) {
+        auto results = batch_random_benchmark(filter_name, reference_function_name, random_runs, n,
+                                              skip_sanity_checks);
+
         print_batch_benchmark_result(results);
-
-        
     }
-
 
     return 0;
 }

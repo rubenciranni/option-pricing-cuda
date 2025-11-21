@@ -2,16 +2,15 @@
 #include <cmath>
 #include <iomanip>
 #include <iostream>
+#include <nlohmann/json.hpp>
 #include <rang.hpp>
 #include <sstream>
-#include <nlohmann/json.hpp>
 
 #include "benchmark_parameters.hpp"
 #include "constants.hpp"
 #include "include/pricing_cli.hpp"
 #include "models/vanilla_american_binomial.hpp"
 #include "models/vanilla_european_binomial.hpp"
-
 
 std::pair<double, double> mean_and_std(const std::vector<double>& v) {
     double mean = 0., std = 0.;
@@ -54,7 +53,7 @@ void print_table(const std::vector<int>& max_width,
     // print remaining rows
     for (size_t r = 1; r < table.size(); ++r) {
         const auto& row = table[r];
-        
+
         if (!row.empty()) {
             std::cout << std::left << std::setw(max_width[0]) << row[0];
             for (size_t c = 1; c < cols; ++c) {
@@ -93,19 +92,18 @@ void print_sanity_checks(const std::vector<BenchmarkResult>& results, bool skip_
         max_name_len = std::max(max_name_len, res.function_name.size());
     }
 
-    std::vector<int> max_width = { static_cast<int>(max_name_len), status_width };
+    std::vector<int> max_width = {static_cast<int>(max_name_len), status_width};
 
     std::vector<std::vector<std::string>> table;
-    table.push_back({ "Function", "Status" });
+    table.push_back({"Function", "Status"});
 
     for (const auto& res : results) {
         std::string status = res.pass_sanity_check() ? "✅" : "❌";
-        table.push_back({ res.function_name, status });
+        table.push_back({res.function_name, status});
     }
 
     print_table(max_width, table);
 }
-
 
 void print_benchmark_results(const std::vector<BenchmarkResult>& results) {
     std::cout << "\n"
@@ -118,70 +116,99 @@ void print_benchmark_results(const std::vector<BenchmarkResult>& results) {
 
     std::cout << "Benchmark Parameters: " << to_string(results[0].run) << "\n\n";
 
-    int max_functional_name_size = 50;
-    int max_witdh_step_size = 15;
+    int max_functional_name_size = 85;
+    int max_width_step_size = 15;
 
     // build column widths: first column + one per step
     std::vector<int> max_width;
     max_width.push_back(max_functional_name_size);
-    for (const auto& p : results[0].execution_times) max_width.push_back(max_witdh_step_size);
+    std::fill_n(std::back_inserter(max_width), results[0].execution_times.size(),
+                max_width_step_size);
 
-    std::vector<std::vector<std::string>> table;
+    std::vector<std::vector<std::string>> table_times;
+    std::vector<std::vector<std::string>> table_prices;
     std::vector<std::string> header;
-    header.push_back("Function name");
+    header.push_back("Function");
     for (const auto& [n_steps, _] : results[0].execution_times) {
-        header.push_back("n" + std::to_string(n_steps));
+        header.push_back("n=" + std::to_string(n_steps));
     }
-    table.push_back(header);
+    table_times.push_back(header);
+    table_prices.push_back(header);
 
     // Helper to find times vector for a given n_steps in a run
-    auto find_times = [](const BenchmarkResult& run, int n) -> const std::vector<double>* {
+    auto find_times = [](const BenchmarkResult& run, int n) -> const std::vector<double>& {
         for (const auto& p : run.execution_times) {
-            if (p.first == n) return &p.second;
+            if (p.first == n) return p.second;
         }
-        return nullptr;
+        throw std::runtime_error("No execution times found for n_steps=" + std::to_string(n));
+    };
+
+    // Helper to find prices vector for a given n_steps in a run
+    auto find_prices = [](const BenchmarkResult& run, int n) -> const std::vector<double>& {
+        for (const auto& p : run.prices) {
+            if (p.first == n) return p.second;
+        }
+        throw std::runtime_error("No execution times found for n_steps=" + std::to_string(n));
     };
 
     for (const auto& res : results) {
         std::string function_title = res.function_name;
-        std::string prefix = "vanilla_american_binomial_";
-        if (function_title.rfind(prefix) != std::string::npos) {
-            function_title = function_title.substr(prefix.length());
-        }
-        std::vector<std::string> row;
+        std::vector<std::string> row_times;
+        std::vector<std::string> row_prices;
         // prepend a simple pass/fail marker to title for quick visibility
         std::string marker = res.pass_sanity_check() ? "✅ " : "❌ ";
-        row.push_back(marker + function_title);
+        row_times.push_back(marker + function_title);
+        row_prices.push_back(marker + function_title);
 
         for (const auto& [n_steps, _] : results[0].execution_times) {
-            const std::vector<double>* times = find_times(res, n_steps);
+            const std::vector<double>& times = find_times(res, n_steps);
+            const std::vector<double>& prices = find_prices(res, n_steps);
             double mean_time = 0.0, std_time = 0.0;
-            if (times && !times->empty()) {
-                if (times->size() == 1) {
-                    mean_time = (*times)[0];
+            double mean_price = 0.0, std_price = 0.0;
+            if (!times.empty()) {
+                if (times.size() == 1) {
+                    mean_time = times[0];
                     std_time = 0.0;
                 } else {
-                    std::tie(mean_time, std_time) = mean_and_std(*times);
+                    std::tie(mean_time, std_time) = mean_and_std(times);
                 }
                 std::ostringstream oss;
                 oss << std::fixed << std::setprecision(3) << mean_time;
                 if (std_time > 0.0) {
                     oss << "±" << std::fixed << std::setprecision(3) << std_time;
-                } 
-                row.push_back(oss.str());
+                }
+                row_times.push_back(oss.str());
             } else {
-                row.push_back("-");
+                row_times.push_back("-");
+            }
+            if (!prices.empty()) {
+                if (prices.size() == 1) {
+                    mean_price = prices[0];
+                    std_price = 0.0;
+                } else {
+                    std::tie(mean_price, std_price) = mean_and_std(prices);
+                }
+                std::ostringstream oss;
+                oss << std::fixed << std::setprecision(5) << mean_price;
+                if (std_price > 0.0) {
+                    oss << "±" << std::fixed << std::setprecision(5) << std_price;
+                }
+                row_prices.push_back(oss.str());
+            } else {
+                row_prices.push_back("-");
             }
         }
 
-        table.push_back(row);
+        table_times.push_back(row_times);
+        table_prices.push_back(row_prices);
     }
-
-    print_table(max_width, table);
+    std::cout << "Times\n";
+    print_table(max_width, table_times);
+    std::cout << "Outputs\n";
+    print_table(max_width, table_prices);
 }
 
 void print_batch_benchmark_result(const std::vector<BatchBenchmarkResult>& results) {
-
     std::cout << "\n"
               << rang::style::bold << "=== BENCHMARK RESULTS ===" << rang::style::reset << "\n";
     if (results.empty()) {
@@ -190,31 +217,27 @@ void print_batch_benchmark_result(const std::vector<BatchBenchmarkResult>& resul
         return;
     }
 
-    int max_functional_name_size = 50;
-    int max_witdh_step_size = 15;
+    int max_functional_name_size = 85;
+    int max_width_step_size = 15;
 
     // build column widths: first column + one per step
     std::vector<int> max_width;
     max_width.push_back(max_functional_name_size);
-    max_width.push_back(max_witdh_step_size);
+    max_width.push_back(max_width_step_size);
 
     std::vector<std::vector<std::string>> table;
     std::vector<std::string> header;
-    header.push_back("Function name");
-    header.push_back("Time");
+    header.push_back("Function");
+    header.push_back("Time (ms)");
     table.push_back(header);
 
     for (size_t i = 0; i < results.size(); ++i) {
         std::vector<std::string> row;
         const auto& res = results[i];
         std::string function_title = res.function_name;
-        std::string prefix = "vanilla_american_binomial_";
-        if (function_title.rfind(prefix) != std::string::npos) {
-            function_title = function_title.substr(prefix.length());
-        }
         row.push_back(function_title);
-        double mean,std;
-        std::tie(mean,std)= mean_and_std(res.execution_times);
+        double mean, std;
+        std::tie(mean, std) = mean_and_std(res.execution_times);
         std::ostringstream oss;
         oss << std::fixed << std::setprecision(3) << mean;
         if (std > 0.0) {
@@ -225,8 +248,6 @@ void print_batch_benchmark_result(const std::vector<BatchBenchmarkResult>& resul
     }
     print_table(max_width, table);
 }
-
-
 
 std::pair<std::string, std::vector<std::string>> parse_hyperparams(const std::string& name) {
     std::string func_id = name;
@@ -250,16 +271,16 @@ std::pair<std::string, std::vector<std::string>> parse_hyperparams(const std::st
 
 nlohmann::json dump_run_json(const Run& run) {
     return nlohmann::json{{"S", run.S},
-                {"K", run.K},
-                {"T", run.T},
-                {"r", run.r},
-                {"sigma", run.sigma},
-                {"q", run.q},
-                {"nstart", run.nstart},
-                {"nend", run.nend},
-                {"nstep", run.nstep},
-                {"nrepetition_at_step", run.nrepetition_at_step},
-                {"type", to_string(run.type)}};
+                          {"K", run.K},
+                          {"T", run.T},
+                          {"r", run.r},
+                          {"sigma", run.sigma},
+                          {"q", run.q},
+                          {"nstart", run.nstart},
+                          {"nend", run.nend},
+                          {"nstep", run.nstep},
+                          {"nrepetition_at_step", run.nrepetition_at_step},
+                          {"type", to_string(run.type)}};
 }
 
 nlohmann::json dump_benchmark_result(const BenchmarkResult& res) {
@@ -293,16 +314,16 @@ nlohmann::json dump_benchmark_result(const BenchmarkResult& res) {
     }
 
     output = nlohmann::json{{"id", res.function_name},
-            {"function_id", func_id},
-            {"do_pass_sanity_check", res.pass_sanity_check() ? "true" : "false"},
-            {"sanity_check", sanity_checks},
-            {"hyperparams", hyper_params},
-            {"all_times", all_times},
-            {"runs",
-            {{"n", n_vals},
-            {"time_ms_mean", time_vals_mean},
-            {"time_ms_std", time_vals_std},
-            {"price", price_vals}}}};
+                            {"function_id", func_id},
+                            {"do_pass_sanity_check", res.pass_sanity_check() ? "true" : "false"},
+                            {"sanity_check", sanity_checks},
+                            {"hyperparams", hyper_params},
+                            {"all_times", all_times},
+                            {"runs",
+                             {{"n", n_vals},
+                              {"time_ms_mean", time_vals_mean},
+                              {"time_ms_std", time_vals_std},
+                              {"price", price_vals}}}};
 
     return output;
 }
@@ -321,4 +342,3 @@ nlohmann::json dump_benchmark_results_json(const std::vector<BenchmarkResult>& r
     }
     return output;
 }
-
