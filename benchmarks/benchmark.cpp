@@ -17,6 +17,7 @@ std::map<std::string, Run> BENCHMARK_PARAMETERS = {
     {"s-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1000, 2000, 1000, 1, OptionType::Put)},
     {"s-repeat", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1000, 1001, 1000, 5, OptionType::Put)},
     {"m-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 20000, 10000, 1, OptionType::Put)},
+    {"m-repeat", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 20000, 10000, 1000, OptionType::Put)},
     {"l-repeat", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 210000, 100000, 5, OptionType::Put)},
     {"l-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 210000, 100000, 1, OptionType::Put)},
     {"xl-repeat", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 260000, 50000, 10, OptionType::Put)},
@@ -42,9 +43,10 @@ std::map<std::string, PricingFunction> FUNCTION_REGISTRY = {
     {"vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc_trimotm", vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc_trimotm},
     {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile},
     {"vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile", vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_VTILE_10000>},
-    {"vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile_trimotm", vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile_trimotm<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_VTILE_10000>},
-    { "vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile_trimotm_trimeeoff",vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile_trimotm_trimeeoff<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_VTILE_10000>}
-    {"vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_shuffle_trimotm", vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_shuffle_trimotm},
+    {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_VTILE_10000>},
+    {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
+    {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc},
+
 
     #ifdef DO_CARTESIAN_PRODUCT
         #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_STPRCMP_YUNROLL_VTILE
@@ -65,8 +67,11 @@ std::map<std::string, PricingFunction> FUNCTION_REGISTRY = {
         #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XOVLPUNROLL_VTILE
             APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile)
         #endif
-        #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XOVLPUNROLL_VTILE_TRIMOTM
-            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile_trimotm)
+        #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XDOVLPUNROLL_VTILE_TRIMOTM
+            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm)
+        #endif
+        #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM
+            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm)
         #endif
         #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XOVLPUNROLL_VTILE_TRIMOTM_TRIMEEOFF
             APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile_trimotm_trimeeoff)
@@ -180,11 +185,11 @@ std::vector<std::vector<BenchmarkResult>> random_benchmark(
 
 std::map<std::string, BatchPricingFunction> BATCH_FUNCTION_REGISTRY = {
     {"vanilla_american_binomial_cuda_batch_naive", vanilla_american_binomial_cuda_batch_naive},
-    {"vanilla_american_binomial_cuda_batch_stprcmp", vanilla_american_binomial_cuda_batch_stprcmp}
-};
-std::vector<BatchBenchmarkResult> batch_random_benchmark(
-    const std::string& filter_function_name, const std::string& reference_function_name,
-    const int n_random_runs,const int n, bool skip_sanity_checks) {
+    {"vanilla_american_binomial_cuda_batch_stprcmp", vanilla_american_binomial_cuda_batch_stprcmp}};
+std::vector<BatchBenchmarkResult> batch_random_benchmark(const std::string& filter_function_name,
+                                                         const std::string& reference_function_name,
+                                                         const int n_random_runs, const int n,
+                                                         bool skip_sanity_checks) {
     if (FUNCTION_REGISTRY.find(reference_function_name) == FUNCTION_REGISTRY.end()) {
         std::cerr << "Reference function '" << reference_function_name
                   << "' not found in function registry.\n";
@@ -207,14 +212,12 @@ std::vector<BatchBenchmarkResult> batch_random_benchmark(
         }
     }
     std::vector<PricingInput> runs =
-        RunGenerator().generateRandomPricingInput(n_random_runs, n,OptionType::Put);
+        RunGenerator().generateRandomPricingInput(n_random_runs, n, OptionType::Put);
     for (const auto& [name, func] : BATCH_FUNCTION_REGISTRY) {
         // filter_function_name is a substring match
-        if (name.find(filter_function_name) != std::string::npos ||
-            filter_function_name.empty()) {
-            BatchBenchmarkResult result(
-                runs, {}, sanity_checks_map[name], name, reference_function_name
-            );
+        if (name.find(filter_function_name) != std::string::npos || filter_function_name.empty()) {
+            BatchBenchmarkResult result(runs, {}, sanity_checks_map[name], name,
+                                        reference_function_name);
             for (int _ = 0; _ < n_random_runs; _++) {
                 auto start = std::chrono::high_resolution_clock::now();
                 func(runs);
