@@ -71,16 +71,16 @@ double vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile(const double 
                                                                    const OptionType type);
 
 template <const Hyperparams& h>
-double vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile_trimotm(
+double vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm(
     const double S, const double K, const double T, const double r, const double sigma,
     const double q, const int n, const OptionType type);
 
 template <const Hyperparams& h>
-double vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_shuffle_trimotm(
+double vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm(
     const double S, const double K, const double T, const double r, const double sigma,
     const double q, const int n, const OptionType type);
 
-double vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_shuffle_trimotm_malloc(
+double vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc(
     const double S, const double K, const double T, const double r, const double sigma,
     const double q, const int n, const OptionType type);
 
@@ -88,6 +88,6 @@ inline double vanilla_american_binomial_cuda(const double S, const double K, con
                                              const double r, const double sigma, const double q,
                                              const int n, const OptionType type) {
     // Choose the current best backend here:
-    return vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile_trimotm<
+    return vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm<
         DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_VTILE_10000>(S, K, T, r, sigma, q, n, type);
 }

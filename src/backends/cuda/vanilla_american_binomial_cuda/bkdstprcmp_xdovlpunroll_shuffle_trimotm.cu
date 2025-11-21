@@ -7,10 +7,8 @@
 #include "backends/hyperparams.hpp"
 #include "constants.hpp"
 
-#define IMPL_NAME bkdstprcmp_xovlpunroll_shuffle_trimotm_malloc
+#define IMPL_NAME bkdstprcmp_xdovlpunroll_shuffle_trimotm
 #define WARP_SIZE 32
-#define THREADS_PER_BLOCK 128
-#define UNROLL_FACTOR 49
 
 __global__ void FUNC_NAME(fill_st_buffers_kernel)(double* __restrict__ st_buffer_bank0,
                                                   double* __restrict__ st_buffer_bank1,
@@ -28,11 +26,12 @@ __global__ void FUNC_NAME(fill_st_buffers_kernel)(double* __restrict__ st_buffer
     st_buffer_bank1[threadId] = fmax(sign * fma(S, u_pow_2_threadId * u_pow_minus_n * u, -K), 0.0);
 }
 
+template <const int THREADS_PER_BLOCK, const int UNROLL_FACTOR>
 __global__ void FUNC_NAME(compute_next_layers_kernel)(
     const double* __restrict__ layer_values_read, double* __restrict__ layer_values_write,
     const double* __restrict__ st_buffer_bank0, const double* __restrict__ st_buffer_bank1,
     const double up, const double down, const int level, const int n, const int upper_bound) {
-    const int NUM_WARPS = THREADS_PER_BLOCK / WARP_SIZE;
+    constexpr int NUM_WARPS = THREADS_PER_BLOCK / WARP_SIZE;
     const unsigned int full_mask = 0xffffffff;
     const unsigned int active_mask = full_mask & ~(1 << (WARP_SIZE - 1));
     const unsigned int lane_id = threadIdx.x % WARP_SIZE;
@@ -108,9 +107,13 @@ int FUNC_NAME(search_bound)(const int n, const double S, const double K, const d
     return lower;
 }
 
+template <const Hyperparams& h>
 double FUNC_NAME(vanilla_american_binomial_cuda)(const double S, const double K, const double T,
                                                  const double r, const double sigma, const double q,
                                                  const int n, const OptionType type) {
+    constexpr int THREADS_PER_BLOCK = h.THREADS_PER_BLOCK;
+    constexpr int UNROLL_FACTOR = h.UNROLL_FACTOR;
+
     const double delta_t = T / n;
     const double u = std::exp(sigma * std::sqrt(delta_t));
     const double d = 1.0 / u;
@@ -121,14 +124,12 @@ double FUNC_NAME(vanilla_american_binomial_cuda)(const double S, const double K,
     const int sign = option_type_sign(type);
 
     double *layer_values_read_d, *layer_values_write_d;
-    cudaMallocAsync(&layer_values_read_d, (n + THREADS_PER_BLOCK) * sizeof(double), 0);
-    cudaMallocAsync(&layer_values_write_d, (n + THREADS_PER_BLOCK) * sizeof(double), 0);
+    cudaMalloc(&layer_values_read_d, (n + THREADS_PER_BLOCK) * sizeof(double));
+    cudaMalloc(&layer_values_write_d, (n + THREADS_PER_BLOCK) * sizeof(double));
 
     double *st_buffer_bank0_d, *st_buffer_bank1_d;
-    cudaMallocAsync(&st_buffer_bank0_d, (n + THREADS_PER_BLOCK + UNROLL_FACTOR) * sizeof(double),
-                    0);
-    cudaMallocAsync(&st_buffer_bank1_d, (n + THREADS_PER_BLOCK + UNROLL_FACTOR) * sizeof(double),
-                    0);
+    cudaMalloc(&st_buffer_bank0_d, (n + THREADS_PER_BLOCK + UNROLL_FACTOR) * sizeof(double));
+    cudaMalloc(&st_buffer_bank1_d, (n + THREADS_PER_BLOCK + UNROLL_FACTOR) * sizeof(double));
 
     int num_blocks = std::ceil((n + 1) * 1.0 / THREADS_PER_BLOCK);
     FUNC_NAME(fill_st_buffers_kernel)<<<num_blocks, THREADS_PER_BLOCK>>>(
@@ -144,9 +145,10 @@ double FUNC_NAME(vanilla_american_binomial_cuda)(const double S, const double K,
         int num_nodes = std::min(level, bound);
         num_blocks =
             std::ceil((num_nodes + UNROLL_FACTOR) * 1.0 / (THREADS_PER_BLOCK - UNROLL_FACTOR));
-        FUNC_NAME(compute_next_layers_kernel)<<<num_blocks, THREADS_PER_BLOCK>>>(
-            layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d, up,
-            down, level, n, num_nodes);
+        FUNC_NAME(compute_next_layers_kernel)<THREADS_PER_BLOCK, UNROLL_FACTOR>
+            <<<num_blocks, THREADS_PER_BLOCK>>>(layer_values_read_d, layer_values_write_d,
+                                                st_buffer_bank0_d, st_buffer_bank1_d, up, down,
+                                                level, n, num_nodes);
         std::swap(layer_values_read_d, layer_values_write_d);
     }
     level += (UNROLL_FACTOR - 1);
@@ -163,10 +165,29 @@ double FUNC_NAME(vanilla_american_binomial_cuda)(const double S, const double K,
     double value_h;
     cudaMemcpy(&value_h, layer_values_read_d, (1) * sizeof(double), cudaMemcpyDeviceToHost);
 
-    cudaFreeAsync(layer_values_read_d, 0);
-    cudaFreeAsync(layer_values_write_d, 0);
-    cudaFreeAsync(st_buffer_bank0_d, 0);
-    cudaFreeAsync(st_buffer_bank1_d, 0);
+    cudaFree(layer_values_read_d);
+    cudaFree(layer_values_write_d);
+    cudaFree(st_buffer_bank0_d);
+    cudaFree(st_buffer_bank1_d);
 
     return value_h;
 }
+
+template double FUNC_NAME(
+    vanilla_american_binomial_cuda)<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>(
+    const double S, const double K, const double T, const double r, const double sigma,
+    const double q, const int n, const OptionType type);
+
+#ifdef DO_CARTESIAN_PRODUCT
+#ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM
+
+#define PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM(  \
+    ID, A, B, C, D, E, Y)                                                                    \
+    template double FUNC_NAME(vanilla_american_binomial_cuda)<GRID_SEARCH_HYPERPARAMS_##ID>( \
+        const double S, const double K, const double T, const double r, const double sigma,  \
+        const double q, const int n, const OptionType type);
+APPLY_FUNCTION(PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM,
+               HYPERPARAMS_CART_PRODUCT, NULL)
+
+#endif
+#endif

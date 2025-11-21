@@ -7,8 +7,10 @@
 #include "backends/hyperparams.hpp"
 #include "constants.hpp"
 
-#define IMPL_NAME bkdstprcmp_xovlpunroll_shuffle_trimotm
-#define WARP_SIZE 32
+// TPB 128 UF 35 ~2.6ms on 10k
+// TPB 256 UF 32 ~660ms on 250k
+
+#define IMPL_NAME bkdstprcmp_xdovlpunroll_vtile_trimotm
 
 __global__ void FUNC_NAME(fill_st_buffers_kernel)(double* __restrict__ st_buffer_bank0,
                                                   double* __restrict__ st_buffer_bank1,
@@ -28,43 +30,38 @@ __global__ void FUNC_NAME(fill_st_buffers_kernel)(double* __restrict__ st_buffer
 
 template <const int THREADS_PER_BLOCK, const int UNROLL_FACTOR>
 __global__ void FUNC_NAME(compute_next_layers_kernel)(
-    const double* __restrict__ layer_values_read, double* __restrict__ layer_values_write,
-    const double* __restrict__ st_buffer_bank0, const double* __restrict__ st_buffer_bank1,
-    const double up, const double down, const int level, const int n, const int upper_bound) {
-    constexpr int NUM_WARPS = THREADS_PER_BLOCK / WARP_SIZE;
-    const unsigned int full_mask = 0xffffffff;
-    const unsigned int active_mask = full_mask & ~(1 << (WARP_SIZE - 1));
-    const unsigned int lane_id = threadIdx.x % WARP_SIZE;
-    const unsigned int warp_id = threadIdx.x / WARP_SIZE;
-
-    __shared__ double warp_edges_layer_values_tile[NUM_WARPS + 1];
+    double* __restrict__ layer_values_read, double* __restrict__ layer_values_write,
+    double* __restrict__ st_buffer_bank0, double* __restrict__ st_buffer_bank1, const double up,
+    const double down, const int level, const int n, const int upper_bound) {
+    __shared__ double layer_values_tile[2][THREADS_PER_BLOCK + 1];
 
     int tile_stride = THREADS_PER_BLOCK - UNROLL_FACTOR;
     int tile_base = tile_stride * blockIdx.x;
     int node_id = tile_base + threadIdx.x;
 
-    double val = layer_values_read[node_id];
-    __syncwarp();
+    layer_values_tile[0][threadIdx.x] = layer_values_read[node_id];
+
+    __syncthreads();
 
 #pragma unroll
     for (int i = 0; i < UNROLL_FACTOR; i++) {
+        int read_idx = i % 2;
+        int write_idx = (i + 1) % 2;
+
         int current_level = level + UNROLL_FACTOR - 1 - i;
-        const double* st_buffer_bank = (n - current_level) % 2 ? st_buffer_bank1 : st_buffer_bank0;
+        double* st_buffer_bank = (n - current_level) % 2 ? st_buffer_bank1 : st_buffer_bank0;
 
-        double up_val = __shfl_down_sync(active_mask, val, 1);
-
-        if (lane_id == 0) warp_edges_layer_values_tile[warp_id] = val;
-        __syncthreads();
-        if (lane_id == WARP_SIZE - 1) up_val = warp_edges_layer_values_tile[warp_id + 1];
-
-        double hold = fma(up, up_val, down * val);
+        double hold = fma(up, layer_values_tile[read_idx][threadIdx.x + 1],
+                          down * layer_values_tile[read_idx][threadIdx.x]);
         int st_index = node_id + (n - current_level) / 2;
         double exercise = st_buffer_bank[st_index];
-        val = fmax(hold, exercise);
+        layer_values_tile[write_idx][threadIdx.x] = fmax(hold, exercise);
+
+        __syncthreads();
     }
 
     if (threadIdx.x < THREADS_PER_BLOCK - UNROLL_FACTOR) {
-        layer_values_write[node_id] = val;
+        layer_values_write[node_id] = layer_values_tile[UNROLL_FACTOR % 2][threadIdx.x];
     }
 }
 
@@ -76,16 +73,16 @@ __global__ void FUNC_NAME(compute_next_layers_kernel)(
     2*i - l = 2 * (i + (n - l - 1) / 2) - n + 1   if (n - l) odd
     the correspoding value is stored at st_buffer_bank1[i + (n - l) / 2]
 */
-__global__ void FUNC_NAME(compute_next_layer_kernel)(const double* __restrict__ layer_values_read,
+__global__ void FUNC_NAME(compute_next_layer_kernel)(double* __restrict__ layer_values_read,
                                                      double* __restrict__ layer_values_write,
-                                                     const double* __restrict__ st_buffer_bank0,
-                                                     const double* __restrict__ st_buffer_bank1,
+                                                     double* __restrict__ st_buffer_bank0,
+                                                     double* __restrict__ st_buffer_bank1,
                                                      const double up, const double down,
                                                      const int level, const int n) {
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
 
     double hold = up * layer_values_read[threadId + 1] + down * layer_values_read[threadId];
-    const double* st_buffer_bank = (n - level) % 2 ? st_buffer_bank1 : st_buffer_bank0;
+    double* st_buffer_bank = (n - level) % 2 ? st_buffer_bank1 : st_buffer_bank0;
     double exercise = st_buffer_bank[threadId + (n - level) / 2];
     layer_values_write[threadId] = fmax(hold, exercise);
 }
@@ -111,9 +108,6 @@ template <const Hyperparams& h>
 double FUNC_NAME(vanilla_american_binomial_cuda)(const double S, const double K, const double T,
                                                  const double r, const double sigma, const double q,
                                                  const int n, const OptionType type) {
-    constexpr int THREADS_PER_BLOCK = h.THREADS_PER_BLOCK;
-    constexpr int UNROLL_FACTOR = h.UNROLL_FACTOR;
-
     const double delta_t = T / n;
     const double u = std::exp(sigma * std::sqrt(delta_t));
     const double d = 1.0 / u;
@@ -122,6 +116,9 @@ double FUNC_NAME(vanilla_american_binomial_cuda)(const double S, const double K,
     const double up = p * discount;
     const double down = (1.0 - p) * discount;
     const int sign = option_type_sign(type);
+
+    constexpr int THREADS_PER_BLOCK = h.THREADS_PER_BLOCK;
+    constexpr int UNROLL_FACTOR = h.UNROLL_FACTOR;
 
     double *layer_values_read_d, *layer_values_write_d;
     cudaMalloc(&layer_values_read_d, (n + THREADS_PER_BLOCK) * sizeof(double));
@@ -174,19 +171,19 @@ double FUNC_NAME(vanilla_american_binomial_cuda)(const double S, const double K,
 }
 
 template double FUNC_NAME(
-    vanilla_american_binomial_cuda)<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>(
+    vanilla_american_binomial_cuda)<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_VTILE_10000>(
     const double S, const double K, const double T, const double r, const double sigma,
     const double q, const int n, const OptionType type);
 
 #ifdef DO_CARTESIAN_PRODUCT
-#ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE_TRIMOTM
+#ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XDOVLPUNROLL_VTILE_TRIMOTM
 
-#define PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE_TRIMOTM(   \
+#define PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XDOVLPUNROLL_VTILE_TRIMOTM(    \
     ID, A, B, C, D, E, Y)                                                                    \
     template double FUNC_NAME(vanilla_american_binomial_cuda)<GRID_SEARCH_HYPERPARAMS_##ID>( \
         const double S, const double K, const double T, const double r, const double sigma,  \
         const double q, const int n, const OptionType type);
-APPLY_FUNCTION(PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE_TRIMOTM,
+APPLY_FUNCTION(PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XDOVLPUNROLL_VTILE_TRIMOTM,
                HYPERPARAMS_CART_PRODUCT, NULL)
 
 #endif
