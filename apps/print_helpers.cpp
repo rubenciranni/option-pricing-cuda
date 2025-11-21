@@ -25,6 +25,52 @@ std::pair<double, double> mean_and_std(const std::vector<double>& v) {
     return {mean, std};
 }
 
+void print_table(const std::vector<int>& max_width,
+                 const std::vector<std::vector<std::string>>& table) {
+    if (table.empty()) return;
+
+    size_t cols = max_width.size();
+    size_t total_width = 0;
+    for (auto w : max_width) total_width += w;
+    // account for a single space separator between columns
+    if (cols > 1) total_width += (cols - 1);
+
+    std::cout << std::string(total_width, '=') << "\n";
+
+    // Header is the first row
+    const auto& header = table[0];
+    std::cout << rang::style::bold;
+    if (!header.empty()) {
+        // print first column left-aligned, rest right-aligned with a separating space
+        std::cout << std::left << std::setw(max_width[0]) << header[0];
+        for (size_t c = 1; c < cols; ++c) {
+            std::string cell = (c < header.size()) ? header[c] : std::string("");
+            std::cout << ' ' << std::right << std::setw(max_width[c]) << cell;
+        }
+    }
+    std::cout << rang::style::reset << "\n";
+    std::cout << std::string(total_width, '=') << "\n";
+
+    // print remaining rows
+    for (size_t r = 1; r < table.size(); ++r) {
+        const auto& row = table[r];
+        
+        if (!row.empty()) {
+            std::cout << std::left << std::setw(max_width[0]) << row[0];
+            for (size_t c = 1; c < cols; ++c) {
+                std::string cell = (c < row.size()) ? row[c] : std::string("-");
+                if (cell.length() > static_cast<size_t>(max_width[c])) {
+                    cell = cell.substr(0, max_width[c] - 3) + "...";
+                }
+                std::cout << ' ' << std::right << std::setw(max_width[c]) << cell;
+            }
+        }
+        std::cout << "\n";
+    }
+
+    std::cout << std::string(total_width, '=') << "\n\n";
+}
+
 void print_sanity_checks(const std::vector<BenchmarkResult>& results, bool skip_sanity_checks) {
     if (!skip_sanity_checks) {
         std::cout << "\n"
@@ -40,70 +86,28 @@ void print_sanity_checks(const std::vector<BenchmarkResult>& results, bool skip_
         }
     }
 
-    const int name_width = 80;
     const int status_width = 10;
 
-    std::cout << std::left << std::setw(name_width) << "Function" << std::right
-              << std::setw(status_width) << "Status"
-              << "\n";
-    std::cout << std::string(name_width + status_width, '-') << "\n";
+    size_t max_name_len = std::string("Function").size();
+    for (const auto& res : results) {
+        max_name_len = std::max(max_name_len, res.function_name.size());
+    }
+
+    std::vector<int> max_width = { static_cast<int>(max_name_len), status_width };
+
+    std::vector<std::vector<std::string>> table;
+    table.push_back({ "Function", "Status" });
 
     for (const auto& res : results) {
-        bool pass = res.pass_sanity_check();
-        std::string status = pass ? "✅" : "❌";
-
-        if (pass)
-            std::cout << rang::fg::green;
-        else
-            std::cout << rang::fg::red;
-
-        std::cout << std::left << std::setw(name_width) << res.function_name << std::right
-                  << std::setw(status_width) << status << rang::fg::reset << "\n";
+        std::string status = res.pass_sanity_check() ? "✅" : "❌";
+        table.push_back({ res.function_name, status });
     }
 
-    std::cout << std::string(name_width + status_width, '-') << "\n\n";
+    print_table(max_width, table);
 }
 
-void print_table(const std::vector<int>& max_width,
-                 const std::vector<std::vector<std::string>>& table) {
-    if (table.empty()) return;
 
-    size_t cols = max_width.size();
-    size_t total_width = 0;
-    for (auto w : max_width) total_width += w;
-
-    std::cout << std::string(total_width, '=') << "\n";
-
-    // Header is the first row
-    const auto& header = table[0];
-    std::cout << rang::style::bold;
-    if (!header.empty()) {
-        // print first column left-aligned, rest right-aligned
-        std::cout << std::left << std::setw(max_width[0]) << header[0];
-        for (size_t c = 1; c < cols && c < header.size(); ++c) {
-            std::cout << std::right << std::setw(max_width[c]) << header[c];
-        }
-    }
-    std::cout << rang::style::reset << "\n";
-    std::cout << std::string(total_width, '=') << "\n";
-
-    // print remaining rows
-    for (size_t r = 1; r < table.size(); ++r) {
-        const auto& row = table[r];
-        if (!row.empty()) {
-            std::cout << std::left << std::setw(max_width[0]) << row[0];
-            for (size_t c = 1; c < cols; ++c) {
-                std::string cell = (c < row.size()) ? row[c] : std::string("-");
-                std::cout << std::right << std::setw(max_width[c]) << cell;
-            }
-        }
-        std::cout << "\n";
-    }
-
-    std::cout << std::string(total_width, '=') << "\n\n";
-}
-
-void print_benchmark_results_pprint(const std::vector<BenchmarkResult>& results) {
+void print_benchmark_results(const std::vector<BenchmarkResult>& results) {
     std::cout << "\n"
               << rang::style::bold << "=== BENCHMARK RESULTS ===" << rang::style::reset << "\n";
     if (results.empty()) {
@@ -122,7 +126,6 @@ void print_benchmark_results_pprint(const std::vector<BenchmarkResult>& results)
     max_width.push_back(max_functional_name_size);
     for (const auto& p : results[0].execution_times) max_width.push_back(max_witdh_step_size);
 
-    // build table: first row is header
     std::vector<std::vector<std::string>> table;
     std::vector<std::string> header;
     header.push_back("Function name");
@@ -141,13 +144,10 @@ void print_benchmark_results_pprint(const std::vector<BenchmarkResult>& results)
 
     for (const auto& res : results) {
         std::string function_title = res.function_name;
-        if (function_title.rfind("vanilla_american_binomial_") != std::string::npos) {
-            function_title = function_title.substr(26);
+        std::string prefix = "vanilla_american_binomial_";
+        if (function_title.rfind(prefix) != std::string::npos) {
+            function_title = function_title.substr(prefix.length());
         }
-        if (function_title.size() > static_cast<size_t>(max_functional_name_size)) {
-            function_title = function_title.substr(0, max_functional_name_size - 3) + "...";
-        }
-
         std::vector<std::string> row;
         // prepend a simple pass/fail marker to title for quick visibility
         std::string marker = res.pass_sanity_check() ? "✅ " : "❌ ";
@@ -167,10 +167,7 @@ void print_benchmark_results_pprint(const std::vector<BenchmarkResult>& results)
                 oss << std::fixed << std::setprecision(3) << mean_time;
                 if (std_time > 0.0) {
                     oss << "±" << std::fixed << std::setprecision(3) << std_time;
-                } else {
-                    // keep spacing consistent when no std
-                    oss << "     ";
-                }
+                } 
                 row.push_back(oss.str());
             } else {
                 row.push_back("-");
@@ -182,6 +179,54 @@ void print_benchmark_results_pprint(const std::vector<BenchmarkResult>& results)
 
     print_table(max_width, table);
 }
+
+void print_batch_benchmark_result(const std::vector<BatchBenchmarkResult>& results) {
+
+    std::cout << "\n"
+              << rang::style::bold << "=== BENCHMARK RESULTS ===" << rang::style::reset << "\n";
+    if (results.empty()) {
+        std::cout << rang::fg::yellow << "No benchmark results to display." << rang::fg::reset
+                  << "\n\n";
+        return;
+    }
+
+    int max_functional_name_size = 50;
+    int max_witdh_step_size = 15;
+
+    // build column widths: first column + one per step
+    std::vector<int> max_width;
+    max_width.push_back(max_functional_name_size);
+    max_width.push_back(max_witdh_step_size);
+
+    std::vector<std::vector<std::string>> table;
+    std::vector<std::string> header;
+    header.push_back("Function name");
+    header.push_back("Time");
+    table.push_back(header);
+
+    for (size_t i = 0; i < results.size(); ++i) {
+        std::vector<std::string> row;
+        const auto& res = results[i];
+        std::string function_title = res.function_name;
+        std::string prefix = "vanilla_american_binomial_";
+        if (function_title.rfind(prefix) != std::string::npos) {
+            function_title = function_title.substr(prefix.length());
+        }
+        row.push_back(function_title);
+        double mean,std;
+        std::tie(mean,std)= mean_and_std(res.execution_times);
+        std::ostringstream oss;
+        oss << std::fixed << std::setprecision(3) << mean;
+        if (std > 0.0) {
+            oss << "±" << std::fixed << std::setprecision(3) << std;
+        }
+        row.push_back(oss.str());
+        table.push_back(row);
+    }
+    print_table(max_width, table);
+}
+
+
 
 std::pair<std::string, std::vector<std::string>> parse_hyperparams(const std::string& name) {
     std::string func_id = name;
@@ -276,3 +321,4 @@ nlohmann::json dump_benchmark_results_json(const std::vector<BenchmarkResult>& r
     }
     return output;
 }
+

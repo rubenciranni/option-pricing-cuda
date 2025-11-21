@@ -1,6 +1,7 @@
 #pragma once
 #include <cuda.h>
 #include <cuda_runtime.h>
+#include <vector>
 #include "backends/hyperparams.hpp"
 #include "constants.hpp"
 
@@ -90,6 +91,13 @@ inline double vanilla_american_binomial_cuda(const double S, const double K, con
     return vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile_trimotm<
         DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_VTILE_10000>(S, K, T, r, sigma, q, n, type);
 }
+
+
+
+std::vector<double> vanilla_american_binomial_cuda_batch_naive(std::vector<PricingInput> runs) ;
+
+std::vector<double> vanilla_american_binomial_cuda_batch_stprcmp(std::vector<PricingInput> runs) ;
+
 
 inline cudaError_t checkCuda(cudaError_t result)
 {

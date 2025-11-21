@@ -176,3 +176,54 @@ std::vector<std::vector<BenchmarkResult>> random_benchmark(
     }
     return results;
 }
+
+std::map<std::string, BatchPricingFunction> BATCH_FUNCTION_REGISTRY = {
+    {"vanilla_american_binomial_cuda_batch_naive", vanilla_american_binomial_cuda_batch_naive},
+    {"vanilla_american_binomial_cuda_batch_stprcmp", vanilla_american_binomial_cuda_batch_stprcmp}
+};
+std::vector<BatchBenchmarkResult> batch_random_benchmark(
+    const std::string& filter_function_name, const std::string& reference_function_name,
+    const int n_random_runs,const int n, bool skip_sanity_checks) {
+    if (FUNCTION_REGISTRY.find(reference_function_name) == FUNCTION_REGISTRY.end()) {
+        std::cerr << "Reference function '" << reference_function_name
+                  << "' not found in function registry.\n";
+        return {};
+    }
+
+    SanityChecker sanity_checker(reference_function_name,
+                                 FUNCTION_REGISTRY[reference_function_name]);
+
+    std::map<std::string, SanityCheckResults> sanity_checks_map;
+    std::vector<BatchBenchmarkResult> results;
+    for (const auto& [name, func] : FUNCTION_REGISTRY) {
+        if (name.find(filter_function_name) != std::string::npos || filter_function_name.empty()) {
+            // Measure execution time
+            SanityCheckResults sanity_check;
+            if (!skip_sanity_checks) {
+                sanity_check = sanity_checker.run_single_all_sanity_checks(func);
+                sanity_checks_map[name] = sanity_check;
+            }
+        }
+    }
+    std::vector<PricingInput> runs =
+        RunGenerator().generateRandomPricingInput(n_random_runs, n,OptionType::Put);
+    for (const auto& [name, func] : BATCH_FUNCTION_REGISTRY) {
+        // filter_function_name is a substring match
+        if (name.find(filter_function_name) != std::string::npos ||
+            filter_function_name.empty()) {
+            BatchBenchmarkResult result(
+                runs, {}, sanity_checks_map[name], name, reference_function_name
+            );
+            for (int _ = 0; _ < n_random_runs; _++) {
+                auto start = std::chrono::high_resolution_clock::now();
+                func(runs);
+                auto end = std::chrono::high_resolution_clock::now();
+                std::chrono::duration<double, std::milli> duration = end - start;
+
+                result.execution_times.push_back(duration.count());
+            }
+            results.push_back(result);
+        }
+    }
+    return results;
+}

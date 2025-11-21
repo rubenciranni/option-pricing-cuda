@@ -147,6 +147,18 @@ class RunGenerator {
         return run;
     }
 
+    std::vector<PricingInput> generateRandomPricingInput(int n_runs, int n, OptionType type) {
+        std::vector<PricingInput> runs;
+        runs.reserve(n_runs);
+
+        for (int i = 0; i < n_runs; ++i) {
+            auto run =generateRandomRun(n, n, n, 1, type);
+            runs.push_back(PricingInput(run.S, run.K, run.T, run.r, run.sigma, run.q, n, type));
+        }
+
+        return runs;
+    }
+
     std::vector<Run> generateRandomRuns(int n_runs, int nstart, int nend, int nstep,
                                         int nrepetition_at_step, OptionType type) {
         std::vector<Run> runs;

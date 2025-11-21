@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
     std::string option_type_str, exercise_type_str, pricing_method_str, backend_str,
         output_format_str;
     double S, K, T, r, sigma, q;
-    int n;
+    int n,random_runs;
 
     auto price_subcommand = app.add_subcommand("price", "Run a single pricing query");
     price_subcommand->add_option("--type", option_type_str, "Option type (call|put)")
@@ -93,7 +93,7 @@ int main(int argc, char** argv) {
         ->default_val("pprint")
         ->check(CLI::IsMember({"pprint", "json"}));
     random_benchmark_subcommand
-        ->add_option("--n-random-runs", n, "Number of random benchmark runs to perform")
+        ->add_option("--n-random-runs", random_runs, "Number of random benchmark runs to perform")
         ->default_val(5);
 
     auto batch_random_benchmark_subcommand =
@@ -114,8 +114,11 @@ int main(int argc, char** argv) {
         ->default_val("pprint")
         ->check(CLI::IsMember({"pprint", "json"}));
     batch_random_benchmark_subcommand
-        ->add_option("--n-random-runs", n, "Number of random benchmark runs to perform")
+        ->add_option("--n-random-runs", random_runs, "Number of random benchmark runs to perform")
         ->default_val(5);
+    batch_random_benchmark_subcommand
+        ->add_option("-n", n, "Number of step 'n' in each random run")
+        ->default_val(1000);
     try {
         app.require_subcommand(1);
         app.parse(argc, argv);
@@ -153,7 +156,7 @@ int main(int argc, char** argv) {
         }
             if (output_format == OutputFormat::PPRINT) {
                 print_sanity_checks(results, skip_sanity_checks);
-                print_benchmark_results_pprint(results);
+                print_benchmark_results(results);
             } else if (output_format == OutputFormat::JSON) {
                 nlohmann::json output = dump_benchmark_results_json(results);
                 std::cout << output.dump(1, '\t') << std::endl;
@@ -165,7 +168,7 @@ int main(int argc, char** argv) {
         OutputFormat output_format = output_format_from_string(output_format_str);
 
         auto results =
-            random_benchmark(filter_name, reference_function_name, n, skip_sanity_checks);
+            random_benchmark(filter_name, reference_function_name, random_runs, skip_sanity_checks);
 
         if (results.empty()) {
             std::cout << rang::fg::yellow
@@ -176,7 +179,7 @@ int main(int argc, char** argv) {
         if (output_format == OutputFormat::PPRINT) {
             print_sanity_checks(results[0], skip_sanity_checks);
             for (const auto& res_per_run : results) {
-                print_benchmark_results_pprint(res_per_run);
+                print_benchmark_results(res_per_run);
             }
         } else if (output_format == OutputFormat::JSON) {
             nlohmann::json output = nlohmann::json::array();
@@ -189,7 +192,11 @@ int main(int argc, char** argv) {
     }else if(*batch_random_benchmark_subcommand){
         OutputFormat output_format = output_format_from_string(output_format_str);
         auto results =
-            batch_random_benchmark(filter_name, reference_function_name, n, skip_sanity_checks);
+            batch_random_benchmark(filter_name, reference_function_name,  random_runs,n, skip_sanity_checks);
+        
+        print_batch_benchmark_result(results);
+
+        
     }
 
 

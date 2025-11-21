@@ -21,6 +21,7 @@ class Run {
     int nrepetition_at_step;
     OptionType type;
 
+
     Run()
         : S(0),
           K(0),
