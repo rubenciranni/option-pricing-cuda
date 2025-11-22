@@ -185,7 +185,9 @@ std::vector<std::vector<BenchmarkResult>> random_benchmark(
 
 std::map<std::string, BatchPricingFunction> BATCH_FUNCTION_REGISTRY = {
     {"vanilla_american_binomial_cuda_batch_naive", vanilla_american_binomial_cuda_batch_naive},
-    {"vanilla_american_binomial_cuda_batch_stprcmp", vanilla_american_binomial_cuda_batch_stprcmp}};
+    {"vanilla_american_binomial_cuda_batch_stprcmp", vanilla_american_binomial_cuda_batch_stprcmp},
+};
+
 std::vector<BatchBenchmarkResult> batch_random_benchmark(const std::string& filter_function_name,
                                                          const std::string& reference_function_name,
                                                          const int n_random_runs, const int n,
@@ -201,12 +203,12 @@ std::vector<BatchBenchmarkResult> batch_random_benchmark(const std::string& filt
 
     std::map<std::string, SanityCheckResults> sanity_checks_map;
     std::vector<BatchBenchmarkResult> results;
-    for (const auto& [name, func] : FUNCTION_REGISTRY) {
+    for (const auto& [name, func] : BATCH_FUNCTION_REGISTRY) {
         if (name.find(filter_function_name) != std::string::npos || filter_function_name.empty()) {
             // Measure execution time
             SanityCheckResults sanity_check;
             if (!skip_sanity_checks) {
-                sanity_check = sanity_checker.run_single_all_sanity_checks(func);
+                sanity_check = sanity_checker.run_single_all_sanity_checks_batch(func);
                 sanity_checks_map[name] = sanity_check;
             }
         }
@@ -219,8 +221,9 @@ std::vector<BatchBenchmarkResult> batch_random_benchmark(const std::string& filt
             BatchBenchmarkResult result(runs, {}, sanity_checks_map[name], name,
                                         reference_function_name);
             for (int _ = 0; _ < n_random_runs; _++) {
+                std::vector<double> out(n_random_runs);
                 auto start = std::chrono::high_resolution_clock::now();
-                func(runs);
+                func(runs, out);
                 auto end = std::chrono::high_resolution_clock::now();
                 std::chrono::duration<double, std::milli> duration = end - start;
 

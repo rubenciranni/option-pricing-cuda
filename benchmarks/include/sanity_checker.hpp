@@ -58,4 +58,22 @@ class SanityChecker {
         }
         return test_results;
     }
+
+    SanityCheckResults run_single_all_sanity_checks_batch(BatchPricingFunction func) {
+        SanityCheckResults test_results;
+        std::vector<PricingInput> inputs;
+        for (const auto& test : reference_function_results) {
+            inputs.push_back(test.first);
+        }
+        std::vector<double> price(inputs.size());
+        func(inputs, price);
+
+        for (size_t i = 0; i < reference_function_results.size(); i++) {
+            double expected = reference_function_results[i].second;
+            if (std::abs(price[i] - expected) > 1e-5) {
+                test_results.emplace_back(reference_function_results[i].first, expected, price[i]);
+            }
+        }
+        return test_results;
+    }
 };

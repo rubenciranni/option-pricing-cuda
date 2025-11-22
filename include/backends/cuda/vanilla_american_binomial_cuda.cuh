@@ -96,9 +96,11 @@ inline double vanilla_american_binomial_cuda(const double S, const double K, con
         DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_VTILE_10000>(S, K, T, r, sigma, q, n, type);
 }
 
-std::vector<double> vanilla_american_binomial_cuda_batch_naive(std::vector<PricingInput> runs);
+void vanilla_american_binomial_cuda_batch_naive(std::vector<PricingInput>& runs,
+                                                std::vector<double>& out);
 
-std::vector<double> vanilla_american_binomial_cuda_batch_stprcmp(std::vector<PricingInput> runs);
+void vanilla_american_binomial_cuda_batch_stprcmp(std::vector<PricingInput>& runs,
+                                                  std::vector<double>& out);
 
 inline cudaError_t checkCuda(cudaError_t result) {
 #if defined(DEBUG) || defined(_DEBUG)

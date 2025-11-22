@@ -17,6 +17,8 @@
 #include "models/vanilla_american_binomial.hpp"
 #include "models/vanilla_european_binomial.hpp"
 
+#define DEBUG 1
+
 int main(int argc, char** argv) {
     CLI::App app{"CLI for Option Pricing and Benchmarking"};
 

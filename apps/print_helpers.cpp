@@ -235,7 +235,9 @@ void print_batch_benchmark_result(const std::vector<BatchBenchmarkResult>& resul
         std::vector<std::string> row;
         const auto& res = results[i];
         std::string function_title = res.function_name;
-        row.push_back(function_title);
+        std::string marker = res.pass_sanity_check() ? "✅ " : "❌ ";
+
+        row.push_back(marker + function_title);
         double mean, std;
         std::tie(mean, std) = mean_and_std(res.execution_times);
         std::ostringstream oss;

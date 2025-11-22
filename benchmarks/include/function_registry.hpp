@@ -10,12 +10,11 @@
 #include "backends/openmp/vanilla_american_binomial_openmp.hpp"
 #include "constants.hpp"
 
-
 typedef double (*PricingFunction)(const double S, const double K, const double T, const double r,
-                                const double sigma, const double q, const int n,
-                                const OptionType type);
+                                  const double sigma, const double q, const int n,
+                                  const OptionType type);
 
-typedef std::vector<double> (*BatchPricingFunction)(std::vector<PricingInput> inputs);
+typedef void (*BatchPricingFunction)(std::vector<PricingInput>& inputs, std::vector<double>& out);
 
 extern std::map<std::string, PricingFunction> FUNCTION_REGISTRY;
 extern std::map<std::string, BatchPricingFunction> BATCH_FUNCTION_REGISTRY;
