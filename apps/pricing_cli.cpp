@@ -194,7 +194,7 @@ int main(int argc, char** argv) {
         auto results = batch_random_benchmark(filter_name, reference_function_name, random_runs, n,
                                               skip_sanity_checks);
 
-        print_batch_benchmark_result(results);
+        print_batch_benchmark_result(results, skip_sanity_checks);
     }
 
     return 0;

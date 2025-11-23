@@ -208,7 +208,20 @@ void print_benchmark_results(const std::vector<BenchmarkResult>& results) {
     print_table(max_width, table_prices);
 }
 
-void print_batch_benchmark_result(const std::vector<BatchBenchmarkResult>& results) {
+void print_batch_benchmark_result(const std::vector<BatchBenchmarkResult>& results, bool skip_sanity_checks) {
+    if (!skip_sanity_checks) {
+        std::cout << "\n"
+                  << rang::style::bold << "=== SANITY CHECKS SUMMARY ===" << rang::style::reset
+                  << "\n\n";
+        for (const auto& result : results) {
+            for (const auto& [params, expected, price] : result.sanity_check_results) {
+                std::cout << "Mismatch in " << result.function_name << " vs "
+                          << result.reference_function_name << " (parameters: '" << params.name
+                          << "'): expected " << expected << ", got " << price
+                          << " (diff = " << std::abs(price - expected) << ")\n";
+            }
+        }
+    }
     std::cout << "\n"
               << rang::style::bold << "=== BENCHMARK RESULTS ===" << rang::style::reset << "\n";
     if (results.empty()) {
@@ -216,6 +229,7 @@ void print_batch_benchmark_result(const std::vector<BatchBenchmarkResult>& resul
                   << "\n\n";
         return;
     }
+    
 
     int max_functional_name_size = 85;
     int max_width_step_size = 15;

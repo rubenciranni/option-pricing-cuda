@@ -24,7 +24,7 @@ inline std::string to_string_with_precision(const T a_value, const int n = 6) {
 void print_sanity_checks(const std::vector<BenchmarkResult>& results, bool skip_sanity_checks);
 void print_table(const std::vector<int>& max_width, const std::vector<std::vector<std::string>>& table);
 void print_benchmark_results(const std::vector<BenchmarkResult>& results);
-void print_batch_benchmark_result(const std::vector<BatchBenchmarkResult>& results) ;
+void print_batch_benchmark_result(const std::vector<BatchBenchmarkResult>& results, bool skip_sanity_checks);
 
 nlohmann::json dump_benchmark_results_json(const std::vector<BenchmarkResult>& results);
 
