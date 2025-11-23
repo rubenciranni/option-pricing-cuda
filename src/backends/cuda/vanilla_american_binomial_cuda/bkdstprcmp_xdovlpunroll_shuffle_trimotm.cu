@@ -268,6 +268,15 @@ double FUNC_NAME(vanilla_american_binomial_cuda)(const double S, const double K,
     return value_h;
 }
 
+template <const int THREADS_PER_BLOCK>
+__global__ void FUNC_NAME(copy_final_value)(const double* __restrict__ layer_values_read,
+                                            double* __restrict__ out, const int n,
+                                            const size_t num_runs) {
+    const int option_idx = blockIdx.x * blockDim.x + threadIdx.x;
+    if (option_idx >= num_runs) return;
+    out[option_idx] = layer_values_read[option_idx * (n + THREADS_PER_BLOCK)];
+}
+
 template <const Hyperparams& h>
 void FUNC_NAME(vanilla_american_binomial_cuda_batch)(std::vector<PricingInput>& runs,
                                                      std::vector<double>& out) {
@@ -307,35 +316,37 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch)(std::vector<PricingInput>& 
     double *d_S, *d_K, *d_u, *d_up, *d_down;
     int *d_bound;
     int *d_n_arr, *d_sign;
+    double* d_out;
+    cudaMallocAsync(&d_S, num_runs * sizeof(double),0);
+    cudaMallocAsync(&d_K, num_runs * sizeof(double),0);
+    cudaMallocAsync(&d_u, num_runs * sizeof(double),0);
+    cudaMallocAsync(&d_up, num_runs * sizeof(double),0);
+    cudaMallocAsync(&d_down, num_runs * sizeof(double),0);
+    cudaMallocAsync(&d_n_arr, num_runs * sizeof(int),0);
+    cudaMallocAsync(&d_sign, num_runs * sizeof(int),0);
+    cudaMallocAsync(&d_bound, num_runs * sizeof(int),0);
+    cudaMallocAsync(&d_out, num_runs * sizeof(double),0);
 
-    cudaMalloc(&d_S, num_runs * sizeof(double));
-    cudaMalloc(&d_K, num_runs * sizeof(double));
-    cudaMalloc(&d_u, num_runs * sizeof(double));
-    cudaMalloc(&d_up, num_runs * sizeof(double));
-    cudaMalloc(&d_down, num_runs * sizeof(double));
-    cudaMalloc(&d_n_arr, num_runs * sizeof(int));
-    cudaMalloc(&d_sign, num_runs * sizeof(int));
-    cudaMalloc(&d_bound, num_runs * sizeof(int));
-
-    cudaMemcpy(d_S, h_S.data(), num_runs * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_K, h_K.data(), num_runs * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_u, h_u.data(), num_runs * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_up, h_up.data(), num_runs * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_down, h_down.data(), num_runs * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_n_arr, h_n.data(), num_runs * sizeof(int), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_sign, h_sign.data(), num_runs * sizeof(int), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_bound, h_bound.data(), num_runs * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpyAsync(d_S, h_S.data(), num_runs * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpyAsync(d_K, h_K.data(), num_runs * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpyAsync(d_u, h_u.data(), num_runs * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpyAsync(d_up, h_up.data(), num_runs * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpyAsync(d_down, h_down.data(), num_runs * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpyAsync(d_n_arr, h_n.data(), num_runs * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpyAsync(d_sign, h_sign.data(), num_runs * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpyAsync(d_bound, h_bound.data(), num_runs * sizeof(int), cudaMemcpyHostToDevice);
+    
 
     int n = runs[0].n;
     const int layer_size = num_runs* (n + THREADS_PER_BLOCK);
     double *layer_values_read_d, *layer_values_write_d;
-    cudaMalloc(&layer_values_read_d, layer_size * sizeof(double));
-    cudaMalloc(&layer_values_write_d, layer_size * sizeof(double));
+    cudaMallocAsync(&layer_values_read_d, layer_size * sizeof(double),0);
+    cudaMallocAsync(&layer_values_write_d, layer_size * sizeof(double),0);
 
     const int buffer_size = num_runs * (n + THREADS_PER_BLOCK + UNROLL_FACTOR);
     double *st_buffer_bank0_d, *st_buffer_bank1_d;
-    cudaMalloc(&st_buffer_bank0_d, buffer_size * sizeof(double));
-    cudaMalloc(&st_buffer_bank1_d, buffer_size * sizeof(double));
+    cudaMallocAsync(&st_buffer_bank0_d, buffer_size * sizeof(double),0);
+    cudaMallocAsync(&st_buffer_bank1_d, buffer_size * sizeof(double),0);
 
     int num_blocks = std::ceil((n + 1) * 1.0 / THREADS_PER_BLOCK);
     dim3 num_blocks_2d(num_blocks, num_runs);
@@ -362,26 +373,25 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch)(std::vector<PricingInput>& 
         std::swap(layer_values_read_d, layer_values_write_d);
     }
 
+    num_blocks = std::ceil(num_runs * 1.0 / THREADS_PER_BLOCK);
+    FUNC_NAME(copy_final_value)<THREADS_PER_BLOCK><<<num_blocks, THREADS_PER_BLOCK>>>(
+        layer_values_read_d, d_out, n, num_runs);
+    
+    cudaMemcpyAsync(out.data(), d_out, num_runs * sizeof(double), cudaMemcpyDeviceToHost, 0);
+
     cudaDeviceSynchronize();
-    std::vector<double> h_results_store(layer_size);
-    cudaMemcpy(h_results_store.data(), layer_values_read_d, layer_size * sizeof(double),
-               cudaMemcpyDeviceToHost);
 
-    for (size_t i = 0; i < num_runs; ++i) {
-        out[i] = h_results_store[i * (n + THREADS_PER_BLOCK)];
-    }
-
-    cudaFree(d_S);
-    cudaFree(d_K);
-    cudaFree(d_u);
-    cudaFree(d_up);
-    cudaFree(d_down);
-    cudaFree(d_n_arr);
-    cudaFree(d_sign);
-    cudaFree(layer_values_read_d);
-    cudaFree(layer_values_write_d);
-    cudaFree(st_buffer_bank0_d);
-    cudaFree(st_buffer_bank1_d);
+    cudaFreeAsync(d_S, 0);
+    cudaFreeAsync(d_K, 0);
+    cudaFreeAsync(d_u, 0);
+    cudaFreeAsync(d_up, 0);
+    cudaFreeAsync(d_down, 0);
+    cudaFreeAsync(d_n_arr, 0);
+    cudaFreeAsync(d_sign, 0);
+    cudaFreeAsync(layer_values_read_d, 0);
+    cudaFreeAsync(layer_values_write_d, 0);
+    cudaFreeAsync(st_buffer_bank0_d, 0);
+    cudaFreeAsync(st_buffer_bank1_d, 0);
     checkCuda(cudaGetLastError());
 }
 

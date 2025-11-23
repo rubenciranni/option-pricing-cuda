@@ -186,8 +186,9 @@ std::vector<std::vector<BenchmarkResult>> random_benchmark(
 std::map<std::string, BatchPricingFunction> BATCH_FUNCTION_REGISTRY = {
     {"vanilla_american_binomial_cuda_batch_naive", vanilla_american_binomial_cuda_batch_naive},
     {"vanilla_american_binomial_cuda_batch_stprcmp", vanilla_american_binomial_cuda_batch_stprcmp},
-    {"vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm", vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>}
-};
+    {"vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+     vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm<
+         DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>}};
 
 std::vector<BatchBenchmarkResult> batch_random_benchmark(const std::string& filter_function_name,
                                                          const std::string& reference_function_name,
@@ -221,15 +222,12 @@ std::vector<BatchBenchmarkResult> batch_random_benchmark(const std::string& filt
         if (name.find(filter_function_name) != std::string::npos || filter_function_name.empty()) {
             BatchBenchmarkResult result(runs, {}, sanity_checks_map[name], name,
                                         reference_function_name);
-            for (int _ = 0; _ < n_random_runs; _++) {
-                std::vector<double> out(n_random_runs);
-                auto start = std::chrono::high_resolution_clock::now();
-                func(runs, out);
-                auto end = std::chrono::high_resolution_clock::now();
-                std::chrono::duration<double, std::milli> duration = end - start;
-
-                result.execution_times.push_back(duration.count());
-            }
+            std::vector<double> out(n_random_runs);
+            auto start = std::chrono::high_resolution_clock::now();
+            func(runs, out);
+            auto end = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double, std::milli> duration = end - start;
+            result.execution_times.push_back(duration.count());
             results.push_back(result);
         }
     }
