@@ -14,7 +14,7 @@
 std::map<std::string, Run> BENCHMARK_PARAMETERS = {
     {"xs-cpu", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 8, 8, 8, 1, OptionType::Put)},
     {"xs-cuda", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 10001, 10000, 1, OptionType::Put)},
-    {"s-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1000, 2000, 1000, 1, OptionType::Put)},
+    {"s-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1024, 2000, 1000, 1, OptionType::Put)},
     {"s-repeat", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1000, 1001, 1000, 5, OptionType::Put)},
     {"m-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 20000, 10000, 1, OptionType::Put)},
     {"m-repeat", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 20000, 10000, 1000, OptionType::Put)},
@@ -32,6 +32,7 @@ std::map<std::string, PricingFunction> FUNCTION_REGISTRY = {
     {"vanilla_american_binomial_cpu_trimotm_trimeeon_stprcmp", vanilla_american_binomial_cpu_trimotm_trimeeon_stprcmp},
     {"vanilla_american_binomial_openmp_naive", vanilla_american_binomial_openmp_naive},
     {"vanilla_american_binomial_cuda_naive", vanilla_american_binomial_cuda_naive},
+    {"vanilla_american_binomial_cuda_nvidia_baseline", vanilla_american_binomial_cuda_nvidia_baseline},
     {"vanilla_american_binomial_cuda_stprcmp", vanilla_american_binomial_cuda_stprcmp},
     {"vanilla_american_binomial_cuda_bkdstprcmp", vanilla_american_binomial_cuda_bkdstprcmp},
     {"vanilla_american_binomial_cuda_stprcmp_yunroll_vtile", vanilla_american_binomial_cuda_stprcmp_yunroll_vtile<DEFAULT_HYPERPARAMS_CUDA_STPRCMP_YUNROLL_VTILE>},
