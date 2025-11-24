@@ -7,22 +7,22 @@
 
 // clang-format off
 inline std::vector<PricingInput> SANITY_CHECK_PRICING_INPUTS = {
-    // PricingInput(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, OptionType::Put, "At-the-money put"),
+    PricingInput(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, OptionType::Put, "At-the-money put"),
     PricingInput(150, 100, 1.0, 0.05, 0.25, 0.02, 100, OptionType::Put, "Deep OTM put"),
     PricingInput(50, 100, 1.0, 0.05, 0.25, 0.02, 100, OptionType::Put, "Deep ITM put"),
-    // PricingInput(100, 100, 0.01, 0.03, 0.2, 0.015, 30, OptionType::Put, "Short maturity put"),
-    // PricingInput(100, 100, 5.0, 0.05, 0.25, 0.02, 500, OptionType::Put, "Long maturity put"),
-    // PricingInput(100, 100, 1.0, 0.03, 0.8, 0.01, 200, OptionType::Put, "High volatility put"),
-    // PricingInput(100, 100, 1.0, 0.03, 0.01, 0.01, 200, OptionType::Put, "Low volatility put"),
+    PricingInput(100, 100, 0.01, 0.03, 0.2, 0.015, 30, OptionType::Put, "Short maturity put"),
+    PricingInput(100, 100, 5.0, 0.05, 0.25, 0.02, 500, OptionType::Put, "Long maturity put"),
+    PricingInput(100, 100, 1.0, 0.03, 0.8, 0.01, 200, OptionType::Put, "High volatility put"),
+    PricingInput(100, 100, 1.0, 0.03, 0.01, 0.01, 200, OptionType::Put, "Low volatility put"),
     PricingInput(100, 100, 1.0, 0.0, 0.2, 0.01, 100, OptionType::Put, "Zero interest rate put"),
-    // PricingInput(100, 100, 1.0, -0.01, 0.25, 0.01, 100, OptionType::Put, "Negative interest rate put"),
+    PricingInput(100, 100, 1.0, -0.01, 0.25, 0.01, 100, OptionType::Put, "Negative interest rate put"),
     PricingInput(100, 100, 1.0, 0.03, 0.2, 0.0, 100, OptionType::Put, "Zero dividend put"),
     PricingInput(100, 100, 1.0, 0.03, 0.2, 0.1, 100, OptionType::Put, "High dividend yield put"),
-    // PricingInput(100, 100, 1.0, 0.03, 0.2, 0.01, 1, OptionType::Put, "Very small time step put"),
+    PricingInput(100, 100, 1.0, 0.03, 0.2, 0.01, 1, OptionType::Put, "Very small time step put"),
     PricingInput(1000, 100, 1.0, 0.03, 0.3, 0.01, 100, OptionType::Put, "Extreme spot vs strike put"),
     PricingInput(100, 100, 1.0, 0.0, 0.0, 0.0, 100, OptionType::Put, "Near zero vol and rate put"),
-    // PricingInput(100, 80, 0.05, 0.02, 0.6, 0.01, 25, OptionType::Put, "Short-term high vol put"),
-    // PricingInput(80, 100, 3.0, 0.05, 0.1, 0.02, 500, OptionType::Put, "Long-term low vol put"),
+    PricingInput(100, 80, 0.05, 0.02, 0.6, 0.01, 25, OptionType::Put, "Short-term high vol put"),
+    PricingInput(80, 100, 3.0, 0.05, 0.1, 0.02, 500, OptionType::Put, "Long-term low vol put"),
 };
 // clang-format on
 
