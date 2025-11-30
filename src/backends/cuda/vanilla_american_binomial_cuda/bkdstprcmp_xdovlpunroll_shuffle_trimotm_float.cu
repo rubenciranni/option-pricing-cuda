@@ -2,15 +2,16 @@
 #include <cuda_runtime.h>
 
 #include <iostream>
+#include <vector>
 
 #include "backends/cuda/vanilla_american_binomial_cuda.cuh"
 #include "backends/hyperparams.hpp"
 #include "constants.hpp"
 
-#define IMPL_NAME bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc
+#define IMPL_NAME bkdstprcmp_xdovlpunroll_shuffle_trimotm_float
 #define WARP_SIZE 32
 
-template <const int THREADS_PER_BLOCK, const int UNROLL_FACTOR>
+// Keep precomputation in FP64 for accuracy
 __global__ void FUNC_NAME(fill_st_buffers_kernel)(double* __restrict__ st_buffer_bank0,
                                                   double* __restrict__ st_buffer_bank1,
                                                   const double S, const double K, const double u,
@@ -27,24 +28,25 @@ __global__ void FUNC_NAME(fill_st_buffers_kernel)(double* __restrict__ st_buffer
     st_buffer_bank1[threadId] = fmax(sign * fma(S, u_pow_2_threadId * u_pow_minus_n * u, -K), 0.0);
 }
 
+// Hot kernel: Use FP32 for compute, FP64 for storage
 template <const int THREADS_PER_BLOCK, const int UNROLL_FACTOR>
 __global__ void FUNC_NAME(compute_next_layers_kernel)(
-    const double* __restrict__ layer_values_read, double* __restrict__ layer_values_write,
+    const float* __restrict__ layer_values_read, float* __restrict__ layer_values_write,
     const double* __restrict__ st_buffer_bank0, const double* __restrict__ st_buffer_bank1,
-    const double up, const double down, const int level, const int n, const int upper_bound) {
+    const float up, const float down, const int level, const int n, const int upper_bound) {
     constexpr int NUM_WARPS = THREADS_PER_BLOCK / WARP_SIZE;
     const unsigned int full_mask = 0xffffffff;
     const unsigned int active_mask = full_mask & ~(1 << (WARP_SIZE - 1));
     const unsigned int lane_id = threadIdx.x % WARP_SIZE;
     const unsigned int warp_id = threadIdx.x / WARP_SIZE;
 
-    __shared__ double warp_edges_layer_values_tile[NUM_WARPS + 1];
+    __shared__ float warp_edges_layer_values_tile[NUM_WARPS + 1];
 
     int tile_stride = THREADS_PER_BLOCK - UNROLL_FACTOR;
     int tile_base = tile_stride * blockIdx.x;
     int node_id = tile_base + threadIdx.x;
 
-    double val = layer_values_read[node_id];
+    float val = layer_values_read[node_id];
     __syncwarp();
 
 #pragma unroll
@@ -52,16 +54,19 @@ __global__ void FUNC_NAME(compute_next_layers_kernel)(
         int current_level = level + UNROLL_FACTOR - 1 - i;
         const double* st_buffer_bank = (n - current_level) % 2 ? st_buffer_bank1 : st_buffer_bank0;
 
-        double up_val = __shfl_down_sync(active_mask, val, 1);
+        float up_val = __shfl_down_sync(active_mask, val, 1);
 
         if (lane_id == 0) warp_edges_layer_values_tile[warp_id] = val;
         __syncthreads();
         if (lane_id == WARP_SIZE - 1) up_val = warp_edges_layer_values_tile[warp_id + 1];
+        __syncthreads();
 
-        double hold = fma(up, up_val, down * val);
+        // FP32 arithmetic
+        float hold = fmaf(up, up_val, down * val);
         int st_index = node_id + (n - current_level) / 2;
-        double exercise = st_buffer_bank[st_index];
-        val = fmax(hold, exercise);
+        // Cast from FP64 st_buffer to FP32 for comparison
+        float exercise = (float)st_buffer_bank[st_index];
+        val = fmaxf(hold, exercise);
     }
 
     if (threadIdx.x < THREADS_PER_BLOCK - UNROLL_FACTOR) {
@@ -77,22 +82,20 @@ __global__ void FUNC_NAME(compute_next_layers_kernel)(
     2*i - l = 2 * (i + (n - l - 1) / 2) - n + 1   if (n - l) odd
     the correspoding value is stored at st_buffer_bank1[i + (n - l) / 2]
 */
-template <const int THREADS_PER_BLOCK, const int UNROLL_FACTOR>
-__global__ void FUNC_NAME(compute_next_layer_kernel)(const double* __restrict__ layer_values_read,
-                                                     double* __restrict__ layer_values_write,
+__global__ void FUNC_NAME(compute_next_layer_kernel)(const float* __restrict__ layer_values_read,
+                                                     float* __restrict__ layer_values_write,
                                                      const double* __restrict__ st_buffer_bank0,
                                                      const double* __restrict__ st_buffer_bank1,
-                                                     const double up, const double down,
+                                                     const float up, const float down,
                                                      const int level, const int n) {
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
 
-    double hold = up * layer_values_read[threadId + 1] + down * layer_values_read[threadId];
+    float hold = up * layer_values_read[threadId + 1] + down * layer_values_read[threadId];
     const double* st_buffer_bank = (n - level) % 2 ? st_buffer_bank1 : st_buffer_bank0;
-    double exercise = st_buffer_bank[threadId + (n - level) / 2];
-    layer_values_write[threadId] = fmax(hold, exercise);
+    float exercise = (float)st_buffer_bank[threadId + (n - level) / 2];
+    layer_values_write[threadId] = fmaxf(hold, exercise);
 }
 
-template <const int THREADS_PER_BLOCK, const int UNROLL_FACTOR>
 int FUNC_NAME(search_bound)(const int n, const double S, const double K, const double u,
                             const int sign) {
     if (sign == 1) return n;
@@ -117,65 +120,82 @@ double FUNC_NAME(vanilla_american_binomial_cuda)(const double S, const double K,
     constexpr int THREADS_PER_BLOCK = h.THREADS_PER_BLOCK;
     constexpr int UNROLL_FACTOR = h.UNROLL_FACTOR;
 
+    // CPU parameters in FP64
     const double delta_t = T / n;
     const double u = std::exp(sigma * std::sqrt(delta_t));
     const double d = 1.0 / u;
     const double p = (exp((r - q) * delta_t) - d) / (u - d);
     const double discount = std::exp(-r * delta_t);
-    const double up = p * discount;
-    const double down = (1.0 - p) * discount;
+    const double up_fp64 = p * discount;
+    const double down_fp64 = (1.0 - p) * discount;
     const int sign = option_type_sign(type);
 
-    double *layer_values_read_d, *layer_values_write_d;
-    cudaMallocAsync(&layer_values_read_d, (n + THREADS_PER_BLOCK) * sizeof(double), 0);
-    cudaMallocAsync(&layer_values_write_d, (n + THREADS_PER_BLOCK) * sizeof(double), 0);
+    // Convert to FP32 for GPU kernels
+    const float up_fp32 = (float)up_fp64;
+    const float down_fp32 = (float)down_fp64;
+
+    // Layer values in FP32 (2x memory savings!)
+    float *layer_values_read_d, *layer_values_write_d;
+    cudaMallocAsync(&layer_values_read_d, (n + THREADS_PER_BLOCK) * sizeof(float), 0);
+    cudaMallocAsync(&layer_values_write_d, (n + THREADS_PER_BLOCK) * sizeof(float), 0);
 
     // Initialize buffers to zero to prevent non-determinism from uninitialized memory
     cudaMemsetAsync(layer_values_read_d, 0, (n + THREADS_PER_BLOCK) * sizeof(float));
     cudaMemsetAsync(layer_values_write_d, 0, (n + THREADS_PER_BLOCK) * sizeof(float));
 
+    // Exercise values in FP64 (precision critical)
     double *st_buffer_bank0_d, *st_buffer_bank1_d;
-    cudaMallocAsync(&st_buffer_bank0_d, (n + THREADS_PER_BLOCK + UNROLL_FACTOR) * sizeof(double),
-                    0);
-    cudaMallocAsync(&st_buffer_bank1_d, (n + THREADS_PER_BLOCK + UNROLL_FACTOR) * sizeof(double),
-                    0);
+    cudaMallocAsync(&st_buffer_bank0_d, (n + THREADS_PER_BLOCK + UNROLL_FACTOR) * sizeof(double), 0);
+    cudaMallocAsync(&st_buffer_bank1_d, (n + THREADS_PER_BLOCK + UNROLL_FACTOR) * sizeof(double), 0);
 
     // Initialize st_buffer_banks to zero
     cudaMemsetAsync(st_buffer_bank0_d, 0, (n + THREADS_PER_BLOCK + UNROLL_FACTOR) * sizeof(double));
     cudaMemsetAsync(st_buffer_bank1_d, 0, (n + THREADS_PER_BLOCK + UNROLL_FACTOR) * sizeof(double));
 
     int num_blocks = std::ceil((n + 1) * 1.0 / THREADS_PER_BLOCK);
-    FUNC_NAME(fill_st_buffers_kernel)<THREADS_PER_BLOCK, UNROLL_FACTOR><<<num_blocks, THREADS_PER_BLOCK>>>(
+    FUNC_NAME(fill_st_buffers_kernel)<<<num_blocks, THREADS_PER_BLOCK>>>(
         st_buffer_bank0_d, st_buffer_bank1_d, S, K, u, sign, n);
 
-    // Layer n is the first n + 1 entries of st_buffer_bank0_d
-    cudaMemcpy(layer_values_read_d, st_buffer_bank0_d, (n + 1) * sizeof(double),
-               cudaMemcpyDeviceToDevice);
+    // Convert initial layer from FP64 to FP32 on CPU
+    std::vector<double> temp_host_fp64(n + 1);
+    cudaMemcpy(temp_host_fp64.data(), st_buffer_bank0_d, (n + 1) * sizeof(double),
+               cudaMemcpyDeviceToHost);
+    std::vector<float> temp_host_fp32(n + 1);
+    for (int i = 0; i <= n; i++) {
+        temp_host_fp32[i] = (float)temp_host_fp64[i];
+    }
+    cudaMemcpy(layer_values_read_d, temp_host_fp32.data(), (n + 1) * sizeof(float),
+               cudaMemcpyHostToDevice);
 
-    int bound = FUNC_NAME(search_bound)<THREADS_PER_BLOCK, UNROLL_FACTOR>(n, S, K, u, sign);
+    int bound = FUNC_NAME(search_bound)(n, S, K, u, sign);
     int level = n - 1 - (UNROLL_FACTOR - 1);
     for (; level >= 0; level -= UNROLL_FACTOR) {
         int num_nodes = std::min(level, bound);
         num_blocks =
             std::ceil((num_nodes + UNROLL_FACTOR) * 1.0 / (THREADS_PER_BLOCK - UNROLL_FACTOR));
-        FUNC_NAME(compute_next_layers_kernel)<THREADS_PER_BLOCK, UNROLL_FACTOR><<<num_blocks, THREADS_PER_BLOCK>>>(
-            layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d, up,
-            down, level, n, num_nodes);
+
+        FUNC_NAME(compute_next_layers_kernel)<THREADS_PER_BLOCK, UNROLL_FACTOR>
+            <<<num_blocks, THREADS_PER_BLOCK>>>(layer_values_read_d, layer_values_write_d,
+                                                st_buffer_bank0_d, st_buffer_bank1_d, up_fp32, down_fp32,
+                                                level, n, num_nodes);
         std::swap(layer_values_read_d, layer_values_write_d);
     }
     level += (UNROLL_FACTOR - 1);
     for (; level >= 0; level -= 1) {
         num_blocks = std::ceil((level + 1) * 1.0 / THREADS_PER_BLOCK);
-        FUNC_NAME(compute_next_layer_kernel)<THREADS_PER_BLOCK, UNROLL_FACTOR><<<num_blocks, THREADS_PER_BLOCK>>>(
-            layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d, up,
-            down, level, n);
+
+        FUNC_NAME(compute_next_layer_kernel)<<<num_blocks, THREADS_PER_BLOCK>>>(
+            layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d, up_fp32,
+            down_fp32, level, n);
         std::swap(layer_values_read_d, layer_values_write_d);
     }
 
     cudaDeviceSynchronize();
 
-    double value_h;
-    cudaMemcpy(&value_h, layer_values_read_d, (1) * sizeof(double), cudaMemcpyDeviceToHost);
+    // Convert final result from FP32 to FP64
+    float value_h_fp32;
+    cudaMemcpy(&value_h_fp32, layer_values_read_d, (1) * sizeof(float), cudaMemcpyDeviceToHost);
+    double value_h = (double)value_h_fp32;
 
     cudaFreeAsync(layer_values_read_d, 0);
     cudaFreeAsync(layer_values_write_d, 0);
@@ -191,14 +211,14 @@ template double FUNC_NAME(
     const double q, const int n, const OptionType type);
 
 #ifdef DO_CARTESIAN_PRODUCT
-#ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM_MALLOC
+#ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM_FLOAT
 
-#define PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM_MALLOC(  \
-    ID, A, B, C, D, E, Y)                                                                           \
-    template double FUNC_NAME(vanilla_american_binomial_cuda)<GRID_SEARCH_HYPERPARAMS_##ID>(        \
-        const double S, const double K, const double T, const double r, const double sigma,         \
+#define PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM_FLOAT(  \
+    ID, A, B, C, D, E, Y)                                                                          \
+    template double FUNC_NAME(vanilla_american_binomial_cuda)<GRID_SEARCH_HYPERPARAMS_##ID>(       \
+        const double S, const double K, const double T, const double r, const double sigma,        \
         const double q, const int n, const OptionType type);
-APPLY_FUNCTION(PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM_MALLOC,
+APPLY_FUNCTION(PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM_FLOAT,
                HYPERPARAMS_CART_PRODUCT, NULL)
 
 #endif

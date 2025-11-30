@@ -196,5 +196,16 @@ ctest -V
 ```bash
 srun -A dphpc -t 60:00 --gpus 5060ti:1 --pty bash
 ```
+or 
+```bash
+srun -A dphpc ./pricing_cli benchmark --filter-by-name vanilla_american_binomial_cpu --parameters easy
+```
 
+# Check for mem errors or race errors
+```bash
+compute-sanitizer --tool memcheck ./pricing_cli benchmark --filter-by-name vanilla_american_binomial_cpu --parameters easy
+```
 
+```bash
+compute-sanitizer --tool racecheck ./pricing_cli benchmark --filter-by-name vanilla_american_binomial_cpu --parameters easy
+```
