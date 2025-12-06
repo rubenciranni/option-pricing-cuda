@@ -131,6 +131,7 @@ __global__ void FUNC_NAME(compute_next_layers_kernel)(
         if (lane_id == 0) warp_edges_layer_values_tile[warp_id] = val;
         __syncthreads();
         if (lane_id == WARP_SIZE - 1) up_val = warp_edges_layer_values_tile[warp_id + 1];
+        __syncthreads(); 
 
         double hold = fma(up, up_val, down * val);
         int st_index = node_id + (n - current_level) / 2;
