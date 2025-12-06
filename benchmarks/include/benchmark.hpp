@@ -37,6 +37,26 @@ inline std::ostream& operator<<(std::ostream& out, const std::vector<double>& v)
     return out;
 }
 
+class BatchBenchmarkResult {
+   public:
+    std::vector<PricingInput> runs;
+    std::vector<double> execution_times;
+    SanityCheckResults sanity_check_results;
+    std::string reference_function_name;
+    std::string function_name;
+
+    BatchBenchmarkResult(std::vector<PricingInput> _runs, std::vector<double> _execution_times,
+                    SanityCheckResults sanity_check_results, std::string function_name,
+                    std::string reference_function_name)
+        : runs(std::move(_runs)),
+          execution_times(std::move(_execution_times)),
+          sanity_check_results(std::move(sanity_check_results)),
+          reference_function_name(std::move(reference_function_name)),
+          function_name(std::move(function_name)) {}
+
+    bool pass_sanity_check() const { return sanity_check_results.empty(); }
+};
+
 class BenchmarkResult {
    public:
     Run run;
@@ -79,3 +99,12 @@ std::vector<BenchmarkResult> benchmark(const std::string& filter_function_name,
                                        const std::string& benchmark_parameters,
                                        const std::string& reference_function_name,
                                        const bool skip_sanity_checks);
+
+std::vector<std::vector<BenchmarkResult>> random_benchmark(
+    const std::string& filter_function_name, const std::string& reference_function_name,
+    const int n_random_runs, bool skip_sanity_checks);
+
+
+std::vector<BatchBenchmarkResult> batch_random_benchmark(
+    const std::string& filter_function_name, const std::string& reference_function_name,
+    const int n_random_runs,const int n, bool skip_sanity_checks);

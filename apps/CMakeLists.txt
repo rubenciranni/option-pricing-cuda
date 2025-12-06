@@ -23,16 +23,21 @@ FetchContent_MakeAvailable(CLI11)
 
 FetchContent_MakeAvailable(json)
 
+file(GLOB_RECURSE PRICING_CLI_CPP_FILES CONFIGURE_DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+)
+
+
 add_executable(pricing_cli)
 
-
 target_sources(pricing_cli PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/pricing_cli.cpp
+        ${PRICING_CLI_CPP_FILES}
 )
 
 target_include_directories(pricing_cli
     PRIVATE
         ${PROJECT_SOURCE_DIR}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 target_link_libraries(pricing_cli

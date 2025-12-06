@@ -77,5 +77,6 @@ double FUNC_NAME(vanilla_american_binomial_cuda)(const double S, const double K,
     cudaFree(layer_values_write_d);
     cudaFree(st_buffer_d);
 
+    checkCuda(cudaGetLastError());
     return value_h;
 }

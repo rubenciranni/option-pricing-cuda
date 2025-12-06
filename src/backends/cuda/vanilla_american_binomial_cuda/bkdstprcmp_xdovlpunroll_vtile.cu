@@ -2,6 +2,7 @@
 #include <cuda_runtime.h>
 
 #include <iostream>
+#include <vector>
 
 #include "assert.h"
 #include "backends/cuda/vanilla_american_binomial_cuda.cuh"
@@ -153,6 +154,95 @@ double FUNC_NAME(vanilla_american_binomial_cuda)(const double S, const double K,
     cudaFree(layer_values_write_d);
     cudaFree(st_buffer_bank0_d);
     cudaFree(st_buffer_bank1_d);
-
+    checkCuda(cudaGetLastError());
     return value_h;
+}
+
+std::vector<double> FUNC_NAME(vanilla_american_binomial_cuda_batch)(std::vector<PricingInput> runs) {
+    cudaStream_t streams[runs.size()];
+    for (size_t i = 0; i < runs.size(); i++) {
+        cudaStreamCreate(&streams[i]);
+    }
+
+    int num_blocks;
+    std::vector<double*> layer_values_read_ds, layer_values_write_ds,
+        st_buffer_bank0_ds, st_buffer_bank1_ds;
+    for (size_t i = 0; i < runs.size(); i++) {
+        auto run = runs[i];
+        auto stream = streams[i];
+        const double delta_t = run.T / run.n;
+        const double u = std::exp(run.sigma * std::sqrt(delta_t));
+        const double d = 1.0 / u;
+        const double p = (exp((run.r - run.q) * delta_t) - d) / (u - d);
+        const double discount = std::exp(-run.r * delta_t);
+        const double up = p * discount;
+        const double down = (1.0 - p) * discount;
+        const int sign = option_type_sign(run.type);
+
+        double *layer_values_read_d, *layer_values_write_d;
+        cudaMallocAsync(&layer_values_read_d, (run.n + 1) * sizeof(double),stream);
+        cudaMallocAsync(&layer_values_write_d, (run.n + 1) * sizeof(double),stream);
+
+        double *st_buffer_bank0_d, *st_buffer_bank1_d;
+        cudaMallocAsync(&st_buffer_bank0_d, (run.n + 1) * sizeof(double),stream);
+        cudaMallocAsync(&st_buffer_bank1_d, (run.n + 1) * sizeof(double),stream);
+
+        num_blocks = std::ceil((run.n + 0) * 1.0 / THREADS_PER_BLOCK);
+        FUNC_NAME(fill_st_buffer_kernel)<<<num_blocks, THREADS_PER_BLOCK,1,stream>>>(st_buffer_bank0_d, run.S, run.K, u,
+                                                                            sign, run.n, 0);
+        FUNC_NAME(fill_st_buffer_kernel)<<<num_blocks, THREADS_PER_BLOCK,1,stream>>>(st_buffer_bank1_d, run.S, run.K, u,
+                                                                            sign, run.n, 1);
+        cudaMemcpyAsync(layer_values_read_d, st_buffer_bank0_d, (run.n + 1) * sizeof(double),
+               cudaMemcpyDeviceToDevice,stream);
+        layer_values_read_ds.push_back(layer_values_read_d);
+        layer_values_write_ds.push_back(layer_values_write_d);
+        st_buffer_bank0_ds.push_back(st_buffer_bank0_d);
+        st_buffer_bank1_ds.push_back(st_buffer_bank1_d);
+
+    }
+    for (size_t i = 0; i < runs.size(); i++) {
+        auto run = runs[i];
+        auto stream = streams[i];
+        const double delta_t = run.T / run.n;
+        const double u = std::exp(run.sigma * std::sqrt(delta_t));
+        const double d = 1.0 / u;
+        const double p = (exp((run.r - run.q) * delta_t) - d) / (u - d);
+        const double discount = std::exp(-run.r * delta_t);
+        const double up = p * discount;
+        const double down = (1.0 - p) * discount;
+        const int sign = option_type_sign(run.type);
+
+        int level = run.n;
+        for (; level >= UNROLL_FACTOR && level > 1; level -= UNROLL_FACTOR) {
+            num_blocks = std::ceil((level - UNROLL_FACTOR + 1) * 1.0 / OUTPUTS_PER_BLOCK);
+            FUNC_NAME(compute_next_layers_kernel)<<<num_blocks, THREADS_PER_BLOCK>>>(
+                layer_values_read_ds[i], layer_values_write_ds[i], st_buffer_bank0_ds[i], st_buffer_bank1_ds[i], up,
+                down, level - UNROLL_FACTOR, run.n);
+            std::swap(layer_values_read_ds[i], layer_values_write_ds[i]);
+        }
+
+        for (; level >= 1; level -= 1) {
+            num_blocks = std::ceil((level + 1) * 1.0 / THREADS_PER_BLOCK);
+            FUNC_NAME(compute_next_layer_kernel)<<<num_blocks, THREADS_PER_BLOCK>>>(
+                layer_values_read_ds[i], layer_values_write_ds[i], st_buffer_bank0_ds[i], st_buffer_bank1_ds[i], up,
+                down, level - 1, run.n);
+            std::swap(layer_values_read_ds[i], layer_values_write_ds[i]);
+        }
+    }
+    std::vector<double> results;
+    for (size_t i = 0; i < runs.size(); i++) {
+        auto run = runs[i];
+        auto stream = streams[i];
+        double value_h;
+        cudaMemcpyAsync(&value_h, layer_values_read_ds[i], (1) * sizeof(double), cudaMemcpyDeviceToHost,stream);
+        cudaFreeAsync(layer_values_read_ds[i],stream);
+        cudaFreeAsync(layer_values_write_ds[i],stream);
+        cudaFreeAsync(st_buffer_bank0_ds[i],stream);
+        cudaFreeAsync(st_buffer_bank1_ds[i],stream);
+        results.push_back(value_h);
+    }
+    cudaDeviceSynchronize();
+    checkCuda(cudaGetLastError());
+
+    return results;
 }

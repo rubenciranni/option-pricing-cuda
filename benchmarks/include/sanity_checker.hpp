@@ -58,4 +58,27 @@ class SanityChecker {
         }
         return test_results;
     }
+
+    SanityCheckResults run_single_all_sanity_checks_batch(BatchPricingFunction func) {
+        SanityCheckResults test_results;
+        std::map<int, std::vector<PricingInput>> inputs_per_n;
+        std::map<int, std::vector<double>> prices_per_n;
+        for (size_t i = 0; i < reference_function_results.size(); i++) {
+            int n = reference_function_results[i].first.n;
+            inputs_per_n[n].push_back(reference_function_results[i].first);
+            prices_per_n[n].push_back(reference_function_results[i].second);
+        }
+
+        for (const auto& [n, inputs_n] : inputs_per_n) {
+            std::vector<double> price(prices_per_n[n].size(), 0.0);
+            func(const_cast<std::vector<PricingInput>&>(inputs_n), price);
+            for (size_t i = 0; i < price.size(); i++) {
+                if (std::abs(price[i] - prices_per_n[n][i]) > 1e-5) {
+                    test_results.emplace_back(inputs_n[i], prices_per_n[n][i], price[i]);
+                }
+            }
+        }
+
+        return test_results;
+    }
 };

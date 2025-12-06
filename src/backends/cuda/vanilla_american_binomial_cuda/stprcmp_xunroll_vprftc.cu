@@ -127,10 +127,12 @@ double FUNC_NAME(vanilla_american_binomial_cuda)(const double S, const double K,
     double h_s_store;
     cudaMemcpy(&h_s_store, d_option_values, (1) * sizeof(double), cudaMemcpyDeviceToHost);
 
+    // ...existing code...
     cudaFree(d_option_values);
     cudaFree(d_option_values_next);
     cudaFree(st_buffer);
 
+    checkCuda(cudaGetLastError());
     return h_s_store;
 }
 
