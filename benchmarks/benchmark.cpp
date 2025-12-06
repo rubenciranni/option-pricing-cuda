@@ -22,6 +22,7 @@ std::map<std::string, Run> BENCHMARK_PARAMETERS = {
     {"l-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 210000, 100000, 1, OptionType::Put)},
     {"xl-repeat", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 260000, 50000, 10, OptionType::Put)},
     {"xxl-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 250000, 250000, 30000, 1, OptionType::Put)},
+    {"custom", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1024, 1024 ,1025, 1, OptionType::Put)},
 };
 
 std::map<std::string, PricingFunction> FUNCTION_REGISTRY = {
@@ -198,6 +199,8 @@ std::vector<std::vector<BenchmarkResult>> random_benchmark(
 std::map<std::string, BatchPricingFunction> BATCH_FUNCTION_REGISTRY = {
     {"vanilla_american_binomial_cuda_batch_naive", vanilla_american_binomial_cuda_batch_naive},
     {"vanilla_american_binomial_cuda_batch_stprcmp", vanilla_american_binomial_cuda_batch_stprcmp},
+    {"vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+        vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
     {"vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
      vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm<
          DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>}};
