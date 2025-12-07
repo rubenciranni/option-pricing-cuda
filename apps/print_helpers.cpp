@@ -207,7 +207,6 @@ void print_benchmark_results(const std::vector<BenchmarkResult>& results) {
     std::cout << "Outputs\n";
     print_table(max_width, table_prices);
 }
-
 void print_batch_benchmark_result(const std::vector<BatchBenchmarkResult>& results, bool skip_sanity_checks) {
     if (!skip_sanity_checks) {
         std::cout << "\n"
@@ -252,13 +251,8 @@ void print_batch_benchmark_result(const std::vector<BatchBenchmarkResult>& resul
         std::string marker = res.pass_sanity_check() ? "✅ " : "❌ ";
 
         row.push_back(marker + function_title);
-        double mean, std;
-        std::tie(mean, std) = mean_and_std(res.execution_times);
         std::ostringstream oss;
-        oss << std::fixed << std::setprecision(3) << mean;
-        if (std > 0.0) {
-            oss << "±" << std::fixed << std::setprecision(3) << std;
-        }
+        oss << std::fixed << std::setprecision(3) << res.execution_time;
         row.push_back(oss.str());
         table.push_back(row);
     }
@@ -283,6 +277,38 @@ std::pair<std::string, std::vector<std::string>> parse_hyperparams(const std::st
     }
 
     return std::make_pair(func_id, hyperparams);
+}
+nlohmann::json dump_batch_benchmark_results_json(const std::vector<BatchBenchmarkResult>& results){
+    nlohmann::json::array_t output;
+
+    for (const auto& res : results) {
+        nlohmann::json res_json;
+        auto [func_id, hparams] = parse_hyperparams(res.function_name);
+        nlohmann::json::array_t hyper, all_times;
+        for (const auto& hparam : hparams) {
+            hyper.push_back(hparam);
+        }
+
+        // nlohmann::json::array_t sanity_checks;
+        // for (auto& [pricing_input, expected, price] : res.sanity_check_results) {
+        //     nlohmann::json sanity_check;
+        //     sanity_check["test_name"] = pricing_input.name;
+        //     sanity_check["expected"] = expected;
+        //     sanity_check["price"] = price;
+        //     sanity_checks.push_back(sanity_check);
+        // }
+
+        res_json = nlohmann::json{{"id", res.function_name},
+                                  {"function_id", func_id},
+                                  {"do_pass_sanity_check", res.pass_sanity_check() ? "true" : "false"},
+                                //   {"sanity_check", sanity_checks},
+                                  {"hyperparams", hyper},
+                                  {"time", res.execution_time}};
+
+        output.push_back(res_json);
+    }
+    return output;
+
 }
 
 nlohmann::json dump_run_json(const Run& run) {

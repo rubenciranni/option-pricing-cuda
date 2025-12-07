@@ -196,6 +196,7 @@ std::vector<std::vector<BenchmarkResult>> random_benchmark(
     return results;
 }
 
+// clang-format off
 std::map<std::string, BatchPricingFunction> BATCH_FUNCTION_REGISTRY = {
     {"vanilla_american_binomial_cuda_batch_naive", vanilla_american_binomial_cuda_batch_naive},
     {"vanilla_american_binomial_cuda_batch_stprcmp", vanilla_american_binomial_cuda_batch_stprcmp},
@@ -203,8 +204,18 @@ std::map<std::string, BatchPricingFunction> BATCH_FUNCTION_REGISTRY = {
         vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
     {"vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
      vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm<
-         DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>}};
+         DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
+    {"vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+        vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
+    #ifdef DO_CARTESIAN_PRODUCT
+        #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_BATCH_SEARCH_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM_DS
+            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_batch_search_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds)
+        #endif
+        
+    #endif
 
+};
+// clang-format on
 std::vector<BatchBenchmarkResult> batch_random_benchmark(const std::string& filter_function_name,
                                                          const std::string& reference_function_name,
                                                          const int n_random_runs, const int n,
@@ -235,15 +246,13 @@ std::vector<BatchBenchmarkResult> batch_random_benchmark(const std::string& filt
     for (const auto& [name, func] : BATCH_FUNCTION_REGISTRY) {
         // filter_function_name is a substring match
         if (name.find(filter_function_name) != std::string::npos || filter_function_name.empty()) {
-            BatchBenchmarkResult result(runs, {}, sanity_checks_map[name], name,
-                                        reference_function_name);
             std::vector<double> out(n_random_runs);
             auto start = std::chrono::high_resolution_clock::now();
             func(runs, out);
             auto end = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double, std::milli> duration = end - start;
-            result.execution_times.push_back(duration.count());
-            results.push_back(result);
+            results.push_back(BatchBenchmarkResult(runs, duration.count(), sanity_checks_map[name], name,
+                                                   reference_function_name));
         }
     }
     return results;

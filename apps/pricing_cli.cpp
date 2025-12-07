@@ -194,7 +194,12 @@ int main(int argc, char** argv) {
         auto results = batch_random_benchmark(filter_name, reference_function_name, random_runs, n,
                                               skip_sanity_checks);
 
-        print_batch_benchmark_result(results, skip_sanity_checks);
+        if(output_format_from_string(output_format_str) == OutputFormat::JSON) {
+            nlohmann::json output = dump_batch_benchmark_results_json(results);
+            std::cout << output.dump(1, '\t') << std::endl;
+        } else {
+            print_batch_benchmark_result(results, skip_sanity_checks);
+        }
     }
 
     return 0;

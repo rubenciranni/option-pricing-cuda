@@ -40,16 +40,16 @@ inline std::ostream& operator<<(std::ostream& out, const std::vector<double>& v)
 class BatchBenchmarkResult {
    public:
     std::vector<PricingInput> runs;
-    std::vector<double> execution_times;
+    double execution_time;
     SanityCheckResults sanity_check_results;
     std::string reference_function_name;
     std::string function_name;
 
-    BatchBenchmarkResult(std::vector<PricingInput> _runs, std::vector<double> _execution_times,
+    BatchBenchmarkResult(std::vector<PricingInput> _runs, double _execution_time,
                     SanityCheckResults sanity_check_results, std::string function_name,
                     std::string reference_function_name)
         : runs(std::move(_runs)),
-          execution_times(std::move(_execution_times)),
+          execution_time(_execution_time),
           sanity_check_results(std::move(sanity_check_results)),
           reference_function_name(std::move(reference_function_name)),
           function_name(std::move(function_name)) {}
