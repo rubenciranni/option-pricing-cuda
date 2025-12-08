@@ -44,3 +44,6 @@ build/
 
 # debug information files
 *.dwo
+
+# any cluster venv
+**venv**

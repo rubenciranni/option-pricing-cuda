@@ -11,18 +11,19 @@
 #include "sanity_checker.hpp"
 
 // clang-format off
-std::map<std::string, Run> BENCHMARK_PARAMETERS = {
-    {"xs-cpu", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 8, 8, 8, 1, OptionType::Put)},
-    {"xs-cuda", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 10001, 10000, 1, OptionType::Put)},
-    {"s-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1024, 2000, 1000, 1, OptionType::Put)},
-    {"s-repeat", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1000, 1001, 1000, 5, OptionType::Put)},
-    {"m-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 20000, 10000, 1, OptionType::Put)},
-    {"m-repeat", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 20000, 10000, 1000, OptionType::Put)},
-    {"l-repeat", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 210000, 100000, 5, OptionType::Put)},
-    {"l-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 210000, 100000, 1, OptionType::Put)},
-    {"xl-repeat", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 260000, 50000, 10, OptionType::Put)},
-    {"xxl-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 250000, 250000, 30000, 1, OptionType::Put)},
-    {"custom", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1024, 1024 ,1025, 1, OptionType::Put)},
+std::map<std::string, Run> BENCHMARK_PARAMETERS = {    
+    {"xs-cpu",     Run(100, 100, 0.5, 0.03, 0.2, 0.015, 8,      8,      Constant_Additive_NStep(8),        1,  OptionType::Put)},
+    {"xs-cuda",    Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000,  10001,  Constant_Additive_NStep(10000),    1,  OptionType::Put)},
+    {"s-single",   Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1024,   2000,   Constant_Additive_NStep(1000),     1,  OptionType::Put)},
+    {"s-repeat",   Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1000,   1001,   Constant_Additive_NStep(1000),     5,  OptionType::Put)},
+    {"m-single",   Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000,  20000,  Constant_Additive_NStep(10000),    1,  OptionType::Put)},
+    {"l-single",   Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000,  210000, Constant_Additive_NStep(100000),   1,  OptionType::Put)},
+    {"l-repeat",   Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000,  210000, Constant_Additive_NStep(100000),   5,  OptionType::Put)},
+    {"xl-repeat",  Run(100, 100, 0.5, 0.03, 0.2, 0.015, 200,    200000, Constant_Multiplicative_NStep(10), 20, OptionType::Put)},
+    {"xl-125",     Run(100, 100, 0.5, 0.03, 0.2, 0.015, 100,    200000, NStep_125(),                       20, 5, OptionType::Put)},
+    {"xl-crazy",   Run(100, 100, 0.5, 0.03, 0.2, 0.015, 111,    200000, Constant_Multiplicative_NStep(2),  20, 5, OptionType::Put)},
+    {"xxl-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 250000, 250000, Constant_Additive_NStep(30000),    1,  OptionType::Put)},
+    {"custom",     Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1024,   1024,   Constant_Additive_NStep(1025),     1,  OptionType::Put)},
 };
 
 std::map<std::string, PricingFunction> FUNCTION_REGISTRY = {
@@ -50,6 +51,7 @@ std::map<std::string, PricingFunction> FUNCTION_REGISTRY = {
     {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
     {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
     {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>}
+
 
     #ifdef DO_CARTESIAN_PRODUCT
         #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_STPRCMP_YUNROLL_VTILE
@@ -114,6 +116,13 @@ std::vector<BenchmarkResult> benchmark(const std::string& filter_function_name,
 
     const Run& data = BENCHMARK_PARAMETERS[benchmark_parameters];
     std::vector<BenchmarkResult> results;
+    
+    std::map<int,double> avg_mean;
+    for (int n = data.nstart; n <= data.nend; n += data.nstep(n)) {
+        avg_mean[n] = 0.;
+    }
+
+    int fi = 0;
     for (const auto& [name, func] : FUNCTION_REGISTRY) {
         // filter_function_name is a substring match
         if (name.find(filter_function_name) != std::string::npos || filter_function_name.empty()) {
@@ -125,8 +134,11 @@ std::vector<BenchmarkResult> benchmark(const std::string& filter_function_name,
 
             BenchmarkResult result(data, benchmark_parameters, {}, name, reference_function_name,
                                    sanity_check);
-            for (int n = data.nstart; n <= data.nend; n += data.nstep) {
-                for (int _ = 0; _ < data.nrepetition_at_step; _++) {
+
+            
+            for (int n = data.nstart; n <= data.nend; n += data.nstep(n)) {
+                for (int r = 0; r < data.nrepetition_at_step; r++) {
+                    if (avg_mean[n] != 0. && r >= data.n_check_stop_after_repetition && mean(result.execution_times[n]) > 2*avg_mean[n]) goto next;
                     auto start = std::chrono::high_resolution_clock::now();
                     double price =
                         func(data.S, data.K, data.T, data.r, data.sigma, data.q, n, data.type);
@@ -136,8 +148,12 @@ std::vector<BenchmarkResult> benchmark(const std::string& filter_function_name,
                     result.execution_times[n].push_back(duration.count());
                     result.prices[n].push_back(price);
                 }
+                if (avg_mean[n] == 0.) avg_mean[n] = mean(result.execution_times[n]);
+                else      avg_mean[n] = (avg_mean[n]*fi + mean(result.execution_times[n]))/(fi+1);
+                next:;
             }
             results.push_back(result);
+            fi++;
         }
     }
     return results;
