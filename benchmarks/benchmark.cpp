@@ -50,7 +50,7 @@ std::map<std::string, PricingFunction> FUNCTION_REGISTRY = {
     {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
     {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
     {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
-    {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>}
+    {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
 
 
     #ifdef DO_CARTESIAN_PRODUCT
@@ -192,7 +192,7 @@ std::vector<std::vector<BenchmarkResult>> random_benchmark(
                 filter_function_name.empty()) {
                 BenchmarkResult result(run, "random_sampled", {}, name, reference_function_name,
                                        sanity_checks_map[name]);
-                for (int n = run.nstart; n <= run.nend; n += run.nstep) {
+                for (int n = run.nstart; n <= run.nend; n += run.nstep(n)) {
                     for (int _ = 0; _ < run.nrepetition_at_step; _++) {
                         auto start = std::chrono::high_resolution_clock::now();
                         double price =

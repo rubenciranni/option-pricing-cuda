@@ -294,7 +294,7 @@ nlohmann::json dump_run_json(const Run& run) {
                           {"q", run.q},
                           {"nstart", run.nstart},
                           {"nend", run.nend},
-                          {"nstep", run.nstep},
+                        //   {"nstep", run.nstep},
                           {"nrepetition_at_step", run.nrepetition_at_step},
                           {"type", to_string(run.type)}};
 }
