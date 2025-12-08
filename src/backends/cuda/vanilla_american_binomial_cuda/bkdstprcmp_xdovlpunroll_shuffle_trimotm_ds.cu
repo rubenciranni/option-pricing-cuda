@@ -106,6 +106,10 @@ int FUNC_NAME(search_bound)(const int n, const double S, const double K, const d
                             const int sign) {
     if (sign == 1) return n;
 
+    // Scheduler: pick a compile-time UNROLL_FACTOR based on the current `level`
+    // and run the corresponding templated kernel in a tight loop. This mirrors
+    // the logic in `get_unroll_factor_for_n` but avoids attempting to assign
+    // to a constexpr template parameter at runtime.
     int lower = 0;
     int upper = n;
     while (lower < upper) {
@@ -255,6 +259,67 @@ __global__ void FUNC_NAME(fill_st_buffers_kernel_batch)(
 }
 
 template <const int THREADS_PER_BLOCK, const int UNROLL_FACTOR>
+__global__ void FUNC_NAME(compute_next_layers_kernel_batch_schedule)(
+    const ds_float* __restrict__ layer_values_read, ds_float* __restrict__ layer_values_write,
+    const ds_float* __restrict__ st_buffer_bank0, const ds_float* __restrict__ st_buffer_bank1,
+    const ds_float* __restrict__ up, const ds_float* __restrict__ down, const int level,
+    const int n, const int* __restrict__ upper_bound, const int MAX_UNROLL_FACTOR) {
+    const int option_idx = blockIdx.y;
+    constexpr int NUM_WARPS = THREADS_PER_BLOCK / WARP_SIZE;
+    const unsigned int full_mask = 0xffffffff;
+    const unsigned int active_mask = full_mask & ~(1 << (WARP_SIZE - 1));
+    const unsigned int lane_id = threadIdx.x % WARP_SIZE;
+    const unsigned int warp_id = threadIdx.x / WARP_SIZE;
+
+    // Offsets
+    const int base_layer_values = (n + THREADS_PER_BLOCK) * option_idx;
+    const int base_st_buffer = (n + THREADS_PER_BLOCK + MAX_UNROLL_FACTOR) * option_idx;
+
+    // Shared memory needs to be ds_float
+    __shared__ ds_float warp_edges_layer_values_tile[NUM_WARPS + 1];
+
+    const int tile_stride = THREADS_PER_BLOCK - UNROLL_FACTOR;
+    const int tile_base = tile_stride * blockIdx.x;
+    const int node_id = tile_base + threadIdx.x;
+
+    if (node_id > upper_bound[option_idx]) return;
+
+    // Load DS value
+    ds_float val = layer_values_read[base_layer_values + node_id];
+    __syncwarp();
+
+    // Cache up/down for this option index in registers
+    const ds_float my_up = up[option_idx];
+    const ds_float my_down = down[option_idx];
+
+#pragma unroll
+    for (int i = 0; i < UNROLL_FACTOR; i++) {
+        int current_level = level + UNROLL_FACTOR - 1 - i;
+        const ds_float* st_buffer_bank =
+            (n - current_level) % 2 ? st_buffer_bank1 : st_buffer_bank0;
+
+        // DS Shuffle
+        ds_float up_val = ds_shfl_down_sync(active_mask, val, 1);
+
+        if (lane_id == 0) warp_edges_layer_values_tile[warp_id] = val;
+        __syncthreads();
+        if (lane_id == WARP_SIZE - 1) up_val = warp_edges_layer_values_tile[warp_id + 1];
+        __syncthreads();
+
+        // DS Math: hold = up * up_val + down * val
+        ds_float hold = ds_add_opt(ds_mul_opt(my_up, up_val), ds_mul_opt(my_down, val));
+
+        int st_index = node_id + (n - current_level) / 2;
+        ds_float exercise = st_buffer_bank[base_st_buffer + st_index];
+        val = ds_max(hold, exercise);
+    }
+
+    if (threadIdx.x < THREADS_PER_BLOCK - UNROLL_FACTOR) {
+        layer_values_write[base_layer_values + node_id] = val;
+    }
+}
+
+template <const int THREADS_PER_BLOCK, const int UNROLL_FACTOR>
 __global__ void FUNC_NAME(compute_next_layers_kernel_batch)(
     const ds_float* __restrict__ layer_values_read, ds_float* __restrict__ layer_values_write,
     const ds_float* __restrict__ st_buffer_bank0, const ds_float* __restrict__ st_buffer_bank1,
@@ -350,14 +415,7 @@ __global__ void FUNC_NAME(copy_final_value)(const ds_float* __restrict__ layer_v
     out[option_idx] = ds_to_double(res_ds);
 }
 
-// points out for which power of two of level which UNROLL_FACTOR to use
 
-const std::map<int, int> SCHEDULER_UNROLL_FACTOR = {
-    {10, 64},
-    {12, 32},
-    {14, 24},
-    {30, 16},
-};
 template <const Hyperparams& h>
 void FUNC_NAME(vanilla_american_binomial_cuda_batch_scheduler)(std::vector<PricingInput>& runs,
                                                                std::vector<double>& out) {
@@ -365,7 +423,7 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch_scheduler)(std::vector<Prici
     if (num_runs == 0) return;
 
     constexpr int THREADS_PER_BLOCK = h.THREADS_PER_BLOCK;
-    constexpr int UNROLL_FACTOR = h.UNROLL_FACTOR;
+    constexpr int MAX_UNROLL_FACTOR = 128;
 
     // Host buffers
     std::vector<double> h_S(num_runs), h_K(num_runs), h_u(num_runs);
@@ -427,7 +485,6 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch_scheduler)(std::vector<Prici
 
     int n = runs[0].n;
 
-    // Allocate buffers using ds_float size
     const int layer_size = num_runs * (n + THREADS_PER_BLOCK);
     ds_float *layer_values_read_d, *layer_values_write_d;
     cudaMalloc(&layer_values_read_d, layer_size * sizeof(ds_float));
@@ -435,7 +492,7 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch_scheduler)(std::vector<Prici
     // Initialize to zero to be safe
     cudaMemsetAsync(layer_values_read_d, 0, layer_size * sizeof(ds_float));
 
-    const int buffer_size = num_runs * (n + THREADS_PER_BLOCK + UNROLL_FACTOR);
+    const int buffer_size = num_runs * (n + THREADS_PER_BLOCK + MAX_UNROLL_FACTOR);
     ds_float *st_buffer_bank0_d, *st_buffer_bank1_d;
     cudaMalloc(&st_buffer_bank0_d, buffer_size * sizeof(ds_float));
     cudaMalloc(&st_buffer_bank1_d, buffer_size * sizeof(ds_float));
@@ -444,55 +501,83 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch_scheduler)(std::vector<Prici
     int num_blocks = std::ceil((n + 1) * 1.0 / THREADS_PER_BLOCK);
     dim3 num_blocks_2d(num_blocks, num_runs);
 
-    FUNC_NAME(fill_st_buffers_kernel_batch)<THREADS_PER_BLOCK, UNROLL_FACTOR>
+    FUNC_NAME(fill_st_buffers_kernel_batch)<THREADS_PER_BLOCK, MAX_UNROLL_FACTOR>
         <<<num_blocks_2d, THREADS_PER_BLOCK>>>(st_buffer_bank0_d, st_buffer_bank1_d, d_S, d_K, d_u,
                                                d_sign, n, layer_values_read_d);
-
-    // 2. Unrolled compute loop
-    int level = n - 1 - (UNROLL_FACTOR - 1);
-    for (; level >= 0; level -= UNROLL_FACTOR) {
-        num_blocks = std::ceil((level + UNROLL_FACTOR) * 1.0 / (THREADS_PER_BLOCK - UNROLL_FACTOR));
+    int level = n;
+    for (; level >= (1 << 20);) {
+        constexpr int U = 16;
+        num_blocks = std::ceil((level) * 1.0 / (THREADS_PER_BLOCK - U));
         dim3 num_blocks_2d_loop(num_blocks, num_runs);
-
-        int log_level = static_cast<int>(std::ceil(std::log2(level + 1)));
-        if (log_level < 10) {
-            FUNC_NAME(compute_next_layers_kernel_batch)<THREADS_PER_BLOCK, 64>
-                <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>(
-                    layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d,
-                    d_up, d_down, level, n, d_bound);
-        } else if (log_level <= 12) {
-            FUNC_NAME(compute_next_layers_kernel_batch)<THREADS_PER_BLOCK, 32>
-                <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>(
-                    layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d,
-                    d_up, d_down, level, n, d_bound);
-        } else if (log_level <= 14) {
-            FUNC_NAME(compute_next_layers_kernel_batch)<THREADS_PER_BLOCK, 24>
-                <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>(
-                    layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d,
-                    d_up, d_down, level, n, d_bound);
-        } else {
-            FUNC_NAME(compute_next_layers_kernel_batch)<THREADS_PER_BLOCK, 16>
-                <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>(
-                    layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d,
-                    d_up, d_down, level, n, d_bound);
-        }
+        FUNC_NAME(compute_next_layers_kernel_batch_schedule)<THREADS_PER_BLOCK, U>
+            <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>(
+                layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d,
+                d_up, d_down, level - U, n, d_bound, MAX_UNROLL_FACTOR);
         std::swap(layer_values_read_d, layer_values_write_d);
+        level -= U;
     }
 
-    // 3. Remainder compute loop
-    level += (UNROLL_FACTOR - 1);
-    for (; level >= 0; level -= 1) {
-        num_blocks = std::ceil((level + UNROLL_FACTOR) * 1.0 / (THREADS_PER_BLOCK));
+    for (; level >= (1 << 14);) {
+        constexpr int U = 24;
+        num_blocks = std::ceil((level) * 1.0 / (THREADS_PER_BLOCK - U));
         dim3 num_blocks_2d_loop(num_blocks, num_runs);
-
-        FUNC_NAME(compute_next_layer_kernel_batch)<THREADS_PER_BLOCK, UNROLL_FACTOR>
-            <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>(layer_values_read_d, layer_values_write_d,
-                                                        st_buffer_bank0_d, st_buffer_bank1_d, d_up,
-                                                        d_down, level, n);
+        FUNC_NAME(compute_next_layers_kernel_batch_schedule)<THREADS_PER_BLOCK, U>
+            <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>(
+                layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d,
+                d_up, d_down, level - U, n, d_bound, MAX_UNROLL_FACTOR);
         std::swap(layer_values_read_d, layer_values_write_d);
+        level -= U;
     }
 
-    // 4. Copy final values
+    for (; level >= (1 << 12);) {
+        constexpr int U = 32;
+        num_blocks = std::ceil((level) * 1.0 / (THREADS_PER_BLOCK - U));
+        dim3 num_blocks_2d_loop(num_blocks, num_runs);
+        FUNC_NAME(compute_next_layers_kernel_batch_schedule)<THREADS_PER_BLOCK, U>
+            <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>(
+                layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d,
+                d_up, d_down, level - U, n, d_bound, MAX_UNROLL_FACTOR);
+        std::swap(layer_values_read_d, layer_values_write_d);
+        level -= U;
+    }
+
+    for (; level >= 64;) {
+        constexpr int U = 64;
+        num_blocks = std::ceil((level) * 1.0 / (THREADS_PER_BLOCK - U));
+        dim3 num_blocks_2d_loop(num_blocks, num_runs);
+        FUNC_NAME(compute_next_layers_kernel_batch_schedule)<THREADS_PER_BLOCK, U>
+            <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>(
+                layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d,
+                d_up, d_down, level - U, n, d_bound, MAX_UNROLL_FACTOR);
+        std::swap(layer_values_read_d, layer_values_write_d);
+        level -= U;
+    }
+
+    for (; level >= 32;) {
+        constexpr int U = 32;
+        num_blocks = std::ceil((level) * 1.0 / (THREADS_PER_BLOCK - U));
+        dim3 num_blocks_2d_loop(num_blocks, num_runs);
+        FUNC_NAME(compute_next_layers_kernel_batch_schedule)<THREADS_PER_BLOCK, U>
+            <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>(
+                layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d,
+                d_up, d_down, level - U, n, d_bound, MAX_UNROLL_FACTOR);
+        std::swap(layer_values_read_d, layer_values_write_d);
+        level -= U;
+    }
+
+    for (; level > 0; level -= 1) {
+        num_blocks = std::ceil((level) * 1.0 / (THREADS_PER_BLOCK-1));
+        dim3 num_blocks_2d_loop(num_blocks, num_runs);
+        FUNC_NAME(compute_next_layers_kernel_batch_schedule)<THREADS_PER_BLOCK, 1>
+            <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>(
+                layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d,
+                d_up, d_down, level-1,n,d_bound, MAX_UNROLL_FACTOR);
+        
+        std::swap(layer_values_read_d, layer_values_write_d);
+  
+    };
+
+
     num_blocks = std::ceil(num_runs * 1.0 / THREADS_PER_BLOCK);
     FUNC_NAME(copy_final_value)<THREADS_PER_BLOCK>
         <<<num_blocks, THREADS_PER_BLOCK>>>(layer_values_read_d, d_out, n, num_runs);
@@ -576,7 +661,6 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch)(std::vector<PricingInput>& 
     cudaMemcpy(d_K, h_K.data(), num_runs * sizeof(double), cudaMemcpyHostToDevice);
     cudaMemcpy(d_u, h_u.data(), num_runs * sizeof(double), cudaMemcpyHostToDevice);
 
-    // Copy DS arrays
     cudaMemcpy(d_up, h_up_ds.data(), num_runs * sizeof(ds_float), cudaMemcpyHostToDevice);
     cudaMemcpy(d_down, h_down_ds.data(), num_runs * sizeof(ds_float), cudaMemcpyHostToDevice);
 
@@ -586,12 +670,10 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch)(std::vector<PricingInput>& 
 
     int n = runs[0].n;
 
-    // Allocate buffers using ds_float size
     const int layer_size = num_runs * (n + THREADS_PER_BLOCK);
     ds_float *layer_values_read_d, *layer_values_write_d;
     cudaMalloc(&layer_values_read_d, layer_size * sizeof(ds_float));
     cudaMalloc(&layer_values_write_d, layer_size * sizeof(ds_float));
-    // Initialize to zero to be safe
     cudaMemsetAsync(layer_values_read_d, 0, layer_size * sizeof(ds_float));
 
     const int buffer_size = num_runs * (n + THREADS_PER_BLOCK + UNROLL_FACTOR);
@@ -599,7 +681,6 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch)(std::vector<PricingInput>& 
     cudaMalloc(&st_buffer_bank0_d, buffer_size * sizeof(ds_float));
     cudaMalloc(&st_buffer_bank1_d, buffer_size * sizeof(ds_float));
 
-    // 1. Fill buffers
     int num_blocks = std::ceil((n + 1) * 1.0 / THREADS_PER_BLOCK);
     dim3 num_blocks_2d(num_blocks, num_runs);
 
@@ -607,7 +688,6 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch)(std::vector<PricingInput>& 
         <<<num_blocks_2d, THREADS_PER_BLOCK>>>(st_buffer_bank0_d, st_buffer_bank1_d, d_S, d_K, d_u,
                                                d_sign, n, layer_values_read_d);
 
-    // 2. Unrolled compute loop
     int level = n - 1 - (UNROLL_FACTOR - 1);
     for (; level >= 0; level -= UNROLL_FACTOR) {
         num_blocks = std::ceil((level + UNROLL_FACTOR) * 1.0 / (THREADS_PER_BLOCK - UNROLL_FACTOR));
@@ -620,7 +700,6 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch)(std::vector<PricingInput>& 
         std::swap(layer_values_read_d, layer_values_write_d);
     }
 
-    // 3. Remainder compute loop
     level += (UNROLL_FACTOR - 1);
     for (; level >= 0; level -= 1) {
         num_blocks = std::ceil((level + UNROLL_FACTOR) * 1.0 / (THREADS_PER_BLOCK));
@@ -633,7 +712,6 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch)(std::vector<PricingInput>& 
         std::swap(layer_values_read_d, layer_values_write_d);
     }
 
-    // 4. Copy final values
     num_blocks = std::ceil(num_runs * 1.0 / THREADS_PER_BLOCK);
     FUNC_NAME(copy_final_value)<THREADS_PER_BLOCK>
         <<<num_blocks, THREADS_PER_BLOCK>>>(layer_values_read_d, d_out, n, num_runs);
@@ -813,25 +891,39 @@ template void FUNC_NAME(
     vanilla_american_binomial_cuda_batch)<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>(
     std::vector<PricingInput>& runs, std::vector<double>& out);
 
-template void FUNC_NAME(
-    vanilla_american_binomial_cuda_batch_scheduler)<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>(
-    std::vector<PricingInput>& runs, std::vector<double>& out);
-
-template void FUNC_NAME(vanilla_american_binomial_cuda_batch_search)<
+template void FUNC_NAME(vanilla_american_binomial_cuda_batch_scheduler)<
     DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>(std::vector<PricingInput>& runs,
                                                              std::vector<double>& out);
 
-#ifdef DO_CARTESIAN_PRODUCT
-#ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_BATCH_SEARCH_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM_DS
+// template void FUNC_NAME(vanilla_american_binomial_cuda_batch_search)<
+//     DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>(std::vector<PricingInput>& runs,
+//                                                              std::vector<double>& out);
 
-#define PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_BATCH_SEARCH_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM_DS( \
-    ID, A, B, C, D, E, Y)                                                                                   \
-    template void FUNC_NAME(                                                                                \
-        vanilla_american_binomial_cuda_batch_search)<GRID_SEARCH_HYPERPARAMS_##ID>(                         \
+#ifdef DO_CARTESIAN_PRODUCT
+
+#ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_BATCH_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM_DS
+#define PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_BATCH_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM_DS( \
+    ID, A, B, C, D, E, Y)                                                                            \
+    template void FUNC_NAME(vanilla_american_binomial_cuda_batch)<GRID_SEARCH_HYPERPARAMS_##ID>(     \
         std::vector<PricingInput> & runs, std::vector<double> & out);
 APPLY_FUNCTION(
-    PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_BATCH_SEARCH_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM_DS,
+    PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_BATCH_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM_DS,
     HYPERPARAMS_CART_PRODUCT, NULL)
 
 #endif
+
+// #ifdef
+// DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_BATCH_SEARCH_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM_DS
+//     #define
+//     PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_BATCH_SEARCH_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM_DS(
+//     \
+//         ID, A, B, C, D, E, Y) \
+//         template void FUNC_NAME( \
+//             vanilla_american_binomial_cuda_batch_search)<GRID_SEARCH_HYPERPARAMS_##ID>( \
+//             std::vector<PricingInput> & runs, std::vector<double> & out);
+//     APPLY_FUNCTION(
+//         PRODUCE_INSTANCES_OF_VANILLA_AMERICAN_CUDA_BATCH_SEARCH_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM_DS,
+//         HYPERPARAMS_CART_PRODUCT, NULL)
+
+// #endif
 #endif
