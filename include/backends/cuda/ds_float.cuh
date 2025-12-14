@@ -179,14 +179,15 @@ __device__ inline ds_float ds_add_two_mults_opt(ds_float my_up, ds_float up_val,
     // --- Step 1: Compute P1 = my_up * up_val (using twoProdFMA logic) ---
     // The multiplication of the high parts: P1.x * P1.y
     ds_float p1 = twoProdFMA(my_up.x, up_val.x); 
+    // --- Step 2: Compute P2 = my_down * val (using twoProdFMA logic) ---
+    // The multiplication of the high parts: P2.x * P2.y
+    ds_float p2 = twoProdFMA(my_down.x, val.x); 
+
     // The error of P1 is p1.y + (my_up.x * up_val.y + my_up.y * up_val.x)
     float err1 = p1.y + (my_up.x * up_val.y + my_up.y * up_val.x);
     // Final result of the first multiplication: hold1.x, hold1.y
     ds_float hold1 = quickTwoSum(p1.x, err1); // Equivalent to ds_mul_opt(my_up, up_val)
     
-    // --- Step 2: Compute P2 = my_down * val (using twoProdFMA logic) ---
-    // The multiplication of the high parts: P2.x * P2.y
-    ds_float p2 = twoProdFMA(my_down.x, val.x); 
     // The error of P2 is p2.y + (my_down.x * val.y + my_down.y * val.x)
     float err2 = p2.y + (my_down.x * val.y + my_down.y * val.x);
     // Final result of the second multiplication: hold2.x, hold2.y

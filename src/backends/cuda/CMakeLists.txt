@@ -17,6 +17,13 @@ target_include_directories(cuda_impl
     ${PROJECT_SOURCE_DIR}/include
 )
 
+# Declare modular header dependencies for better caching and rebuild tracking
+set_source_files_properties(${CUDA_BACKEND_SOURCES}
+    PROPERTIES
+    OBJECT_DEPENDS
+    "${PROJECT_SOURCE_DIR}/include/backends/cuda/vanilla_american_binomial_cuda.cuh;${PROJECT_SOURCE_DIR}/include/backends/cuda/vanilla_american_binomial_cuda_basic.cuh;${PROJECT_SOURCE_DIR}/include/backends/cuda/vanilla_american_binomial_cuda_templated.cuh;${PROJECT_SOURCE_DIR}/include/backends/cuda/vanilla_american_binomial_cuda_batch.cuh"
+)
+
 target_compile_options(cuda_impl PRIVATE
     -Wno-pedantic
 )

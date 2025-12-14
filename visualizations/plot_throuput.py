@@ -3,10 +3,10 @@ import matplotlib.pyplot as plt
 import json
 import os
 
-FILE_PATH = '/home/gspadaccini/option-pricing-cuda/build/out.json'
+FILE_PATH = '/home/gspadaccini/option-pricing-cuda/build/temp.json'
 OUTPUT_PLOT_FILE = lambda x: f'plot_{x}.png'
 
-def calculate_throughput(df):
+def calculate_values(df):
     # Calculates throughput using the formula: (n * n_runs) / time
     df['n_runs'] = pd.to_numeric(df['n_runs'], errors='coerce')
     df['time'] = pd.to_numeric(df['time'], errors='coerce')
@@ -14,14 +14,53 @@ def calculate_throughput(df):
     
     df.dropna(subset=['n_runs', 'time', 'n'], inplace=True)
     
-    total_options = df['n_runs']  * df['n']
+    total_options = df['n_runs'] 
     
     time_safe = df['time'] / 1000
     df['throughput'] = total_options / time_safe
+    df['operation_intensity'] = 
     print(df)
     
     return df
+def plot_latency(df):
+    
+    df.rename(columns={'n_runs': 'n-random-runs'}, inplace=True) 
+    
+    required_cols = ['n', 'throughput', 'n-random-runs','time']
+    if not all(col in df.columns for col in required_cols):
+        print("Error: DataFrame missing required columns for plotting. Skipping plot.")
+        return
 
+    plt.figure(figsize=(12, 6))
+    
+    random_runs = sorted(df['n-random-runs'].unique())
+
+    for runs in random_runs:
+        subset = df[df['n-random-runs'] == runs]
+        
+        if not subset.empty:
+            plt.plot(
+                subset['n'],
+                subset['time'],
+                marker='o',
+                linestyle='-',
+                label=f'$N_{{runs}}$: {runs}'
+            )
+
+    # --- Plot Customization ---
+    plt.title(f'Latency vs. Input Size (n)', fontsize=16)
+    plt.xlabel('Input Size (n)', fontsize=14)
+    plt.ylabel('Latency (seconds)', fontsize=14)
+    plt.xscale("log") 
+    plt.yscale("log")
+    
+    plt.xticks(list(df['n'].unique()))
+
+    plt.grid(True, which="major", ls="--", alpha=0.7)
+    plt.legend(title='Number of Runs', loc='best')
+    plt.tight_layout()
+
+    plt.savefig(OUTPUT_PLOT_FILE('latency'))
 def plot_latency(df):
     
     df.rename(columns={'n_runs': 'n-random-runs'}, inplace=True) 
@@ -109,7 +148,7 @@ def main():
             
         df = pd.DataFrame(data)
 
-        df = calculate_throughput(df)
+        df = calculate_values(df)
 
         plot_throughput(df)
 

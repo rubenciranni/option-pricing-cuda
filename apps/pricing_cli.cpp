@@ -86,7 +86,7 @@ int main(int argc, char** argv) {
     random_benchmark_subcommand
         ->add_option("--reference-function", reference_function_name,
                      "Reference function name for sanity checks")
-        ->default_val("vanilla_american_binomial_cpu_naive");
+        ->default_val("vanilla_american_binomial_cuda_stprcmp");
     random_benchmark_subcommand
         ->add_flag("--skip-sanity-checks", skip_sanity_checks, "Skip sanity checks.")
         ->default_val(false);
@@ -121,7 +121,7 @@ int main(int argc, char** argv) {
     batch_random_benchmark_subcommand
         ->add_option("--reference-function", reference_function_name,
                      "Reference function name for sanity checks")
-        ->default_val("vanilla_american_binomial_cpu_naive");
+        ->default_val("vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds");
     batch_random_benchmark_subcommand
         ->add_flag("--skip-sanity-checks", skip_sanity_checks, "Skip sanity checks.")
         ->default_val(false);
@@ -221,7 +221,7 @@ int main(int argc, char** argv) {
     } else if (*benchmark_random_thougput_subcommand) {
         nlohmann::json::array_t output;
         for (auto random_runs : std::vector<int>{1,2,4,8,16,32,64,128,256,512,1024}) {
-            for (auto n : std::vector<int>{1000,1500,5000,10000,15000,50000,100000,150000}) {
+            for (auto n : std::vector<int>{64,128,256,512,1024,2048,4096,8192,1<<14,1<<15,1<<16,1<<17}) {
                 auto results = batch_random_benchmark(filter_name, reference_function_name,
                                                       random_runs, n, skip_sanity_checks);
                 OutputFormat output_format = output_format_from_string(output_format_str);
