@@ -110,3 +110,5 @@ std::vector<std::vector<BenchmarkResult>> random_benchmark(
 std::vector<BatchBenchmarkResult> batch_random_benchmark(
     const std::string& filter_function_name, const std::string& reference_function_name,
     const int n_random_runs,const int n, bool skip_sanity_checks);
+
+void check_occupancy_all_cuda_functions() ;

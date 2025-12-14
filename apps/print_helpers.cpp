@@ -336,11 +336,17 @@ nlohmann::json dump_batch_benchmark_results_json(const std::vector<BatchBenchmar
         //     sanity_checks.push_back(sanity_check);
         // }
 
+        int n = 0;
+        if(res.runs.size()>0){
+            n = res.runs[0].n;
+        }
         res_json =
             nlohmann::json{{"id", res.function_name},
                            {"function_id", func_id},
                            {"do_pass_sanity_check", res.pass_sanity_check() ? "true" : "false"},
                            //   {"sanity_check", sanity_checks},
+                           {"n", n },
+                           {"n_runs", static_cast<int>(res.runs.size())},
                            {"hyperparams", hyper},
                            {"time", res.execution_time}};
 

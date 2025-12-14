@@ -33,4 +33,4 @@ target_compile_options(cuda_impl PRIVATE
     --use_fast_math
     -lnvToolsExt
 )
-target_link_libraries(cuda_impl PUBLIC CUDA::cudart)
+target_link_libraries(cuda_impl PUBLIC CUDA::cudart CUDA::cuda_driver)

@@ -130,6 +130,11 @@ template <const Hyperparams& h>
 void vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds(
     std::vector<PricingInput>& runs, std::vector<double>& out);
 
+template <const Hyperparams& h>
+void test_vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds(
+    std::vector<PricingInput>& runs, std::vector<double>& out);
+
+
 // template <const Hyperparams& h>
 // void vanilla_american_binomial_cuda_batch_search_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds (
 //     std::vector<PricingInput>& runs, std::vector<double>& out);
@@ -151,3 +156,6 @@ inline cudaError_t checkCuda(cudaError_t result) {
 #endif
     return result;
 }
+
+// Declaration only; definition is in check_occupancy.cu to avoid multiple definitions
+std::pair<int, int> check_occupancy_function(CUfunction func);

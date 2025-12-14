@@ -98,6 +98,20 @@ int main(int argc, char** argv) {
         ->add_option("--n-random-runs", random_runs, "Number of random benchmark runs to perform")
         ->default_val(5);
 
+    auto check_occupancy_subcommand =
+        app.add_subcommand("check-occupancy", "Check occupancy of CUDA implementations");
+
+    auto benchmark_random_thougput_subcommand =
+        app.add_subcommand("benchmark-random-throughput",
+                           "Run benchmark on randomly generated parameters for throughput");
+    benchmark_random_thougput_subcommand
+        ->add_option("--filter-by-name", filter_name, "Filter functions by name")
+        ->default_val("");
+    benchmark_random_thougput_subcommand
+        ->add_option("--output-format", output_format_str, "Output Format (pprint|json)")
+        ->default_val("pprint")
+        ->check(CLI::IsMember({"pprint", "json"}));
+
     auto batch_random_benchmark_subcommand = app.add_subcommand(
         "batch-random-benchmark", "Run benchmark on randomly generated parameters");
     batch_random_benchmark_subcommand
@@ -194,12 +208,32 @@ int main(int argc, char** argv) {
         auto results = batch_random_benchmark(filter_name, reference_function_name, random_runs, n,
                                               skip_sanity_checks);
 
-        if(output_format_from_string(output_format_str) == OutputFormat::JSON) {
-            nlohmann::json output = dump_batch_benchmark_results_json(results);
-            std::cout << output.dump(1, '\t') << std::endl;
-        } else {
+        OutputFormat output_format = output_format_from_string(output_format_str);
+        if (output_format == OutputFormat::PPRINT) {
             print_batch_benchmark_result(results, skip_sanity_checks);
+        } else if (output_format == OutputFormat::JSON) {
+            auto output = dump_batch_benchmark_results_json(results);
+            std::cout << output.dump(1, '\t') << std::endl;
         }
+    } else if (*check_occupancy_subcommand) {
+        check_occupancy_all_cuda_functions();
+
+    } else if (*benchmark_random_thougput_subcommand) {
+        nlohmann::json::array_t output;
+        for (auto random_runs : std::vector<int>{1,2,4,8,16,32,64,128,256,512,1024}) {
+            for (auto n : std::vector<int>{1000,1500,5000,10000,15000,50000,100000,150000}) {
+                auto results = batch_random_benchmark(filter_name, reference_function_name,
+                                                      random_runs, n, skip_sanity_checks);
+                OutputFormat output_format = output_format_from_string(output_format_str);
+                if (output_format == OutputFormat::PPRINT) {
+                    print_batch_benchmark_result(results, skip_sanity_checks);
+                } else if (output_format == OutputFormat::JSON) {
+                    auto batch_output = dump_batch_benchmark_results_json(results);
+                    output.insert(output.end(), batch_output.begin(), batch_output.end());
+                }
+            }
+        }
+        std::cout << output << std::endl;
     }
 
     return 0;

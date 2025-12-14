@@ -207,13 +207,16 @@ std::map<std::string, BatchPricingFunction> BATCH_FUNCTION_REGISTRY = {
          DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
     {"vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
         vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
+    { "test_vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+        test_vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
+
     #ifdef DO_CARTESIAN_PRODUCT
         #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_BATCH_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM
             APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm)
         #endif
-        // #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_BATCH_SEARCH_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM_DS
-        //     APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_batch_search_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds)
-        // #endif
+        #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_BATCH_SEARCH_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM_DS
+            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_batch_search_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds)
+        #endif
 
         #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_BATCH_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM_DS
             APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds)
@@ -263,4 +266,19 @@ std::vector<BatchBenchmarkResult> batch_random_benchmark(const std::string& filt
         }
     }
     return results;
+}
+
+
+
+void check_occupancy_all_cuda_functions() {
+    for (const auto& [name, func] : BATCH_FUNCTION_REGISTRY) {
+        if (name.find("cuda") != std::string::npos) {
+            std::cout << "Checking occupancy for function: " << name << "\n";
+            std::pair<int,int> dim = check_occupancy_function(reinterpret_cast<CUfunction>(func));
+            std::cout << "Occupancy results for func " << name << ":\n";
+            std::cout << "  Minimum grid size: " << dim.first << "\n";
+            std::cout << "  Optimal block size: " << dim.second << "\n";
+            
+        }
+    }
 }
