@@ -121,7 +121,7 @@ int main(int argc, char** argv) {
     batch_random_benchmark_subcommand
         ->add_option("--reference-function", reference_function_name,
                      "Reference function name for sanity checks")
-        ->default_val("vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds");
+        ->default_val("vanilla_american_binomial_cuda_stprcmp_yunroll_vtile");
     batch_random_benchmark_subcommand
         ->add_flag("--skip-sanity-checks", skip_sanity_checks, "Skip sanity checks.")
         ->default_val(false);
