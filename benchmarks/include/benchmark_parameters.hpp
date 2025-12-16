@@ -42,6 +42,29 @@ inline double mean(std::vector<double> v) {
 }
 
 
+class PricingInput {
+   public:
+    std::string name;
+    double S;
+    double K;
+    double T;
+    double r;
+    double sigma;
+    double q;
+    int n;
+    OptionType type;
+
+    PricingInput() : S(0), K(0), T(0), r(0), sigma(0), q(0), n(0), type(OptionType::Call) {}
+
+    PricingInput(double S, double K, double T, double r, double sigma, double q, int n,
+                 OptionType type)
+        : name(""), S(S), K(K), T(T), r(r), sigma(sigma), q(q), n(n), type(type) {}
+
+    PricingInput(double S, double K, double T, double r, double sigma, double q, int n,
+                 OptionType type, std::string name)
+        : name(name), S(S), K(K), T(T), r(r), sigma(sigma), q(q), n(n), type(type) {}
+};
+
 class Run {
    public:
     double S;
@@ -71,21 +94,6 @@ class Run {
           nrepetition_at_step(1),
           type(OptionType::Call) {}
 
-    Run(double S, double K, double T, double r, double sigma, double q, int nstart, int nend,
-        int nstep, OptionType type)
-        : S(S),
-          K(K),
-          T(T),
-          r(r),
-          sigma(sigma),
-          q(q),
-          nstart(nstart),
-          nend(nend),
-          nstep(Constant_Additive_NStep(nstep)),
-          nrepetition_at_step(1),
-          n_check_stop_after_repetition(1),
-          type(type) {}
-    
     Run(double S, double K, double T, double r, double sigma, double q, int nstart, int nend,
         std::function<int(int)> nstep, OptionType type)
         : S(S),

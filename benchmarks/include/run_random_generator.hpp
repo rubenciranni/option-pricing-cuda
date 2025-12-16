@@ -140,7 +140,7 @@ class RunGenerator {
         // Set the fixed parameters
         run.nstart = nstart;
         run.nend = nend;
-        run.nstep = Constant_Additive_NStep(nstep);
+        run.nstep = nstep;
         run.nrepetition_at_step = nrepetition_at_step;
         run.type = type;
 
