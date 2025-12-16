@@ -8,102 +8,14 @@
 #include "backends/hyperparams.hpp"
 #include "constants.hpp"
 
+// Include modular header files for organization
+#include "vanilla_american_binomial_cuda_basic.cuh"
+#include "vanilla_american_binomial_cuda_templated.cuh"
+#include "vanilla_american_binomial_cuda_batch.cuh"
+
 #define CONCAT_IMPL(a, b) a##_##b
 #define EXPAND_AND_CONCAT(a, b) CONCAT_IMPL(a, b)
 #define FUNC_NAME(func) EXPAND_AND_CONCAT(func, IMPL_NAME)
-
-double vanilla_american_binomial_cuda_naive(const double S, const double K, const double T,
-                                            const double r, const double sigma, const double q,
-                                            const int n, const OptionType type);
-
-double vanilla_american_binomial_cuda_nvidia_baseline(const double S, const double K,
-                                                      const double T, const double r,
-                                                      const double sigma, const double q,
-                                                      const int n, const OptionType type);
-
-double vanilla_american_binomial_cuda_stprcmp(const double S, const double K, const double T,
-                                              const double r, const double sigma, const double q,
-                                              const int n, const OptionType type);
-
-double vanilla_american_binomial_cuda_bkdstprcmp(const double S, const double K, const double T,
-                                                 const double r, const double sigma, const double q,
-                                                 const int n, const OptionType type);
-
-template <const Hyperparams& h>
-double vanilla_american_binomial_cuda_stprcmp_yunroll_vtile(const double S, const double K,
-                                                            const double T, const double r,
-                                                            const double sigma, const double q,
-                                                            const int n, const OptionType type);
-
-template <const Hyperparams& h>
-double vanilla_american_binomial_cuda_stprcmp_xunroll_vprftc(const double S, const double K,
-                                                             const double T, const double r,
-                                                             const double sigma, const double q,
-                                                             const int n, const OptionType type);
-
-template <const Hyperparams& h>
-double vanilla_american_binomial_cuda_stprcmp_xunroll_stvtile(const double S, const double K,
-                                                              const double T, const double r,
-                                                              const double sigma, const double q,
-                                                              const int n, const OptionType type);
-
-template <const Hyperparams& h>
-double vanilla_american_binomial_cuda_stprcmp_xyunroll_vprftc(const double S, const double K,
-                                                              const double T, const double r,
-                                                              const double sigma, const double q,
-                                                              const int n, const OptionType type);
-
-double vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc(
-    const double S, const double K, const double T, const double r, const double sigma,
-    const double q, const int n, const OptionType type);
-
-template <const Hyperparams& h>
-double vanilla_american_binomial_cuda_stprcmp_xyunroll_stvprftc(const double S, const double K,
-                                                                const double T, const double r,
-                                                                const double sigma, const double q,
-                                                                const int n, const OptionType type);
-
-double vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc_trimotm(
-    const double S, const double K, const double T, const double r, const double sigma,
-    const double q, const int n, const OptionType type);
-
-double vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile(const double S, const double K,
-                                                                    const double T, const double r,
-                                                                    const double sigma,
-                                                                    const double q, const int n,
-                                                                    const OptionType type);
-
-template <const Hyperparams& h>
-double vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile(const double S, const double K,
-                                                                   const double T, const double r,
-                                                                   const double sigma,
-                                                                   const double q, const int n,
-                                                                   const OptionType type);
-
-template <const Hyperparams& h>
-double vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm(
-    const double S, const double K, const double T, const double r, const double sigma,
-    const double q, const int n, const OptionType type);
-
-template <const Hyperparams& h>
-double vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm(
-    const double S, const double K, const double T, const double r, const double sigma,
-    const double q, const int n, const OptionType type);
-
-template <const Hyperparams& h>
-double vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc(
-    const double S, const double K, const double T, const double r, const double sigma,
-    const double q, const int n, const OptionType type);
-
-template <const Hyperparams& h>
-double vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds(
-    const double S, const double K, const double T, const double r, const double sigma,
-    const double q, const int n, const OptionType type);
-
-template <const Hyperparams& h>
-double vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float(
-    const double S, const double K, const double T, const double r, const double sigma,
-    const double q, const int n, const OptionType type);
 
 inline double vanilla_american_binomial_cuda(const double S, const double K, const double T,
                                              const double r, const double sigma, const double q,
@@ -112,28 +24,6 @@ inline double vanilla_american_binomial_cuda(const double S, const double K, con
     return vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm<
         DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>(S, K, T, r, sigma, q, n, type);
 }
-
-// ==========================================
-// Batch pricing functions
-// ==========================================
-
-void vanilla_american_binomial_cuda_batch_naive(std::vector<PricingInput>& runs,
-                                                std::vector<double>& out);
-
-void vanilla_american_binomial_cuda_batch_nvidia_baseline(std::vector<PricingInput>& runs,
-                                                          std::vector<double>& out);
-
-void vanilla_american_binomial_cuda_batch_stprcmp(std::vector<PricingInput>& runs,
-                                                  std::vector<double>& out);
-
-template <const Hyperparams& h>
-void vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds(
-    std::vector<PricingInput>& runs, std::vector<double>& out);
-
-
-template <const Hyperparams& h>
-void vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm(
-    std::vector<PricingInput>& runs, std::vector<double>& out);
 
 inline cudaError_t checkCuda(cudaError_t result) {
 #if defined(DEBUG) || defined(_DEBUG)
@@ -144,3 +34,6 @@ inline cudaError_t checkCuda(cudaError_t result) {
 #endif
     return result;
 }
+
+// Declaration only; definition is in check_occupancy.cu to avoid multiple definitions
+std::pair<int, int> check_occupancy_function(CUfunction func);

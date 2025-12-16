@@ -207,8 +207,8 @@ void print_benchmark_results(const std::vector<BenchmarkResult>& results) {
     std::cout << "Outputs\n";
     print_table(max_width, table_prices);
 }
-
-void print_batch_benchmark_result(const std::vector<BatchBenchmarkResult>& results, bool skip_sanity_checks) {
+void print_batch_benchmark_result(const std::vector<BatchBenchmarkResult>& results,
+                                  bool skip_sanity_checks) {
     if (!skip_sanity_checks) {
         std::cout << "\n"
                   << rang::style::bold << "=== SANITY CHECKS SUMMARY ===" << rang::style::reset
@@ -229,7 +229,6 @@ void print_batch_benchmark_result(const std::vector<BatchBenchmarkResult>& resul
                   << "\n\n";
         return;
     }
-    
 
     int max_functional_name_size = 85;
     int max_width_step_size = 15;
@@ -252,17 +251,50 @@ void print_batch_benchmark_result(const std::vector<BatchBenchmarkResult>& resul
         std::string marker = res.pass_sanity_check() ? "✅ " : "❌ ";
 
         row.push_back(marker + function_title);
-        double mean, std;
-        std::tie(mean, std) = mean_and_std(res.execution_times);
+        
         std::ostringstream oss;
-        oss << std::fixed << std::setprecision(3) << mean;
-        if (std > 0.0) {
-            oss << "±" << std::fixed << std::setprecision(3) << std;
-        }
+        oss << std::fixed << std::setprecision(3) << res.execution_time;
         row.push_back(oss.str());
         table.push_back(row);
     }
     print_table(max_width, table);
+
+    // Determine number of result columns (cap at 3)
+    size_t num_result_cols = 0;
+    for (const auto& r : results) {
+        num_result_cols = std::max(num_result_cols, std::min(size_t(3), r.out.size()));
+    }
+
+    // Build header and column widths
+    std::vector<int> max_width_results;
+    std::vector<std::vector<std::string>> results_table;
+    max_width_results.push_back(max_functional_name_size);
+    std::vector<std::string> header_row;
+    header_row.push_back("Function");
+    for (size_t c = 0; c < num_result_cols; ++c) {
+        header_row.push_back("Result " + std::to_string(c + 1));
+        max_width_results.push_back(9);
+    }
+    results_table.push_back(header_row);
+
+    // Populate rows
+    for (const auto& res : results) {
+        std::vector<std::string> row;
+        std::string marker = res.pass_sanity_check() ? "✅ " : "❌ ";
+        row.push_back(marker + res.function_name);
+        for (size_t c = 0; c < num_result_cols; ++c) {
+            if (c < res.out.size()) {
+                std::ostringstream oss;
+                oss << std::fixed << std::setprecision(6) << res.out[c];
+                row.push_back(oss.str());
+            } else {
+                row.push_back("-");
+            }
+        }
+        results_table.push_back(row);
+    }
+
+    print_table(max_width_results, results_table);
 }
 
 std::pair<std::string, std::vector<std::string>> parse_hyperparams(const std::string& name) {
@@ -283,6 +315,44 @@ std::pair<std::string, std::vector<std::string>> parse_hyperparams(const std::st
     }
 
     return std::make_pair(func_id, hyperparams);
+}
+nlohmann::json dump_batch_benchmark_results_json(const std::vector<BatchBenchmarkResult>& results) {
+    nlohmann::json::array_t output;
+
+    for (const auto& res : results) {
+        nlohmann::json res_json;
+        auto [func_id, hparams] = parse_hyperparams(res.function_name);
+        nlohmann::json::array_t hyper, all_times;
+        for (const auto& hparam : hparams) {
+            hyper.push_back(hparam);
+        }
+
+        // nlohmann::json::array_t sanity_checks;
+        // for (auto& [pricing_input, expected, price] : res.sanity_check_results) {
+        //     nlohmann::json sanity_check;
+        //     sanity_check["test_name"] = pricing_input.name;
+        //     sanity_check["expected"] = expected;
+        //     sanity_check["price"] = price;
+        //     sanity_checks.push_back(sanity_check);
+        // }
+
+        int n = 0;
+        if(res.runs.size()>0){
+            n = res.runs[0].n;
+        }
+        res_json =
+            nlohmann::json{{"id", res.function_name},
+                           {"function_id", func_id},
+                           {"do_pass_sanity_check", res.pass_sanity_check() ? "true" : "false"},
+                           //   {"sanity_check", sanity_checks},
+                           {"n", n },
+                           {"n_runs", static_cast<int>(res.runs.size())},
+                           {"hyperparams", hyper},
+                           {"time", res.execution_time}};
+
+        output.push_back(res_json);
+    }
+    return output;
 }
 
 nlohmann::json dump_run_json(const Run& run) {

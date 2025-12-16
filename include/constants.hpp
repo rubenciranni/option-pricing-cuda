@@ -14,9 +14,11 @@ constexpr int option_type_sign(OptionType type) noexcept {
     return (type == OptionType::Call) ? 1 : -1;
 }
 
-inline void lowercase_transform(std::string& str) {
-    std::transform(str.begin(), str.end(), str.begin(),
+inline std::string lowercase_transform(const std::string& str) {
+    std::string out = str;
+    std::transform(out.begin(), out.end(), out.begin(),
                    [](unsigned char c) { return std::tolower(c); });
+    return out;
 }
 
 inline std::string to_string(OptionType type) {
@@ -63,51 +65,51 @@ inline std::string to_string(ExerciseType style) {
     }
 }
 
-inline OptionType option_type_from_string(std::string& type) {
-    lowercase_transform(type);
-    if (type == "call")
+inline OptionType option_type_from_string(const std::string& type) {
+    std::string lower_type = lowercase_transform(type);
+    if (lower_type == "call")
         return OptionType::Call;
-    else if (type == "put")
+    else if (lower_type == "put")
         return OptionType::Put;
     else
         throw std::invalid_argument("Invalid OptionType: " + type);
 }
 
-inline Backend backend_from_string(std::string& backend) {
-    lowercase_transform(backend);
-    if (backend == "cpu")
+inline Backend backend_from_string(const std::string& backend) {
+    std::string lower_backend = lowercase_transform(backend);
+    if (lower_backend == "cpu")
         return Backend::CPU;
-    else if (backend == "openmp")
+    else if (lower_backend == "openmp")
         return Backend::OpenMP;
-    else if (backend == "cuda")
+    else if (lower_backend == "cuda")
         return Backend::CUDA;
     else
         throw std::invalid_argument("Invalid Backend: " + backend);
 }
 
-inline PricingMethod pricing_method_from_string(std::string& method) {
-    lowercase_transform(method);
-    if (method == "binomial")
+inline PricingMethod pricing_method_from_string(const std::string& method) {
+    std::string lower_method = lowercase_transform(method);
+    if (lower_method == "binomial")
         return PricingMethod::Binomial;
     else
         throw std::invalid_argument("Invalid PricingMethod: " + method);
 }
 
-inline OutputFormat output_format_from_string(std::string& type) {
-    lowercase_transform(type);
-    if (type == "pprint")
+inline OutputFormat output_format_from_string(const std::string& type) {
+    std::string lower_type = lowercase_transform(type);
+    if (lower_type == "pprint")
         return OutputFormat::PPRINT;
-    else if (type == "json")
+    else if (lower_type == "json")
         return OutputFormat::JSON;
     else
         throw std::invalid_argument("Invalid OutputFormat: " + type);
 }
 
-inline ExerciseType exercise_type_from_string(std::string& style) {
-    lowercase_transform(style);
-    if (style == "european")
+inline ExerciseType exercise_type_from_string(const std::string& style) {
+    std::string lower_style = lowercase_transform(style);
+    if (lower_style == "european")
         return ExerciseType::European;
-    else if (style == "american")
+    else if (lower_style == "american")
         return ExerciseType::American;
     else
         throw std::invalid_argument("Invalid ExerciseType: " + style);
@@ -132,6 +134,6 @@ class PricingInput {
         : name(""), S(S), K(K), T(T), r(r), sigma(sigma), q(q), n(n), type(type) {}
 
     PricingInput(double S, double K, double T, double r, double sigma, double q, int n,
-                 OptionType type, std::string name)
+                 OptionType type, const std::string& name)
         : name(name), S(S), K(K), T(T), r(r), sigma(sigma), q(q), n(n), type(type) {}
 };

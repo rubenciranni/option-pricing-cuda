@@ -27,6 +27,7 @@ void print_benchmark_results(const std::vector<BenchmarkResult>& results);
 void print_batch_benchmark_result(const std::vector<BatchBenchmarkResult>& results, bool skip_sanity_checks);
 
 nlohmann::json dump_benchmark_results_json(const std::vector<BenchmarkResult>& results);
+nlohmann::json dump_batch_benchmark_results_json(const std::vector<BatchBenchmarkResult>& results);
 
 // Parsing helpers
 std::pair<std::string, std::vector<std::string>> parse_hyperparams(const std::string& name);
