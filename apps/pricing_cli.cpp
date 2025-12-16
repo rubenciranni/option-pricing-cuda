@@ -2,7 +2,6 @@
 
 #include <CLI/CLI.hpp>
 #include <algorithm>
-#include <benchmark.hpp>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
@@ -12,6 +11,7 @@
 #include <string>
 #include <unordered_map>
 
+#include "benchmark.hpp"
 #include "benchmark_parameters.hpp"
 #include "constants.hpp"
 #include "models/vanilla_american_binomial.hpp"
@@ -19,10 +19,125 @@
 
 #define DEBUG 1
 
+void handle_price(const std::string& option_type_str, const std::string& exercise_type_str,
+                  const std::string& pricing_method_str, const std::string& backend_str, double S,
+                  double K, double T, double r, double sigma, double q, int n) {
+    OptionType option_type = option_type_from_string(option_type_str);
+    Backend backend = backend_from_string(backend_str);
+    ExerciseType exercise_type = exercise_type_from_string(exercise_type_str);
+    PricingMethod pricing_method = pricing_method_from_string(pricing_method_str);
+
+    double price = -1.;
+    if (pricing_method == PricingMethod::Binomial) {
+        if (exercise_type == ExerciseType::American) {
+            price = vanilla_american_binomial(S, K, T, r, sigma, q, n, option_type, backend);
+        } else if (exercise_type == ExerciseType::European) {
+            price = vanilla_european_binomial(S, K, T, r, sigma, q, n, option_type, backend);
+        }
+    }
+
+    printf("Option Price: %.4f\n", price);
+}
+
+void handle_benchmark(const std::string& output_format_str, const std::string& filter_name,
+                      const std::string& benchmark_parameters,
+                      const std::string& reference_function_name, int skip_sanity_checks) {
+    OutputFormat output_format = output_format_from_string(output_format_str);
+
+    auto results =
+        benchmark(filter_name, benchmark_parameters, reference_function_name, skip_sanity_checks);
+
+    if (results.empty()) {
+        std::cout << rang::fg::yellow << "No functions matched the given filter: " << filter_name
+                  << rang::fg::reset << "\n";
+        return;
+    }
+    if (output_format == OutputFormat::PPRINT) {
+        print_sanity_checks(results, skip_sanity_checks);
+        print_benchmark_results(results);
+    } else if (output_format == OutputFormat::JSON) {
+        nlohmann::json output = dump_benchmark_results_json(results);
+        std::cout << output.dump(1, '\t') << std::endl;
+    }
+}
+
+void handle_list_parameters() {
+    list_benchmark_parameters();
+}
+
+void handle_random_benchmark(const std::string& output_format_str, const std::string& filter_name,
+                             const std::string& reference_function_name, int random_runs,
+                             int skip_sanity_checks) {
+    OutputFormat output_format = output_format_from_string(output_format_str);
+
+    auto results =
+        random_benchmark(filter_name, reference_function_name, random_runs, skip_sanity_checks);
+
+    if (results.empty()) {
+        std::cout << rang::fg::yellow << "No functions matched the given filter: " << filter_name
+                  << rang::fg::reset << "\n";
+        return;
+    }
+    if (output_format == OutputFormat::PPRINT) {
+        print_sanity_checks(results[0], skip_sanity_checks);
+        for (const auto& res_per_run : results) {
+            print_benchmark_results(res_per_run);
+        }
+    } else if (output_format == OutputFormat::JSON) {
+        nlohmann::json output = nlohmann::json::array();
+
+        for (const auto& res_per_run : results) {
+            output.push_back(dump_benchmark_results_json(res_per_run));
+        }
+        std::cout << output.dump(1, '\t') << std::endl;
+    }
+}
+
+void handle_batch_random_benchmark(const std::string& output_format_str,
+                                   const std::string& filter_name,
+                                   const std::string& reference_function_name, int random_runs,
+                                   int n, int skip_sanity_checks) {
+    auto results = batch_random_benchmark(filter_name, reference_function_name, random_runs, n,
+                                          skip_sanity_checks);
+
+    OutputFormat output_format = output_format_from_string(output_format_str);
+    if (output_format == OutputFormat::PPRINT) {
+        print_batch_benchmark_result(results, skip_sanity_checks);
+    } else if (output_format == OutputFormat::JSON) {
+        auto output = dump_batch_benchmark_results_json(results);
+        std::cout << output.dump(1, '\t') << std::endl;
+    }
+}
+
+void handle_check_occupancy() {
+    check_occupancy_all_cuda_functions();
+}
+
+void handle_benchmark_random_throughput(const std::string& output_format_str,
+                                        const std::string& filter_name,
+                                        const std::string& reference_function_name,
+                                        int skip_sanity_checks) {
+    nlohmann::json::array_t output;
+    for (auto random_runs : std::vector<int>{1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024}) {
+        for (auto n : std::vector<int>{64, 128, 256, 512, 1024, 2048, 4096, 8192, 1 << 14, 1 << 15,
+                                       1 << 16, 1 << 17}) {
+            auto results = batch_random_benchmark(filter_name, reference_function_name, random_runs,
+                                                  n, skip_sanity_checks);
+            OutputFormat output_format = output_format_from_string(output_format_str);
+            if (output_format == OutputFormat::PPRINT) {
+                print_batch_benchmark_result(results, skip_sanity_checks);
+            } else if (output_format == OutputFormat::JSON) {
+                auto batch_output = dump_batch_benchmark_results_json(results);
+                output.insert(output.end(), batch_output.begin(), batch_output.end());
+            }
+        }
+    }
+    std::cout << output << std::endl;
+}
+
 int main(int argc, char** argv) {
     CLI::App app{"CLI for Option Pricing and Benchmarking"};
 
-    // Pricing subcommand
     std::string option_type_str, exercise_type_str, pricing_method_str, backend_str,
         output_format_str;
     double S, K, T, r, sigma, q;
@@ -49,7 +164,6 @@ int main(int argc, char** argv) {
         ->default_val("cpu")
         ->check(CLI::IsMember({"cpu", "openmp", "cuda"}));
 
-    // Benchmarking subcommand
     std::string filter_name;
     std::string benchmark_parameters;
     std::string reference_function_name;
@@ -73,7 +187,6 @@ int main(int argc, char** argv) {
         ->default_val("pprint")
         ->check(CLI::IsMember({"pprint", "json"}));
 
-    // List parameters subcommand
     auto list_parameters_subcommand = app.add_subcommand(
         "benchmark-parameters", "List available benchmark parameters and their config");
 
@@ -142,98 +255,24 @@ int main(int argc, char** argv) {
     }
 
     if (*price_subcommand) {
-        OptionType option_type = option_type_from_string(option_type_str);
-        Backend backend = backend_from_string(backend_str);
-        ExerciseType exercise_type = exercise_type_from_string(exercise_type_str);
-        PricingMethod pricing_method = pricing_method_from_string(pricing_method_str);
-
-        double price = -1.;
-        if (pricing_method == PricingMethod::Binomial) {
-            if (exercise_type == ExerciseType::American) {
-                price = vanilla_american_binomial(S, K, T, r, sigma, q, n, option_type, backend);
-            } else if (exercise_type == ExerciseType::European) {
-                price = vanilla_european_binomial(S, K, T, r, sigma, q, n, option_type, backend);
-            }
-        }
-
-        printf("Option Price: %.4f\n", price);
+        handle_price(option_type_str, exercise_type_str, pricing_method_str, backend_str, S, K, T,
+                     r, sigma, q, n);
     } else if (*benchmark_subcommand) {
-        OutputFormat output_format = output_format_from_string(output_format_str);
-
-        auto results = benchmark(filter_name, benchmark_parameters, reference_function_name,
-                                 skip_sanity_checks);
-
-        if (results.empty()) {
-            std::cout << rang::fg::yellow
-                      << "No functions matched the given filter: " << filter_name << rang::fg::reset
-                      << "\n";
-            return 0;
-        }
-        if (output_format == OutputFormat::PPRINT) {
-            print_sanity_checks(results, skip_sanity_checks);
-            print_benchmark_results(results);
-        } else if (output_format == OutputFormat::JSON) {
-            nlohmann::json output = dump_benchmark_results_json(results);
-            std::cout << output.dump(1, '\t') << std::endl;
-        }
-
+        handle_benchmark(output_format_str, filter_name, benchmark_parameters,
+                         reference_function_name, skip_sanity_checks);
     } else if (*list_parameters_subcommand) {
-        list_benchmark_parameters();
+        handle_list_parameters();
     } else if (*random_benchmark_subcommand) {
-        OutputFormat output_format = output_format_from_string(output_format_str);
-
-        auto results =
-            random_benchmark(filter_name, reference_function_name, random_runs, skip_sanity_checks);
-
-        if (results.empty()) {
-            std::cout << rang::fg::yellow
-                      << "No functions matched the given filter: " << filter_name << rang::fg::reset
-                      << "\n";
-            return 0;
-        }
-        if (output_format == OutputFormat::PPRINT) {
-            print_sanity_checks(results[0], skip_sanity_checks);
-            for (const auto& res_per_run : results) {
-                print_benchmark_results(res_per_run);
-            }
-        } else if (output_format == OutputFormat::JSON) {
-            nlohmann::json output = nlohmann::json::array();
-
-            for (const auto& res_per_run : results) {
-                output.push_back(dump_benchmark_results_json(res_per_run));
-            }
-            std::cout << output.dump(1, '\t') << std::endl;
-        }
+        handle_random_benchmark(output_format_str, filter_name, reference_function_name,
+                                random_runs, skip_sanity_checks);
     } else if (*batch_random_benchmark_subcommand) {
-        auto results = batch_random_benchmark(filter_name, reference_function_name, random_runs, n,
-                                              skip_sanity_checks);
-
-        OutputFormat output_format = output_format_from_string(output_format_str);
-        if (output_format == OutputFormat::PPRINT) {
-            print_batch_benchmark_result(results, skip_sanity_checks);
-        } else if (output_format == OutputFormat::JSON) {
-            auto output = dump_batch_benchmark_results_json(results);
-            std::cout << output.dump(1, '\t') << std::endl;
-        }
+        handle_batch_random_benchmark(output_format_str, filter_name, reference_function_name,
+                                      random_runs, n, skip_sanity_checks);
     } else if (*check_occupancy_subcommand) {
-        check_occupancy_all_cuda_functions();
-
+        handle_check_occupancy();
     } else if (*benchmark_random_thougput_subcommand) {
-        nlohmann::json::array_t output;
-        for (auto random_runs : std::vector<int>{1,2,4,8,16,32,64,128,256,512,1024}) {
-            for (auto n : std::vector<int>{64,128,256,512,1024,2048,4096,8192,1<<14,1<<15,1<<16,1<<17}) {
-                auto results = batch_random_benchmark(filter_name, reference_function_name,
-                                                      random_runs, n, skip_sanity_checks);
-                OutputFormat output_format = output_format_from_string(output_format_str);
-                if (output_format == OutputFormat::PPRINT) {
-                    print_batch_benchmark_result(results, skip_sanity_checks);
-                } else if (output_format == OutputFormat::JSON) {
-                    auto batch_output = dump_batch_benchmark_results_json(results);
-                    output.insert(output.end(), batch_output.begin(), batch_output.end());
-                }
-            }
-        }
-        std::cout << output << std::endl;
+        handle_benchmark_random_throughput(output_format_str, filter_name, reference_function_name,
+                                           skip_sanity_checks);
     }
 
     return 0;
