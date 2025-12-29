@@ -40,19 +40,21 @@ inline std::ostream& operator<<(std::ostream& out, const std::vector<double>& v)
 class BatchBenchmarkResult {
    public:
     std::vector<PricingInput> runs;
-    std::vector<double> execution_times;
+    double execution_time;
     SanityCheckResults sanity_check_results;
     std::string reference_function_name;
     std::string function_name;
+    std::vector<double> out;
 
-    BatchBenchmarkResult(std::vector<PricingInput> _runs, std::vector<double> _execution_times,
+    BatchBenchmarkResult(std::vector<PricingInput> _runs, double _execution_time,
                     SanityCheckResults sanity_check_results, std::string function_name,
-                    std::string reference_function_name)
+                    std::string reference_function_name, std::vector<double> out)
         : runs(std::move(_runs)),
-          execution_times(std::move(_execution_times)),
+          execution_time(_execution_time),
           sanity_check_results(std::move(sanity_check_results)),
           reference_function_name(std::move(reference_function_name)),
-          function_name(std::move(function_name)) {}
+          function_name(std::move(function_name)),
+          out(std::move(out)) {}
 
     bool pass_sanity_check() const { return sanity_check_results.empty(); }
 };
@@ -108,3 +110,5 @@ std::vector<std::vector<BenchmarkResult>> random_benchmark(
 std::vector<BatchBenchmarkResult> batch_random_benchmark(
     const std::string& filter_function_name, const std::string& reference_function_name,
     const int n_random_runs,const int n, bool skip_sanity_checks);
+
+void check_occupancy_all_cuda_functions() ;

@@ -11,47 +11,45 @@
 #include "sanity_checker.hpp"
 
 // clang-format off
-std::map<std::string, Run> BENCHMARK_PARAMETERS = {    
-    {"xs-cpu",     Run(100, 100, 0.5, 0.03, 0.2, 0.015, 8,      8,      Constant_Additive_NStep(8),        1,  OptionType::Put)},
-    {"xs-cuda",    Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000,  10001,  Constant_Additive_NStep(10000),    1,  OptionType::Put)},
-    {"s-single",   Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1024,   2000,   Constant_Additive_NStep(1000),     1,  OptionType::Put)},
-    {"s-repeat",   Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1000,   1001,   Constant_Additive_NStep(1000),     5,  OptionType::Put)},
-    {"m-single",   Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000,  20000,  Constant_Additive_NStep(10000),    1,  OptionType::Put)},
-    {"l-single",   Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000,  210000, Constant_Additive_NStep(100000),   1,  OptionType::Put)},
-    {"l-repeat",   Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000,  210000, Constant_Additive_NStep(100000),   5,  OptionType::Put)},
-    {"xl-repeat",  Run(100, 100, 0.5, 0.03, 0.2, 0.015, 200,    200000, Constant_Multiplicative_NStep(10), 20, OptionType::Put)},
-    {"xl-125",     Run(100, 100, 0.5, 0.03, 0.2, 0.015, 100,    200000, NStep_125(),                       20, 5, OptionType::Put)},
-    {"xl-crazy",   Run(100, 100, 0.5, 0.03, 0.2, 0.015, 111,    200000, Constant_Multiplicative_NStep(2),  20, 5, OptionType::Put)},
-    {"xxl-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 250000, 250000, Constant_Additive_NStep(30000),    1,  OptionType::Put)},
-    {"custom",     Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1024,   1024,   Constant_Additive_NStep(1025),     1,  OptionType::Put)},
+std::map<std::string, Run> BENCHMARK_PARAMETERS = {
+    {"xs-cpu", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 8, 8, 8, 1, OptionType::Put)},
+    {"xs-cuda", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 10001, 10000, 1, OptionType::Put)},
+    {"s-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1024, 2000, 1000, 1, OptionType::Put)},
+    {"s-repeat", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1000, 1001, 1000, 5, OptionType::Put)},
+    {"m-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 20000, 10000, 1, OptionType::Put)},
+    {"m-repeat", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 20000, 10000, 1000, OptionType::Put)},
+    {"l-repeat", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 210000, 100000, 5, OptionType::Put)},
+    {"l-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 210000, 100000, 1, OptionType::Put)},
+    {"xl-repeat", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 260000, 50000, 10, OptionType::Put)},
+    {"xxl-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 250000, 250000, 30000, 1, OptionType::Put)},
+    {"custom", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1024, 1024 ,1025, 1, OptionType::Put)},
 };
 
 std::map<std::string, PricingFunction> FUNCTION_REGISTRY = {
     {"vanilla_american_binomial_cpu_naive", vanilla_american_binomial_cpu_naive},
-    {"vanilla_american_binomial_cpu_trimotm", vanilla_american_binomial_cpu_trimotm},
-    {"vanilla_american_binomial_cpu_trimotm_stprcmp", vanilla_american_binomial_cpu_trimotm_stprcmp},
-    {"vanilla_american_binomial_cpu_trimotm_trimeeoff_stprcmp", vanilla_american_binomial_cpu_trimotm_trimeeoff_stprcmp},
-    {"vanilla_american_binomial_cpu_trimotm_trimeeon_stprcmp", vanilla_american_binomial_cpu_trimotm_trimeeon_stprcmp},
-    {"vanilla_american_binomial_openmp_naive", vanilla_american_binomial_openmp_naive},
-    {"vanilla_american_binomial_cuda_naive", vanilla_american_binomial_cuda_naive},
-    {"vanilla_american_binomial_cuda_nvidia_baseline", vanilla_american_binomial_cuda_nvidia_baseline},
-    {"vanilla_american_binomial_cuda_stprcmp", vanilla_american_binomial_cuda_stprcmp},
-    {"vanilla_american_binomial_cuda_bkdstprcmp", vanilla_american_binomial_cuda_bkdstprcmp},
+    // {"vanilla_american_binomial_cpu_trimotm", vanilla_american_binomial_cpu_trimotm},
+    // {"vanilla_american_binomial_cpu_trimotm_stprcmp", vanilla_american_binomial_cpu_trimotm_stprcmp},
+    // {"vanilla_american_binomial_cpu_trimotm_trimeeoff_stprcmp", vanilla_american_binomial_cpu_trimotm_trimeeoff_stprcmp},
+    // {"vanilla_american_binomial_cpu_trimotm_trimeeon_stprcmp", vanilla_american_binomial_cpu_trimotm_trimeeon_stprcmp},
+    // {"vanilla_american_binomial_openmp_naive", vanilla_american_binomial_openmp_naive},
+    // {"vanilla_american_binomial_cuda_naive", vanilla_american_binomial_cuda_naive},
+    // {"vanilla_american_binomial_cuda_nvidia_baseline", vanilla_american_binomial_cuda_nvidia_baseline},
+    // {"vanilla_american_binomial_cuda_stprcmp", vanilla_american_binomial_cuda_stprcmp},
+    // {"vanilla_american_binomial_cuda_bkdstprcmp", vanilla_american_binomial_cuda_bkdstprcmp},
     {"vanilla_american_binomial_cuda_stprcmp_yunroll_vtile", vanilla_american_binomial_cuda_stprcmp_yunroll_vtile<DEFAULT_HYPERPARAMS_CUDA_STPRCMP_YUNROLL_VTILE>},
-    {"vanilla_american_binomial_cuda_stprcmp_xunroll_vprftc", vanilla_american_binomial_cuda_stprcmp_xunroll_vprftc<DEFAULT_HYPERPARAMS_CUDA_STPRCMP_XUNROLL_VPRFTC>},
-    {"vanilla_american_binomial_cuda_stprcmp_xunroll_stvtile", vanilla_american_binomial_cuda_stprcmp_xunroll_stvtile<DEFAULT_HYPERPARAMS_CUDA_STPRCMP_XUNROLL_STVTILE>},
-    {"vanilla_american_binomial_cuda_stprcmp_xyunroll_vprftc", vanilla_american_binomial_cuda_stprcmp_xyunroll_vprftc<DEFAULT_HYPERPARAMS_CUDA_STPRCMP_XYUNROLL_VPRFTC>},
-    {"vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc", vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc},
-    {"vanilla_american_binomial_cuda_stprcmp_xyunroll_stvprftc", vanilla_american_binomial_cuda_stprcmp_xyunroll_stvprftc<DEFAULT_HYPERPARAMS_CUDA_STPRCMP_XYUNROLL_STVPRFTC>},
-    {"vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc_trimotm", vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc_trimotm},
-    {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile},
-    {"vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile", vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_VTILE_10000>},
-    {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_VTILE_10000>},
-    {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
-    {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
-    {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
-    {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
-
+    // {"vanilla_american_binomial_cuda_stprcmp_xunroll_vprftc", vanilla_american_binomial_cuda_stprcmp_xunroll_vprftc<DEFAULT_HYPERPARAMS_CUDA_STPRCMP_XUNROLL_VPRFTC>},
+    // {"vanilla_american_binomial_cuda_stprcmp_xunroll_stvtile", vanilla_american_binomial_cuda_stprcmp_xunroll_stvtile<DEFAULT_HYPERPARAMS_CUDA_STPRCMP_XUNROLL_STVTILE>},
+    // {"vanilla_american_binomial_cuda_stprcmp_xyunroll_vprftc", vanilla_american_binomial_cuda_stprcmp_xyunroll_vprftc<DEFAULT_HYPERPARAMS_CUDA_STPRCMP_XYUNROLL_VPRFTC>},
+    // {"vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc", vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc},
+    // {"vanilla_american_binomial_cuda_stprcmp_xyunroll_stvprftc", vanilla_american_binomial_cuda_stprcmp_xyunroll_stvprftc<DEFAULT_HYPERPARAMS_CUDA_STPRCMP_XYUNROLL_STVPRFTC>},
+    // {"vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc_trimotm", vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc_trimotm},
+    // {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile},
+    // {"vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile", vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_VTILE_10000>},
+    // {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_VTILE_10000>},
+    // {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
+    // {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
+    // {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
+    // {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
 
     #ifdef DO_CARTESIAN_PRODUCT
         #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_STPRCMP_YUNROLL_VTILE
@@ -116,13 +114,6 @@ std::vector<BenchmarkResult> benchmark(const std::string& filter_function_name,
 
     const Run& data = BENCHMARK_PARAMETERS[benchmark_parameters];
     std::vector<BenchmarkResult> results;
-    
-    std::map<int,double> avg_mean;
-    for (int n = data.nstart; n <= data.nend; n += data.nstep(n)) {
-        avg_mean[n] = 0.;
-    }
-
-    int fi = 0;
     for (const auto& [name, func] : FUNCTION_REGISTRY) {
         // filter_function_name is a substring match
         if (name.find(filter_function_name) != std::string::npos || filter_function_name.empty()) {
@@ -134,11 +125,8 @@ std::vector<BenchmarkResult> benchmark(const std::string& filter_function_name,
 
             BenchmarkResult result(data, benchmark_parameters, {}, name, reference_function_name,
                                    sanity_check);
-
-            
-            for (int n = data.nstart; n <= data.nend; n += data.nstep(n)) {
-                for (int r = 0; r < data.nrepetition_at_step; r++) {
-                    if (avg_mean[n] != 0. && r >= data.n_check_stop_after_repetition && mean(result.execution_times[n]) > 2*avg_mean[n]) goto next;
+            for (int n = data.nstart; n <= data.nend; n += data.nstep) {
+                for (int _ = 0; _ < data.nrepetition_at_step; _++) {
                     auto start = std::chrono::high_resolution_clock::now();
                     double price =
                         func(data.S, data.K, data.T, data.r, data.sigma, data.q, n, data.type);
@@ -148,12 +136,8 @@ std::vector<BenchmarkResult> benchmark(const std::string& filter_function_name,
                     result.execution_times[n].push_back(duration.count());
                     result.prices[n].push_back(price);
                 }
-                if (avg_mean[n] == 0.) avg_mean[n] = mean(result.execution_times[n]);
-                else      avg_mean[n] = (avg_mean[n]*fi + mean(result.execution_times[n]))/(fi+1);
-                next:;
             }
             results.push_back(result);
-            fi++;
         }
     }
     return results;
@@ -192,7 +176,7 @@ std::vector<std::vector<BenchmarkResult>> random_benchmark(
                 filter_function_name.empty()) {
                 BenchmarkResult result(run, "random_sampled", {}, name, reference_function_name,
                                        sanity_checks_map[name]);
-                for (int n = run.nstart; n <= run.nend; n += run.nstep(n)) {
+                for (int n = run.nstart; n <= run.nend; n += run.nstep) {
                     for (int _ = 0; _ < run.nrepetition_at_step; _++) {
                         auto start = std::chrono::high_resolution_clock::now();
                         double price =
@@ -212,15 +196,36 @@ std::vector<std::vector<BenchmarkResult>> random_benchmark(
     return results;
 }
 
+// clang-format off
 std::map<std::string, BatchPricingFunction> BATCH_FUNCTION_REGISTRY = {
-    {"vanilla_american_binomial_cuda_batch_naive", vanilla_american_binomial_cuda_batch_naive},
-    {"vanilla_american_binomial_cuda_batch_stprcmp", vanilla_american_binomial_cuda_batch_stprcmp},
+    // {"vanilla_american_binomial_cuda_batch_naive", vanilla_american_binomial_cuda_batch_naive},
+    // {"vanilla_american_binomial_cuda_batch_stprcmp", vanilla_american_binomial_cuda_batch_stprcmp},
     {"vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
         vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
-    {"vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
-     vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm<
-         DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>}};
+    // {"vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+    //  vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm<
+    //      DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
+    {"vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+        vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds},
+    { "test_vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+        test_vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
 
+    #ifdef DO_CARTESIAN_PRODUCT
+        #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_BATCH_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM
+            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm)
+        #endif
+        // #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_BATCH_SEARCH_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM_DS
+        //     APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_batch_search_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds)
+        // #endif
+
+        #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_BATCH_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM_DS
+            APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds)
+        #endif
+        
+    #endif
+
+};
+// clang-format on
 std::vector<BatchBenchmarkResult> batch_random_benchmark(const std::string& filter_function_name,
                                                          const std::string& reference_function_name,
                                                          const int n_random_runs, const int n,
@@ -251,16 +256,29 @@ std::vector<BatchBenchmarkResult> batch_random_benchmark(const std::string& filt
     for (const auto& [name, func] : BATCH_FUNCTION_REGISTRY) {
         // filter_function_name is a substring match
         if (name.find(filter_function_name) != std::string::npos || filter_function_name.empty()) {
-            BatchBenchmarkResult result(runs, {}, sanity_checks_map[name], name,
-                                        reference_function_name);
             std::vector<double> out(n_random_runs);
             auto start = std::chrono::high_resolution_clock::now();
             func(runs, out);
             auto end = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double, std::milli> duration = end - start;
-            result.execution_times.push_back(duration.count());
-            results.push_back(result);
+            results.push_back(BatchBenchmarkResult(runs, duration.count(), sanity_checks_map[name], name,
+                                                   reference_function_name, out));
         }
     }
     return results;
+}
+
+
+
+void check_occupancy_all_cuda_functions() {
+    for (const auto& [name, func] : BATCH_FUNCTION_REGISTRY) {
+        if (name.find("cuda") != std::string::npos) {
+            std::cout << "Checking occupancy for function: " << name << "\n";
+            std::pair<int,int> dim = check_occupancy_function(reinterpret_cast<CUfunction>(func));
+            std::cout << "Occupancy results for func " << name << ":\n";
+            std::cout << "  Minimum grid size: " << dim.first << "\n";
+            std::cout << "  Optimal block size: " << dim.second << "\n";
+            
+        }
+    }
 }
