@@ -3,9 +3,35 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <functional>
 
 #include "constants.hpp"
 
+inline auto Constant_Additive_NStep = [](int step) {
+    return [step](int ) {
+        return step;
+    };
+};
+
+inline auto Constant_Multiplicative_NStep = [](int step) {
+    return [step](int current_n) {
+        return current_n*step-current_n;
+    };
+};
+
+inline auto NStep_125 = []() {
+    return [](int current_n) {
+        int div = current_n, rem;
+        do {
+            rem = div % 10;
+            div = div / 10; 
+        } while (div != 0);
+        if (rem == 2)
+            return current_n/2*3;
+        else
+            return current_n;
+    };
+};
 
 class Run {
    public:
@@ -18,6 +44,7 @@ class Run {
     int nstart;
     int nend;
     int nstep;
+    std::function<int(int)> nstep_fct;
     int nrepetition_at_step;
     OptionType type;
 
@@ -46,6 +73,7 @@ class Run {
           nstart(nstart),
           nend(nend),
           nstep(nstep),
+          nstep_fct(Constant_Additive_NStep(nstep)),
           nrepetition_at_step(1),
           type(type) {}
         
@@ -60,8 +88,25 @@ class Run {
           nstart(nstart),
           nend(nend),
           nstep(nstep),
+          nstep_fct(Constant_Additive_NStep(nstep)),
           nrepetition_at_step(nrepetition_at_step),
           type(type) {}
+
+    Run(double S, double K, double T, double r, double sigma, double q, int nstart, int nend,
+        std::function<int(int)> nstep_fct, int nrepetition_at_step, OptionType type)
+        : S(S),
+          K(K),
+          T(T),
+          r(r),
+          sigma(sigma),
+          q(q),
+          nstart(nstart),
+          nend(nend),
+          nstep(-1),
+          nstep_fct(nstep_fct),
+          nrepetition_at_step(nrepetition_at_step),
+          type(type) {}
+
 };
 
 inline std::string to_string(Run run) {
