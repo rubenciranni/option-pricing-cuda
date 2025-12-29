@@ -190,6 +190,17 @@ cd build/tests
 ctest -V
 ```
 
+## Profiling
+Example:
+```bash
+bash scripts/profiling.sh ".*compute_.*" "bkdstprcmp_xovlpunroll_vtile_trimotm" "l-repeat"
+```
+The first argument is the kernels to profile (ncu). The second argument is the function to profile (nsys). The last argument is the level.
+
+Example with all Kernels:
+```bash
+bash scripts/profiling.sh ".*" "bkdstprcmp_xovlpunroll_vtile_trimotm" "l-repeat"
+```
 
 
 # GPU command
