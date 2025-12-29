@@ -47,3 +47,5 @@ build/
 
 # any cluster venv
 **venv**
+
+visualizations/plots

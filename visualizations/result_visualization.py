@@ -116,17 +116,18 @@ def get_n(d, n):
 
 def plot_tpb_split(res_dict):
     
-    def ppprint(tpbdata, tpbfnames, tpbmeans, min_median, base_median, s): 
+    def ppprint(tpbdata, tpbfnames, tpbmeans, min_median, base_median, q25percentile, s): 
         norm = colors.Normalize(vmin=min(tpbmeans), vmax=max(tpbmeans))
         colormap = cm.get_cmap('RdYlGn_r')
 
-        fig, ax = plt.subplots(figsize=(48,15))
+        fig, ax = plt.subplots(figsize=(96,30))
         bp = ax.boxplot(tpbdata, tick_labels=tpbfnames, patch_artist=True, showfliers=False)
 
         for box, mean in zip(bp['boxes'], tpbmeans):
             box.set_facecolor(colormap(norm(mean)))
 
         ax.axhline(min_median, linestyle='--', linewidth=1, color=colormap(norm(min_median)), label="Minimum Median")
+        if q25percentile is not None: ax.axhline(q25percentile, linestyle='--', linewidth=1, color='purple', label="25th percentile")
         ax.axhline(base_median, linestyle='--', linewidth=1, color=colormap(norm(base_median)), label="Base Median")
 
 
@@ -138,6 +139,7 @@ def plot_tpb_split(res_dict):
         plt.tight_layout()
         plt.legend()
         plt.savefig(f"plots/tpb/n{get_n(res_dict, nidx)}-TpB{TpB}{s}")
+        plt.close()
 
 
     for nidx in range(n_depths(res_dict)):
@@ -149,20 +151,20 @@ def plot_tpb_split(res_dict):
         idxs, fnames, data, medians = zip(
             *sorted(zip(idxs, fnames, data, medians), key=lambda x: int(get_hyperparam_el(res_dict, x[0], 2)))
         )
-
+        
         medians = np.array(medians)
 
         base_median = medians[fnames.index('base')]
         min_median = min(medians)
 
-        for TpB in ['512', '256', '128']:
-            selector = [i for i,(x,y) in enumerate(zip(medians, fnames)) if (TpB in y)]
-            tpbdata = [x for i,x in enumerate(data) if i in selector]
-            tpbfnames = np.array(fnames)[selector]
-            tpbmedians = np.array(medians)[selector]
+        for TpB in [256, 512, 128]:
+            selector = [i for i,(x,y) in enumerate(zip(medians, fnames)) if (int(get_hyperparam_el(res_dict, i, 1)) in [TpB, -1])]
+            tpbdata = [data[i] for i in selector]
+            tpbfnames = [fnames[i] for i in selector] 
+            tpbmedians = [medians[i] for i in selector]
 
-            if not len(tpbmedians): continue
-            ppprint(tpbdata, tpbfnames, tpbmedians, min_median, base_median, '-all')
+            if len(tpbmedians) <= 1: continue
+            ppprint(tpbdata, tpbfnames, tpbmedians, min_median, base_median, np.quantile(tpbmedians, .25), '-all')
 
             selector = [i for i,(x,y) in enumerate(zip(medians, fnames)) if (x < np.quantile(tpbmedians, .25)) ]
             tpbdata = [x for i,x in enumerate(data) if i in selector]
@@ -171,7 +173,7 @@ def plot_tpb_split(res_dict):
 
             if not len(tpbmedians): continue
 
-            ppprint(tpbdata, tpbfnames, tpbmedians, min_median, base_median, '-q25')
+            ppprint(tpbdata, tpbfnames, tpbmedians, min_median, base_median, None, '-q25')
 
 
 
@@ -241,15 +243,22 @@ def plot_evolution(res_dict):
 
 if __name__ == "__main__":
 
+    # dicts = []
+    # with open("../128-NStep125-100.json", 'r') as fh:    
+    #     dicts.append(json.load(fh))
+
+    # with open("../128-NStepCM2-111.json", 'r') as fh:    
+    #     dicts.append(json.load(fh))
+    
     dicts = []
-    with open("../128-NStep125-100.json", 'r') as fh:    
+    with open("../256-ds-NStep125-100.json", 'r') as fh:    
         dicts.append(json.load(fh))
 
-    with open("../128-NStepCM2-111.json", 'r') as fh:    
+    with open("../256-ds-NStepCM2-111.json", 'r') as fh:    
         dicts.append(json.load(fh))
 
     res_dict = merge_dicts(dicts, 'total-128.json')
 
 
     plot_tpb_split(res_dict)
-    plot_evolution(res_dict)
+    # plot_evolution(res_dict)
