@@ -1,0 +1,7634 @@
+[
+	{
+		"benchmark_parameters": {
+			"K": 81.69536496418992,
+			"S": 100.0,
+			"T": 1.2259523102337087,
+			"nend": 20000,
+			"nrepetition_at_step": 5,
+			"nstart": 10000,
+			"nstep": 10000,
+			"q": 0.01377746663562546,
+			"r": 0.028916655150968668,
+			"sigma": 0.21999498410876817,
+			"type": "Put"
+		},
+		"runs": [
+			{
+				"all_times": [
+					[
+						39.048378,
+						39.092014,
+						39.130356,
+						39.135553,
+						39.181717
+					],
+					[
+						80.213604,
+						80.236378,
+						111.178365,
+						94.138353,
+						80.279039
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.117603599999995,
+						89.20914780000001
+					],
+					"time_ms_std": [
+						0.05010574829597902,
+						13.675898668879412
+					]
+				},
+				"sanity_check": []
+			}
+		]
+	},
+	{
+		"benchmark_parameters": {
+			"K": 81.69536496418992,
+			"S": 100.0,
+			"T": 1.2259523102337087,
+			"nend": 20000,
+			"nrepetition_at_step": 5,
+			"nstart": 10000,
+			"nstep": 10000,
+			"q": 0.01377746663562546,
+			"r": 0.028916655150968668,
+			"sigma": 0.21999498410876817,
+			"type": "Put"
+		},
+		"runs": [
+			{
+				"all_times": [
+					[
+						39.048378,
+						39.092014,
+						39.130356,
+						39.135553,
+						39.181717
+					],
+					[
+						80.213604,
+						80.236378,
+						111.178365,
+						94.138353,
+						80.279039
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.117603599999995,
+						89.20914780000001
+					],
+					"time_ms_std": [
+						0.05010574829597902,
+						13.675898668879412
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.297087,
+						6.029212,
+						4.342468,
+						4.568797,
+						3.25174
+					],
+					[
+						8.201647,
+						8.278478,
+						8.228455,
+						8.239374,
+						8.253761
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						4.2978608,
+						8.240343000000001
+					],
+					"time_ms_std": [
+						1.1367596636341828,
+						0.028609285511875505
+					]
+				},
+				"sanity_check": []
+			}
+		]
+	},
+	{
+		"benchmark_parameters": {
+			"K": 81.69536496418992,
+			"S": 100.0,
+			"T": 1.2259523102337087,
+			"nend": 20000,
+			"nrepetition_at_step": 5,
+			"nstart": 10000,
+			"nstep": 10000,
+			"q": 0.01377746663562546,
+			"r": 0.028916655150968668,
+			"sigma": 0.21999498410876817,
+			"type": "Put"
+		},
+		"runs": [
+			{
+				"all_times": [
+					[
+						39.048378,
+						39.092014,
+						39.130356,
+						39.135553,
+						39.181717
+					],
+					[
+						80.213604,
+						80.236378,
+						111.178365,
+						94.138353,
+						80.279039
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.117603599999995,
+						89.20914780000001
+					],
+					"time_ms_std": [
+						0.05010574829597902,
+						13.675898668879412
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.297087,
+						6.029212,
+						4.342468,
+						4.568797,
+						3.25174
+					],
+					[
+						8.201647,
+						8.278478,
+						8.228455,
+						8.239374,
+						8.253761
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						4.2978608,
+						8.240343000000001
+					],
+					"time_ms_std": [
+						1.1367596636341828,
+						0.028609285511875505
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						1.992033,
+						1.719162,
+						1.70737,
+						1.708228,
+						1.706929
+					],
+					[
+						3.91506,
+						3.892917,
+						3.87506,
+						3.879564,
+						3.869774
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						1.7667443999999999,
+						3.886475
+					],
+					"time_ms_std": [
+						0.1260420650033154,
+						0.01813552546798689
+					]
+				},
+				"sanity_check": []
+			}
+		]
+	},
+	{
+		"benchmark_parameters": {
+			"K": 81.69536496418992,
+			"S": 100.0,
+			"T": 1.2259523102337087,
+			"nend": 20000,
+			"nrepetition_at_step": 5,
+			"nstart": 10000,
+			"nstep": 10000,
+			"q": 0.01377746663562546,
+			"r": 0.028916655150968668,
+			"sigma": 0.21999498410876817,
+			"type": "Put"
+		},
+		"runs": [
+			{
+				"all_times": [
+					[
+						39.048378,
+						39.092014,
+						39.130356,
+						39.135553,
+						39.181717
+					],
+					[
+						80.213604,
+						80.236378,
+						111.178365,
+						94.138353,
+						80.279039
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.117603599999995,
+						89.20914780000001
+					],
+					"time_ms_std": [
+						0.05010574829597902,
+						13.675898668879412
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.297087,
+						6.029212,
+						4.342468,
+						4.568797,
+						3.25174
+					],
+					[
+						8.201647,
+						8.278478,
+						8.228455,
+						8.239374,
+						8.253761
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						4.2978608,
+						8.240343000000001
+					],
+					"time_ms_std": [
+						1.1367596636341828,
+						0.028609285511875505
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						1.992033,
+						1.719162,
+						1.70737,
+						1.708228,
+						1.706929
+					],
+					[
+						3.91506,
+						3.892917,
+						3.87506,
+						3.879564,
+						3.869774
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						1.7667443999999999,
+						3.886475
+					],
+					"time_ms_std": [
+						0.1260420650033154,
+						0.01813552546798689
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.281804,
+						2.181531,
+						2.177276,
+						2.216824,
+						2.185589
+					],
+					[
+						5.405932,
+						5.362761,
+						5.368355,
+						5.366585,
+						5.367859
+					]
+				],
+				"do_pass_sanity_check": "false",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152669,
+						2.153131
+					],
+					"time_ms_mean": [
+						2.2086048000000003,
+						5.3742984
+					],
+					"time_ms_std": [
+						0.04378895275865829,
+						0.01781910956810132
+					]
+				},
+				"sanity_check": [
+					{
+						"expected": 5.2765702551402915,
+						"price": 5.275815486907959,
+						"test_name": "At-the-money put"
+					},
+					{
+						"expected": 29.743972655501523,
+						"price": 29.74395751953125,
+						"test_name": "High volatility put"
+					},
+					{
+						"expected": 8.413504774380517,
+						"price": 8.41347599029541,
+						"test_name": "Zero interest rate put"
+					},
+					{
+						"expected": 10.954893903914176,
+						"price": 10.954870223999023,
+						"test_name": "Negative interest rate put"
+					}
+				]
+			}
+		]
+	},
+	{
+		"benchmark_parameters": {
+			"K": 81.69536496418992,
+			"S": 100.0,
+			"T": 1.2259523102337087,
+			"nend": 20000,
+			"nrepetition_at_step": 5,
+			"nstart": 10000,
+			"nstep": 10000,
+			"q": 0.01377746663562546,
+			"r": 0.028916655150968668,
+			"sigma": 0.21999498410876817,
+			"type": "Put"
+		},
+		"runs": [
+			{
+				"all_times": [
+					[
+						39.048378,
+						39.092014,
+						39.130356,
+						39.135553,
+						39.181717
+					],
+					[
+						80.213604,
+						80.236378,
+						111.178365,
+						94.138353,
+						80.279039
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.117603599999995,
+						89.20914780000001
+					],
+					"time_ms_std": [
+						0.05010574829597902,
+						13.675898668879412
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.297087,
+						6.029212,
+						4.342468,
+						4.568797,
+						3.25174
+					],
+					[
+						8.201647,
+						8.278478,
+						8.228455,
+						8.239374,
+						8.253761
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						4.2978608,
+						8.240343000000001
+					],
+					"time_ms_std": [
+						1.1367596636341828,
+						0.028609285511875505
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						1.992033,
+						1.719162,
+						1.70737,
+						1.708228,
+						1.706929
+					],
+					[
+						3.91506,
+						3.892917,
+						3.87506,
+						3.879564,
+						3.869774
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						1.7667443999999999,
+						3.886475
+					],
+					"time_ms_std": [
+						0.1260420650033154,
+						0.01813552546798689
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.281804,
+						2.181531,
+						2.177276,
+						2.216824,
+						2.185589
+					],
+					[
+						5.405932,
+						5.362761,
+						5.368355,
+						5.366585,
+						5.367859
+					]
+				],
+				"do_pass_sanity_check": "false",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152669,
+						2.153131
+					],
+					"time_ms_mean": [
+						2.2086048000000003,
+						5.3742984
+					],
+					"time_ms_std": [
+						0.04378895275865829,
+						0.01781910956810132
+					]
+				},
+				"sanity_check": [
+					{
+						"expected": 5.2765702551402915,
+						"price": 5.275815486907959,
+						"test_name": "At-the-money put"
+					},
+					{
+						"expected": 29.743972655501523,
+						"price": 29.74395751953125,
+						"test_name": "High volatility put"
+					},
+					{
+						"expected": 8.413504774380517,
+						"price": 8.41347599029541,
+						"test_name": "Zero interest rate put"
+					},
+					{
+						"expected": 10.954893903914176,
+						"price": 10.954870223999023,
+						"test_name": "Negative interest rate put"
+					}
+				]
+			},
+			{
+				"all_times": [
+					[
+						2.958222,
+						2.952701,
+						2.956458,
+						3.0877,
+						2.958494
+					],
+					[
+						7.64516,
+						7.640363,
+						7.616891,
+						7.649895,
+						7.657643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.166423,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.982715,
+						7.6419904
+					],
+					"time_ms_std": [
+						0.0587339006877629,
+						0.01541234296919202
+					]
+				},
+				"sanity_check": []
+			}
+		]
+	},
+	{
+		"benchmark_parameters": {
+			"K": 81.69536496418992,
+			"S": 100.0,
+			"T": 1.2259523102337087,
+			"nend": 20000,
+			"nrepetition_at_step": 5,
+			"nstart": 10000,
+			"nstep": 10000,
+			"q": 0.01377746663562546,
+			"r": 0.028916655150968668,
+			"sigma": 0.21999498410876817,
+			"type": "Put"
+		},
+		"runs": [
+			{
+				"all_times": [
+					[
+						39.048378,
+						39.092014,
+						39.130356,
+						39.135553,
+						39.181717
+					],
+					[
+						80.213604,
+						80.236378,
+						111.178365,
+						94.138353,
+						80.279039
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.117603599999995,
+						89.20914780000001
+					],
+					"time_ms_std": [
+						0.05010574829597902,
+						13.675898668879412
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.297087,
+						6.029212,
+						4.342468,
+						4.568797,
+						3.25174
+					],
+					[
+						8.201647,
+						8.278478,
+						8.228455,
+						8.239374,
+						8.253761
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						4.2978608,
+						8.240343000000001
+					],
+					"time_ms_std": [
+						1.1367596636341828,
+						0.028609285511875505
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						1.992033,
+						1.719162,
+						1.70737,
+						1.708228,
+						1.706929
+					],
+					[
+						3.91506,
+						3.892917,
+						3.87506,
+						3.879564,
+						3.869774
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						1.7667443999999999,
+						3.886475
+					],
+					"time_ms_std": [
+						0.1260420650033154,
+						0.01813552546798689
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.281804,
+						2.181531,
+						2.177276,
+						2.216824,
+						2.185589
+					],
+					[
+						5.405932,
+						5.362761,
+						5.368355,
+						5.366585,
+						5.367859
+					]
+				],
+				"do_pass_sanity_check": "false",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152669,
+						2.153131
+					],
+					"time_ms_mean": [
+						2.2086048000000003,
+						5.3742984
+					],
+					"time_ms_std": [
+						0.04378895275865829,
+						0.01781910956810132
+					]
+				},
+				"sanity_check": [
+					{
+						"expected": 5.2765702551402915,
+						"price": 5.275815486907959,
+						"test_name": "At-the-money put"
+					},
+					{
+						"expected": 29.743972655501523,
+						"price": 29.74395751953125,
+						"test_name": "High volatility put"
+					},
+					{
+						"expected": 8.413504774380517,
+						"price": 8.41347599029541,
+						"test_name": "Zero interest rate put"
+					},
+					{
+						"expected": 10.954893903914176,
+						"price": 10.954870223999023,
+						"test_name": "Negative interest rate put"
+					}
+				]
+			},
+			{
+				"all_times": [
+					[
+						2.958222,
+						2.952701,
+						2.956458,
+						3.0877,
+						2.958494
+					],
+					[
+						7.64516,
+						7.640363,
+						7.616891,
+						7.649895,
+						7.657643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.166423,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.982715,
+						7.6419904
+					],
+					"time_ms_std": [
+						0.0587339006877629,
+						0.01541234296919202
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.800082,
+						3.422378,
+						3.432426,
+						3.411798,
+						3.388602
+					],
+					[
+						9.946062,
+						9.963417,
+						9.971302,
+						9.974126,
+						9.926643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.4910571999999993,
+						9.956309999999998
+					],
+					"time_ms_std": [
+						0.17351503244157265,
+						0.019860965245928876
+					]
+				},
+				"sanity_check": []
+			}
+		]
+	},
+	{
+		"benchmark_parameters": {
+			"K": 81.69536496418992,
+			"S": 100.0,
+			"T": 1.2259523102337087,
+			"nend": 20000,
+			"nrepetition_at_step": 5,
+			"nstart": 10000,
+			"nstep": 10000,
+			"q": 0.01377746663562546,
+			"r": 0.028916655150968668,
+			"sigma": 0.21999498410876817,
+			"type": "Put"
+		},
+		"runs": [
+			{
+				"all_times": [
+					[
+						39.048378,
+						39.092014,
+						39.130356,
+						39.135553,
+						39.181717
+					],
+					[
+						80.213604,
+						80.236378,
+						111.178365,
+						94.138353,
+						80.279039
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.117603599999995,
+						89.20914780000001
+					],
+					"time_ms_std": [
+						0.05010574829597902,
+						13.675898668879412
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.297087,
+						6.029212,
+						4.342468,
+						4.568797,
+						3.25174
+					],
+					[
+						8.201647,
+						8.278478,
+						8.228455,
+						8.239374,
+						8.253761
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						4.2978608,
+						8.240343000000001
+					],
+					"time_ms_std": [
+						1.1367596636341828,
+						0.028609285511875505
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						1.992033,
+						1.719162,
+						1.70737,
+						1.708228,
+						1.706929
+					],
+					[
+						3.91506,
+						3.892917,
+						3.87506,
+						3.879564,
+						3.869774
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						1.7667443999999999,
+						3.886475
+					],
+					"time_ms_std": [
+						0.1260420650033154,
+						0.01813552546798689
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.281804,
+						2.181531,
+						2.177276,
+						2.216824,
+						2.185589
+					],
+					[
+						5.405932,
+						5.362761,
+						5.368355,
+						5.366585,
+						5.367859
+					]
+				],
+				"do_pass_sanity_check": "false",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152669,
+						2.153131
+					],
+					"time_ms_mean": [
+						2.2086048000000003,
+						5.3742984
+					],
+					"time_ms_std": [
+						0.04378895275865829,
+						0.01781910956810132
+					]
+				},
+				"sanity_check": [
+					{
+						"expected": 5.2765702551402915,
+						"price": 5.275815486907959,
+						"test_name": "At-the-money put"
+					},
+					{
+						"expected": 29.743972655501523,
+						"price": 29.74395751953125,
+						"test_name": "High volatility put"
+					},
+					{
+						"expected": 8.413504774380517,
+						"price": 8.41347599029541,
+						"test_name": "Zero interest rate put"
+					},
+					{
+						"expected": 10.954893903914176,
+						"price": 10.954870223999023,
+						"test_name": "Negative interest rate put"
+					}
+				]
+			},
+			{
+				"all_times": [
+					[
+						2.958222,
+						2.952701,
+						2.956458,
+						3.0877,
+						2.958494
+					],
+					[
+						7.64516,
+						7.640363,
+						7.616891,
+						7.649895,
+						7.657643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.166423,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.982715,
+						7.6419904
+					],
+					"time_ms_std": [
+						0.0587339006877629,
+						0.01541234296919202
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.800082,
+						3.422378,
+						3.432426,
+						3.411798,
+						3.388602
+					],
+					[
+						9.946062,
+						9.963417,
+						9.971302,
+						9.974126,
+						9.926643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.4910571999999993,
+						9.956309999999998
+					],
+					"time_ms_std": [
+						0.17351503244157265,
+						0.019860965245928876
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.945638,
+						2.864605,
+						2.860244,
+						2.85955,
+						2.87136
+					],
+					[
+						7.671011,
+						7.740721,
+						7.749179,
+						7.743513,
+						7.768226
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.8802794,
+						7.7345299999999995
+					],
+					"time_ms_std": [
+						0.03683786904531812,
+						0.03709346218675203
+					]
+				},
+				"sanity_check": []
+			}
+		]
+	},
+	{
+		"benchmark_parameters": {
+			"K": 81.69536496418992,
+			"S": 100.0,
+			"T": 1.2259523102337087,
+			"nend": 20000,
+			"nrepetition_at_step": 5,
+			"nstart": 10000,
+			"nstep": 10000,
+			"q": 0.01377746663562546,
+			"r": 0.028916655150968668,
+			"sigma": 0.21999498410876817,
+			"type": "Put"
+		},
+		"runs": [
+			{
+				"all_times": [
+					[
+						39.048378,
+						39.092014,
+						39.130356,
+						39.135553,
+						39.181717
+					],
+					[
+						80.213604,
+						80.236378,
+						111.178365,
+						94.138353,
+						80.279039
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.117603599999995,
+						89.20914780000001
+					],
+					"time_ms_std": [
+						0.05010574829597902,
+						13.675898668879412
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.297087,
+						6.029212,
+						4.342468,
+						4.568797,
+						3.25174
+					],
+					[
+						8.201647,
+						8.278478,
+						8.228455,
+						8.239374,
+						8.253761
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						4.2978608,
+						8.240343000000001
+					],
+					"time_ms_std": [
+						1.1367596636341828,
+						0.028609285511875505
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						1.992033,
+						1.719162,
+						1.70737,
+						1.708228,
+						1.706929
+					],
+					[
+						3.91506,
+						3.892917,
+						3.87506,
+						3.879564,
+						3.869774
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						1.7667443999999999,
+						3.886475
+					],
+					"time_ms_std": [
+						0.1260420650033154,
+						0.01813552546798689
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.281804,
+						2.181531,
+						2.177276,
+						2.216824,
+						2.185589
+					],
+					[
+						5.405932,
+						5.362761,
+						5.368355,
+						5.366585,
+						5.367859
+					]
+				],
+				"do_pass_sanity_check": "false",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152669,
+						2.153131
+					],
+					"time_ms_mean": [
+						2.2086048000000003,
+						5.3742984
+					],
+					"time_ms_std": [
+						0.04378895275865829,
+						0.01781910956810132
+					]
+				},
+				"sanity_check": [
+					{
+						"expected": 5.2765702551402915,
+						"price": 5.275815486907959,
+						"test_name": "At-the-money put"
+					},
+					{
+						"expected": 29.743972655501523,
+						"price": 29.74395751953125,
+						"test_name": "High volatility put"
+					},
+					{
+						"expected": 8.413504774380517,
+						"price": 8.41347599029541,
+						"test_name": "Zero interest rate put"
+					},
+					{
+						"expected": 10.954893903914176,
+						"price": 10.954870223999023,
+						"test_name": "Negative interest rate put"
+					}
+				]
+			},
+			{
+				"all_times": [
+					[
+						2.958222,
+						2.952701,
+						2.956458,
+						3.0877,
+						2.958494
+					],
+					[
+						7.64516,
+						7.640363,
+						7.616891,
+						7.649895,
+						7.657643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.166423,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.982715,
+						7.6419904
+					],
+					"time_ms_std": [
+						0.0587339006877629,
+						0.01541234296919202
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.800082,
+						3.422378,
+						3.432426,
+						3.411798,
+						3.388602
+					],
+					[
+						9.946062,
+						9.963417,
+						9.971302,
+						9.974126,
+						9.926643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.4910571999999993,
+						9.956309999999998
+					],
+					"time_ms_std": [
+						0.17351503244157265,
+						0.019860965245928876
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.945638,
+						2.864605,
+						2.860244,
+						2.85955,
+						2.87136
+					],
+					[
+						7.671011,
+						7.740721,
+						7.749179,
+						7.743513,
+						7.768226
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.8802794,
+						7.7345299999999995
+					],
+					"time_ms_std": [
+						0.03683786904531812,
+						0.03709346218675203
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.201342,
+						3.230654,
+						3.149482,
+						3.116107,
+						3.116912
+					],
+					[
+						8.723533,
+						8.774274,
+						8.874342,
+						8.940049,
+						8.946978
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.1628993999999997,
+						8.8518352
+					],
+					"time_ms_std": [
+						0.05136369241789373,
+						0.09977171094403466
+					]
+				},
+				"sanity_check": []
+			}
+		]
+	},
+	{
+		"benchmark_parameters": {
+			"K": 81.69536496418992,
+			"S": 100.0,
+			"T": 1.2259523102337087,
+			"nend": 20000,
+			"nrepetition_at_step": 5,
+			"nstart": 10000,
+			"nstep": 10000,
+			"q": 0.01377746663562546,
+			"r": 0.028916655150968668,
+			"sigma": 0.21999498410876817,
+			"type": "Put"
+		},
+		"runs": [
+			{
+				"all_times": [
+					[
+						39.048378,
+						39.092014,
+						39.130356,
+						39.135553,
+						39.181717
+					],
+					[
+						80.213604,
+						80.236378,
+						111.178365,
+						94.138353,
+						80.279039
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.117603599999995,
+						89.20914780000001
+					],
+					"time_ms_std": [
+						0.05010574829597902,
+						13.675898668879412
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.297087,
+						6.029212,
+						4.342468,
+						4.568797,
+						3.25174
+					],
+					[
+						8.201647,
+						8.278478,
+						8.228455,
+						8.239374,
+						8.253761
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						4.2978608,
+						8.240343000000001
+					],
+					"time_ms_std": [
+						1.1367596636341828,
+						0.028609285511875505
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						1.992033,
+						1.719162,
+						1.70737,
+						1.708228,
+						1.706929
+					],
+					[
+						3.91506,
+						3.892917,
+						3.87506,
+						3.879564,
+						3.869774
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						1.7667443999999999,
+						3.886475
+					],
+					"time_ms_std": [
+						0.1260420650033154,
+						0.01813552546798689
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.281804,
+						2.181531,
+						2.177276,
+						2.216824,
+						2.185589
+					],
+					[
+						5.405932,
+						5.362761,
+						5.368355,
+						5.366585,
+						5.367859
+					]
+				],
+				"do_pass_sanity_check": "false",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152669,
+						2.153131
+					],
+					"time_ms_mean": [
+						2.2086048000000003,
+						5.3742984
+					],
+					"time_ms_std": [
+						0.04378895275865829,
+						0.01781910956810132
+					]
+				},
+				"sanity_check": [
+					{
+						"expected": 5.2765702551402915,
+						"price": 5.275815486907959,
+						"test_name": "At-the-money put"
+					},
+					{
+						"expected": 29.743972655501523,
+						"price": 29.74395751953125,
+						"test_name": "High volatility put"
+					},
+					{
+						"expected": 8.413504774380517,
+						"price": 8.41347599029541,
+						"test_name": "Zero interest rate put"
+					},
+					{
+						"expected": 10.954893903914176,
+						"price": 10.954870223999023,
+						"test_name": "Negative interest rate put"
+					}
+				]
+			},
+			{
+				"all_times": [
+					[
+						2.958222,
+						2.952701,
+						2.956458,
+						3.0877,
+						2.958494
+					],
+					[
+						7.64516,
+						7.640363,
+						7.616891,
+						7.649895,
+						7.657643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.166423,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.982715,
+						7.6419904
+					],
+					"time_ms_std": [
+						0.0587339006877629,
+						0.01541234296919202
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.800082,
+						3.422378,
+						3.432426,
+						3.411798,
+						3.388602
+					],
+					[
+						9.946062,
+						9.963417,
+						9.971302,
+						9.974126,
+						9.926643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.4910571999999993,
+						9.956309999999998
+					],
+					"time_ms_std": [
+						0.17351503244157265,
+						0.019860965245928876
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.945638,
+						2.864605,
+						2.860244,
+						2.85955,
+						2.87136
+					],
+					[
+						7.671011,
+						7.740721,
+						7.749179,
+						7.743513,
+						7.768226
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.8802794,
+						7.7345299999999995
+					],
+					"time_ms_std": [
+						0.03683786904531812,
+						0.03709346218675203
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.201342,
+						3.230654,
+						3.149482,
+						3.116107,
+						3.116912
+					],
+					[
+						8.723533,
+						8.774274,
+						8.874342,
+						8.940049,
+						8.946978
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.1628993999999997,
+						8.8518352
+					],
+					"time_ms_std": [
+						0.05136369241789373,
+						0.09977171094403466
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						255.602477,
+						255.408708,
+						255.403407,
+						255.38687,
+						255.398034
+					],
+					[
+						521.836658,
+						521.815855,
+						521.817654,
+						521.819401,
+						521.836956
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_naive",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_naive",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						255.43989919999999,
+						521.8253048
+					],
+					"time_ms_std": [
+						0.09124267600032489,
+						0.010575135067707906
+					]
+				},
+				"sanity_check": []
+			}
+		]
+	},
+	{
+		"benchmark_parameters": {
+			"K": 81.69536496418992,
+			"S": 100.0,
+			"T": 1.2259523102337087,
+			"nend": 20000,
+			"nrepetition_at_step": 5,
+			"nstart": 10000,
+			"nstep": 10000,
+			"q": 0.01377746663562546,
+			"r": 0.028916655150968668,
+			"sigma": 0.21999498410876817,
+			"type": "Put"
+		},
+		"runs": [
+			{
+				"all_times": [
+					[
+						39.048378,
+						39.092014,
+						39.130356,
+						39.135553,
+						39.181717
+					],
+					[
+						80.213604,
+						80.236378,
+						111.178365,
+						94.138353,
+						80.279039
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.117603599999995,
+						89.20914780000001
+					],
+					"time_ms_std": [
+						0.05010574829597902,
+						13.675898668879412
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.297087,
+						6.029212,
+						4.342468,
+						4.568797,
+						3.25174
+					],
+					[
+						8.201647,
+						8.278478,
+						8.228455,
+						8.239374,
+						8.253761
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						4.2978608,
+						8.240343000000001
+					],
+					"time_ms_std": [
+						1.1367596636341828,
+						0.028609285511875505
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						1.992033,
+						1.719162,
+						1.70737,
+						1.708228,
+						1.706929
+					],
+					[
+						3.91506,
+						3.892917,
+						3.87506,
+						3.879564,
+						3.869774
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						1.7667443999999999,
+						3.886475
+					],
+					"time_ms_std": [
+						0.1260420650033154,
+						0.01813552546798689
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.281804,
+						2.181531,
+						2.177276,
+						2.216824,
+						2.185589
+					],
+					[
+						5.405932,
+						5.362761,
+						5.368355,
+						5.366585,
+						5.367859
+					]
+				],
+				"do_pass_sanity_check": "false",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152669,
+						2.153131
+					],
+					"time_ms_mean": [
+						2.2086048000000003,
+						5.3742984
+					],
+					"time_ms_std": [
+						0.04378895275865829,
+						0.01781910956810132
+					]
+				},
+				"sanity_check": [
+					{
+						"expected": 5.2765702551402915,
+						"price": 5.275815486907959,
+						"test_name": "At-the-money put"
+					},
+					{
+						"expected": 29.743972655501523,
+						"price": 29.74395751953125,
+						"test_name": "High volatility put"
+					},
+					{
+						"expected": 8.413504774380517,
+						"price": 8.41347599029541,
+						"test_name": "Zero interest rate put"
+					},
+					{
+						"expected": 10.954893903914176,
+						"price": 10.954870223999023,
+						"test_name": "Negative interest rate put"
+					}
+				]
+			},
+			{
+				"all_times": [
+					[
+						2.958222,
+						2.952701,
+						2.956458,
+						3.0877,
+						2.958494
+					],
+					[
+						7.64516,
+						7.640363,
+						7.616891,
+						7.649895,
+						7.657643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.166423,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.982715,
+						7.6419904
+					],
+					"time_ms_std": [
+						0.0587339006877629,
+						0.01541234296919202
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.800082,
+						3.422378,
+						3.432426,
+						3.411798,
+						3.388602
+					],
+					[
+						9.946062,
+						9.963417,
+						9.971302,
+						9.974126,
+						9.926643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.4910571999999993,
+						9.956309999999998
+					],
+					"time_ms_std": [
+						0.17351503244157265,
+						0.019860965245928876
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.945638,
+						2.864605,
+						2.860244,
+						2.85955,
+						2.87136
+					],
+					[
+						7.671011,
+						7.740721,
+						7.749179,
+						7.743513,
+						7.768226
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.8802794,
+						7.7345299999999995
+					],
+					"time_ms_std": [
+						0.03683786904531812,
+						0.03709346218675203
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.201342,
+						3.230654,
+						3.149482,
+						3.116107,
+						3.116912
+					],
+					[
+						8.723533,
+						8.774274,
+						8.874342,
+						8.940049,
+						8.946978
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.1628993999999997,
+						8.8518352
+					],
+					"time_ms_std": [
+						0.05136369241789373,
+						0.09977171094403466
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						255.602477,
+						255.408708,
+						255.403407,
+						255.38687,
+						255.398034
+					],
+					[
+						521.836658,
+						521.815855,
+						521.817654,
+						521.819401,
+						521.836956
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_naive",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_naive",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						255.43989919999999,
+						521.8253048
+					],
+					"time_ms_std": [
+						0.09124267600032489,
+						0.010575135067707906
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.29096,
+						2.164371,
+						2.142991,
+						2.14561,
+						2.132443
+					],
+					[
+						4.577901,
+						4.360615,
+						4.301762,
+						4.292455,
+						4.271346
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.175275,
+						4.3608158
+					],
+					"time_ms_std": [
+						0.06568631049541457,
+						0.12578893011986367
+					]
+				},
+				"sanity_check": []
+			}
+		]
+	},
+	{
+		"benchmark_parameters": {
+			"K": 81.69536496418992,
+			"S": 100.0,
+			"T": 1.2259523102337087,
+			"nend": 20000,
+			"nrepetition_at_step": 5,
+			"nstart": 10000,
+			"nstep": 10000,
+			"q": 0.01377746663562546,
+			"r": 0.028916655150968668,
+			"sigma": 0.21999498410876817,
+			"type": "Put"
+		},
+		"runs": [
+			{
+				"all_times": [
+					[
+						39.048378,
+						39.092014,
+						39.130356,
+						39.135553,
+						39.181717
+					],
+					[
+						80.213604,
+						80.236378,
+						111.178365,
+						94.138353,
+						80.279039
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.117603599999995,
+						89.20914780000001
+					],
+					"time_ms_std": [
+						0.05010574829597902,
+						13.675898668879412
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.297087,
+						6.029212,
+						4.342468,
+						4.568797,
+						3.25174
+					],
+					[
+						8.201647,
+						8.278478,
+						8.228455,
+						8.239374,
+						8.253761
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						4.2978608,
+						8.240343000000001
+					],
+					"time_ms_std": [
+						1.1367596636341828,
+						0.028609285511875505
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						1.992033,
+						1.719162,
+						1.70737,
+						1.708228,
+						1.706929
+					],
+					[
+						3.91506,
+						3.892917,
+						3.87506,
+						3.879564,
+						3.869774
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						1.7667443999999999,
+						3.886475
+					],
+					"time_ms_std": [
+						0.1260420650033154,
+						0.01813552546798689
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.281804,
+						2.181531,
+						2.177276,
+						2.216824,
+						2.185589
+					],
+					[
+						5.405932,
+						5.362761,
+						5.368355,
+						5.366585,
+						5.367859
+					]
+				],
+				"do_pass_sanity_check": "false",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152669,
+						2.153131
+					],
+					"time_ms_mean": [
+						2.2086048000000003,
+						5.3742984
+					],
+					"time_ms_std": [
+						0.04378895275865829,
+						0.01781910956810132
+					]
+				},
+				"sanity_check": [
+					{
+						"expected": 5.2765702551402915,
+						"price": 5.275815486907959,
+						"test_name": "At-the-money put"
+					},
+					{
+						"expected": 29.743972655501523,
+						"price": 29.74395751953125,
+						"test_name": "High volatility put"
+					},
+					{
+						"expected": 8.413504774380517,
+						"price": 8.41347599029541,
+						"test_name": "Zero interest rate put"
+					},
+					{
+						"expected": 10.954893903914176,
+						"price": 10.954870223999023,
+						"test_name": "Negative interest rate put"
+					}
+				]
+			},
+			{
+				"all_times": [
+					[
+						2.958222,
+						2.952701,
+						2.956458,
+						3.0877,
+						2.958494
+					],
+					[
+						7.64516,
+						7.640363,
+						7.616891,
+						7.649895,
+						7.657643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.166423,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.982715,
+						7.6419904
+					],
+					"time_ms_std": [
+						0.0587339006877629,
+						0.01541234296919202
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.800082,
+						3.422378,
+						3.432426,
+						3.411798,
+						3.388602
+					],
+					[
+						9.946062,
+						9.963417,
+						9.971302,
+						9.974126,
+						9.926643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.4910571999999993,
+						9.956309999999998
+					],
+					"time_ms_std": [
+						0.17351503244157265,
+						0.019860965245928876
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.945638,
+						2.864605,
+						2.860244,
+						2.85955,
+						2.87136
+					],
+					[
+						7.671011,
+						7.740721,
+						7.749179,
+						7.743513,
+						7.768226
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.8802794,
+						7.7345299999999995
+					],
+					"time_ms_std": [
+						0.03683786904531812,
+						0.03709346218675203
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.201342,
+						3.230654,
+						3.149482,
+						3.116107,
+						3.116912
+					],
+					[
+						8.723533,
+						8.774274,
+						8.874342,
+						8.940049,
+						8.946978
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.1628993999999997,
+						8.8518352
+					],
+					"time_ms_std": [
+						0.05136369241789373,
+						0.09977171094403466
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						255.602477,
+						255.408708,
+						255.403407,
+						255.38687,
+						255.398034
+					],
+					[
+						521.836658,
+						521.815855,
+						521.817654,
+						521.819401,
+						521.836956
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_naive",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_naive",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						255.43989919999999,
+						521.8253048
+					],
+					"time_ms_std": [
+						0.09124267600032489,
+						0.010575135067707906
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.29096,
+						2.164371,
+						2.142991,
+						2.14561,
+						2.132443
+					],
+					[
+						4.577901,
+						4.360615,
+						4.301762,
+						4.292455,
+						4.271346
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.175275,
+						4.3608158
+					],
+					"time_ms_std": [
+						0.06568631049541457,
+						0.12578893011986367
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						39.929071,
+						39.964516,
+						39.956521,
+						39.965926,
+						39.957508
+					],
+					[
+						81.225029,
+						80.993614,
+						80.970307,
+						80.980624,
+						80.980358
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.9547084,
+						81.02998640000001
+					],
+					"time_ms_std": [
+						0.014919979266072265,
+						0.10934557913011636
+					]
+				},
+				"sanity_check": []
+			}
+		]
+	},
+	{
+		"benchmark_parameters": {
+			"K": 81.69536496418992,
+			"S": 100.0,
+			"T": 1.2259523102337087,
+			"nend": 20000,
+			"nrepetition_at_step": 5,
+			"nstart": 10000,
+			"nstep": 10000,
+			"q": 0.01377746663562546,
+			"r": 0.028916655150968668,
+			"sigma": 0.21999498410876817,
+			"type": "Put"
+		},
+		"runs": [
+			{
+				"all_times": [
+					[
+						39.048378,
+						39.092014,
+						39.130356,
+						39.135553,
+						39.181717
+					],
+					[
+						80.213604,
+						80.236378,
+						111.178365,
+						94.138353,
+						80.279039
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.117603599999995,
+						89.20914780000001
+					],
+					"time_ms_std": [
+						0.05010574829597902,
+						13.675898668879412
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.297087,
+						6.029212,
+						4.342468,
+						4.568797,
+						3.25174
+					],
+					[
+						8.201647,
+						8.278478,
+						8.228455,
+						8.239374,
+						8.253761
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						4.2978608,
+						8.240343000000001
+					],
+					"time_ms_std": [
+						1.1367596636341828,
+						0.028609285511875505
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						1.992033,
+						1.719162,
+						1.70737,
+						1.708228,
+						1.706929
+					],
+					[
+						3.91506,
+						3.892917,
+						3.87506,
+						3.879564,
+						3.869774
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						1.7667443999999999,
+						3.886475
+					],
+					"time_ms_std": [
+						0.1260420650033154,
+						0.01813552546798689
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.281804,
+						2.181531,
+						2.177276,
+						2.216824,
+						2.185589
+					],
+					[
+						5.405932,
+						5.362761,
+						5.368355,
+						5.366585,
+						5.367859
+					]
+				],
+				"do_pass_sanity_check": "false",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152669,
+						2.153131
+					],
+					"time_ms_mean": [
+						2.2086048000000003,
+						5.3742984
+					],
+					"time_ms_std": [
+						0.04378895275865829,
+						0.01781910956810132
+					]
+				},
+				"sanity_check": [
+					{
+						"expected": 5.2765702551402915,
+						"price": 5.275815486907959,
+						"test_name": "At-the-money put"
+					},
+					{
+						"expected": 29.743972655501523,
+						"price": 29.74395751953125,
+						"test_name": "High volatility put"
+					},
+					{
+						"expected": 8.413504774380517,
+						"price": 8.41347599029541,
+						"test_name": "Zero interest rate put"
+					},
+					{
+						"expected": 10.954893903914176,
+						"price": 10.954870223999023,
+						"test_name": "Negative interest rate put"
+					}
+				]
+			},
+			{
+				"all_times": [
+					[
+						2.958222,
+						2.952701,
+						2.956458,
+						3.0877,
+						2.958494
+					],
+					[
+						7.64516,
+						7.640363,
+						7.616891,
+						7.649895,
+						7.657643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.166423,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.982715,
+						7.6419904
+					],
+					"time_ms_std": [
+						0.0587339006877629,
+						0.01541234296919202
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.800082,
+						3.422378,
+						3.432426,
+						3.411798,
+						3.388602
+					],
+					[
+						9.946062,
+						9.963417,
+						9.971302,
+						9.974126,
+						9.926643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.4910571999999993,
+						9.956309999999998
+					],
+					"time_ms_std": [
+						0.17351503244157265,
+						0.019860965245928876
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.945638,
+						2.864605,
+						2.860244,
+						2.85955,
+						2.87136
+					],
+					[
+						7.671011,
+						7.740721,
+						7.749179,
+						7.743513,
+						7.768226
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.8802794,
+						7.7345299999999995
+					],
+					"time_ms_std": [
+						0.03683786904531812,
+						0.03709346218675203
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.201342,
+						3.230654,
+						3.149482,
+						3.116107,
+						3.116912
+					],
+					[
+						8.723533,
+						8.774274,
+						8.874342,
+						8.940049,
+						8.946978
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.1628993999999997,
+						8.8518352
+					],
+					"time_ms_std": [
+						0.05136369241789373,
+						0.09977171094403466
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						255.602477,
+						255.408708,
+						255.403407,
+						255.38687,
+						255.398034
+					],
+					[
+						521.836658,
+						521.815855,
+						521.817654,
+						521.819401,
+						521.836956
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_naive",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_naive",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						255.43989919999999,
+						521.8253048
+					],
+					"time_ms_std": [
+						0.09124267600032489,
+						0.010575135067707906
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.29096,
+						2.164371,
+						2.142991,
+						2.14561,
+						2.132443
+					],
+					[
+						4.577901,
+						4.360615,
+						4.301762,
+						4.292455,
+						4.271346
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.175275,
+						4.3608158
+					],
+					"time_ms_std": [
+						0.06568631049541457,
+						0.12578893011986367
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						39.929071,
+						39.964516,
+						39.956521,
+						39.965926,
+						39.957508
+					],
+					[
+						81.225029,
+						80.993614,
+						80.970307,
+						80.980624,
+						80.980358
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.9547084,
+						81.02998640000001
+					],
+					"time_ms_std": [
+						0.014919979266072265,
+						0.10934557913011636
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						11.12284,
+						11.075975,
+						11.087976,
+						11.066209,
+						11.051474
+					],
+					[
+						29.740916,
+						29.743344,
+						29.761617,
+						29.745478,
+						29.754629
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xunroll_stvtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xunroll_stvtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						11.0808948,
+						29.7491968
+					],
+					"time_ms_std": [
+						0.02699538767456369,
+						0.00866640863910869
+					]
+				},
+				"sanity_check": []
+			}
+		]
+	},
+	{
+		"benchmark_parameters": {
+			"K": 81.69536496418992,
+			"S": 100.0,
+			"T": 1.2259523102337087,
+			"nend": 20000,
+			"nrepetition_at_step": 5,
+			"nstart": 10000,
+			"nstep": 10000,
+			"q": 0.01377746663562546,
+			"r": 0.028916655150968668,
+			"sigma": 0.21999498410876817,
+			"type": "Put"
+		},
+		"runs": [
+			{
+				"all_times": [
+					[
+						39.048378,
+						39.092014,
+						39.130356,
+						39.135553,
+						39.181717
+					],
+					[
+						80.213604,
+						80.236378,
+						111.178365,
+						94.138353,
+						80.279039
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.117603599999995,
+						89.20914780000001
+					],
+					"time_ms_std": [
+						0.05010574829597902,
+						13.675898668879412
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.297087,
+						6.029212,
+						4.342468,
+						4.568797,
+						3.25174
+					],
+					[
+						8.201647,
+						8.278478,
+						8.228455,
+						8.239374,
+						8.253761
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						4.2978608,
+						8.240343000000001
+					],
+					"time_ms_std": [
+						1.1367596636341828,
+						0.028609285511875505
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						1.992033,
+						1.719162,
+						1.70737,
+						1.708228,
+						1.706929
+					],
+					[
+						3.91506,
+						3.892917,
+						3.87506,
+						3.879564,
+						3.869774
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						1.7667443999999999,
+						3.886475
+					],
+					"time_ms_std": [
+						0.1260420650033154,
+						0.01813552546798689
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.281804,
+						2.181531,
+						2.177276,
+						2.216824,
+						2.185589
+					],
+					[
+						5.405932,
+						5.362761,
+						5.368355,
+						5.366585,
+						5.367859
+					]
+				],
+				"do_pass_sanity_check": "false",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152669,
+						2.153131
+					],
+					"time_ms_mean": [
+						2.2086048000000003,
+						5.3742984
+					],
+					"time_ms_std": [
+						0.04378895275865829,
+						0.01781910956810132
+					]
+				},
+				"sanity_check": [
+					{
+						"expected": 5.2765702551402915,
+						"price": 5.275815486907959,
+						"test_name": "At-the-money put"
+					},
+					{
+						"expected": 29.743972655501523,
+						"price": 29.74395751953125,
+						"test_name": "High volatility put"
+					},
+					{
+						"expected": 8.413504774380517,
+						"price": 8.41347599029541,
+						"test_name": "Zero interest rate put"
+					},
+					{
+						"expected": 10.954893903914176,
+						"price": 10.954870223999023,
+						"test_name": "Negative interest rate put"
+					}
+				]
+			},
+			{
+				"all_times": [
+					[
+						2.958222,
+						2.952701,
+						2.956458,
+						3.0877,
+						2.958494
+					],
+					[
+						7.64516,
+						7.640363,
+						7.616891,
+						7.649895,
+						7.657643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.166423,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.982715,
+						7.6419904
+					],
+					"time_ms_std": [
+						0.0587339006877629,
+						0.01541234296919202
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.800082,
+						3.422378,
+						3.432426,
+						3.411798,
+						3.388602
+					],
+					[
+						9.946062,
+						9.963417,
+						9.971302,
+						9.974126,
+						9.926643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.4910571999999993,
+						9.956309999999998
+					],
+					"time_ms_std": [
+						0.17351503244157265,
+						0.019860965245928876
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.945638,
+						2.864605,
+						2.860244,
+						2.85955,
+						2.87136
+					],
+					[
+						7.671011,
+						7.740721,
+						7.749179,
+						7.743513,
+						7.768226
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.8802794,
+						7.7345299999999995
+					],
+					"time_ms_std": [
+						0.03683786904531812,
+						0.03709346218675203
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.201342,
+						3.230654,
+						3.149482,
+						3.116107,
+						3.116912
+					],
+					[
+						8.723533,
+						8.774274,
+						8.874342,
+						8.940049,
+						8.946978
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.1628993999999997,
+						8.8518352
+					],
+					"time_ms_std": [
+						0.05136369241789373,
+						0.09977171094403466
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						255.602477,
+						255.408708,
+						255.403407,
+						255.38687,
+						255.398034
+					],
+					[
+						521.836658,
+						521.815855,
+						521.817654,
+						521.819401,
+						521.836956
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_naive",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_naive",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						255.43989919999999,
+						521.8253048
+					],
+					"time_ms_std": [
+						0.09124267600032489,
+						0.010575135067707906
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.29096,
+						2.164371,
+						2.142991,
+						2.14561,
+						2.132443
+					],
+					[
+						4.577901,
+						4.360615,
+						4.301762,
+						4.292455,
+						4.271346
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.175275,
+						4.3608158
+					],
+					"time_ms_std": [
+						0.06568631049541457,
+						0.12578893011986367
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						39.929071,
+						39.964516,
+						39.956521,
+						39.965926,
+						39.957508
+					],
+					[
+						81.225029,
+						80.993614,
+						80.970307,
+						80.980624,
+						80.980358
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.9547084,
+						81.02998640000001
+					],
+					"time_ms_std": [
+						0.014919979266072265,
+						0.10934557913011636
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						11.12284,
+						11.075975,
+						11.087976,
+						11.066209,
+						11.051474
+					],
+					[
+						29.740916,
+						29.743344,
+						29.761617,
+						29.745478,
+						29.754629
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xunroll_stvtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xunroll_stvtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						11.0808948,
+						29.7491968
+					],
+					"time_ms_std": [
+						0.02699538767456369,
+						0.00866640863910869
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						12.542295,
+						12.412284,
+						12.413158,
+						12.520316,
+						12.525735
+					],
+					[
+						31.388684,
+						31.389186,
+						31.409237,
+						31.408665,
+						31.393222
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xunroll_vprftc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xunroll_vprftc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						12.4827576,
+						31.397798799999997
+					],
+					"time_ms_std": [
+						0.0644457619576337,
+						0.01033336492629564
+					]
+				},
+				"sanity_check": []
+			}
+		]
+	},
+	{
+		"benchmark_parameters": {
+			"K": 81.69536496418992,
+			"S": 100.0,
+			"T": 1.2259523102337087,
+			"nend": 20000,
+			"nrepetition_at_step": 5,
+			"nstart": 10000,
+			"nstep": 10000,
+			"q": 0.01377746663562546,
+			"r": 0.028916655150968668,
+			"sigma": 0.21999498410876817,
+			"type": "Put"
+		},
+		"runs": [
+			{
+				"all_times": [
+					[
+						39.048378,
+						39.092014,
+						39.130356,
+						39.135553,
+						39.181717
+					],
+					[
+						80.213604,
+						80.236378,
+						111.178365,
+						94.138353,
+						80.279039
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.117603599999995,
+						89.20914780000001
+					],
+					"time_ms_std": [
+						0.05010574829597902,
+						13.675898668879412
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.297087,
+						6.029212,
+						4.342468,
+						4.568797,
+						3.25174
+					],
+					[
+						8.201647,
+						8.278478,
+						8.228455,
+						8.239374,
+						8.253761
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						4.2978608,
+						8.240343000000001
+					],
+					"time_ms_std": [
+						1.1367596636341828,
+						0.028609285511875505
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						1.992033,
+						1.719162,
+						1.70737,
+						1.708228,
+						1.706929
+					],
+					[
+						3.91506,
+						3.892917,
+						3.87506,
+						3.879564,
+						3.869774
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						1.7667443999999999,
+						3.886475
+					],
+					"time_ms_std": [
+						0.1260420650033154,
+						0.01813552546798689
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.281804,
+						2.181531,
+						2.177276,
+						2.216824,
+						2.185589
+					],
+					[
+						5.405932,
+						5.362761,
+						5.368355,
+						5.366585,
+						5.367859
+					]
+				],
+				"do_pass_sanity_check": "false",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152669,
+						2.153131
+					],
+					"time_ms_mean": [
+						2.2086048000000003,
+						5.3742984
+					],
+					"time_ms_std": [
+						0.04378895275865829,
+						0.01781910956810132
+					]
+				},
+				"sanity_check": [
+					{
+						"expected": 5.2765702551402915,
+						"price": 5.275815486907959,
+						"test_name": "At-the-money put"
+					},
+					{
+						"expected": 29.743972655501523,
+						"price": 29.74395751953125,
+						"test_name": "High volatility put"
+					},
+					{
+						"expected": 8.413504774380517,
+						"price": 8.41347599029541,
+						"test_name": "Zero interest rate put"
+					},
+					{
+						"expected": 10.954893903914176,
+						"price": 10.954870223999023,
+						"test_name": "Negative interest rate put"
+					}
+				]
+			},
+			{
+				"all_times": [
+					[
+						2.958222,
+						2.952701,
+						2.956458,
+						3.0877,
+						2.958494
+					],
+					[
+						7.64516,
+						7.640363,
+						7.616891,
+						7.649895,
+						7.657643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.166423,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.982715,
+						7.6419904
+					],
+					"time_ms_std": [
+						0.0587339006877629,
+						0.01541234296919202
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.800082,
+						3.422378,
+						3.432426,
+						3.411798,
+						3.388602
+					],
+					[
+						9.946062,
+						9.963417,
+						9.971302,
+						9.974126,
+						9.926643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.4910571999999993,
+						9.956309999999998
+					],
+					"time_ms_std": [
+						0.17351503244157265,
+						0.019860965245928876
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.945638,
+						2.864605,
+						2.860244,
+						2.85955,
+						2.87136
+					],
+					[
+						7.671011,
+						7.740721,
+						7.749179,
+						7.743513,
+						7.768226
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.8802794,
+						7.7345299999999995
+					],
+					"time_ms_std": [
+						0.03683786904531812,
+						0.03709346218675203
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.201342,
+						3.230654,
+						3.149482,
+						3.116107,
+						3.116912
+					],
+					[
+						8.723533,
+						8.774274,
+						8.874342,
+						8.940049,
+						8.946978
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.1628993999999997,
+						8.8518352
+					],
+					"time_ms_std": [
+						0.05136369241789373,
+						0.09977171094403466
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						255.602477,
+						255.408708,
+						255.403407,
+						255.38687,
+						255.398034
+					],
+					[
+						521.836658,
+						521.815855,
+						521.817654,
+						521.819401,
+						521.836956
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_naive",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_naive",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						255.43989919999999,
+						521.8253048
+					],
+					"time_ms_std": [
+						0.09124267600032489,
+						0.010575135067707906
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.29096,
+						2.164371,
+						2.142991,
+						2.14561,
+						2.132443
+					],
+					[
+						4.577901,
+						4.360615,
+						4.301762,
+						4.292455,
+						4.271346
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.175275,
+						4.3608158
+					],
+					"time_ms_std": [
+						0.06568631049541457,
+						0.12578893011986367
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						39.929071,
+						39.964516,
+						39.956521,
+						39.965926,
+						39.957508
+					],
+					[
+						81.225029,
+						80.993614,
+						80.970307,
+						80.980624,
+						80.980358
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.9547084,
+						81.02998640000001
+					],
+					"time_ms_std": [
+						0.014919979266072265,
+						0.10934557913011636
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						11.12284,
+						11.075975,
+						11.087976,
+						11.066209,
+						11.051474
+					],
+					[
+						29.740916,
+						29.743344,
+						29.761617,
+						29.745478,
+						29.754629
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xunroll_stvtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xunroll_stvtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						11.0808948,
+						29.7491968
+					],
+					"time_ms_std": [
+						0.02699538767456369,
+						0.00866640863910869
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						12.542295,
+						12.412284,
+						12.413158,
+						12.520316,
+						12.525735
+					],
+					[
+						31.388684,
+						31.389186,
+						31.409237,
+						31.408665,
+						31.393222
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xunroll_vprftc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xunroll_vprftc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						12.4827576,
+						31.397798799999997
+					],
+					"time_ms_std": [
+						0.0644457619576337,
+						0.01033336492629564
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						20.671807,
+						20.631203,
+						20.648191,
+						20.670961,
+						20.654008
+					],
+					[
+						41.178349,
+						41.15893,
+						41.164251,
+						41.163751,
+						41.149236
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_stvprftc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_stvprftc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						20.655234,
+						41.1629034
+					],
+					"time_ms_std": [
+						0.016960238382758726,
+						0.010531936445875866
+					]
+				},
+				"sanity_check": []
+			}
+		]
+	},
+	{
+		"benchmark_parameters": {
+			"K": 81.69536496418992,
+			"S": 100.0,
+			"T": 1.2259523102337087,
+			"nend": 20000,
+			"nrepetition_at_step": 5,
+			"nstart": 10000,
+			"nstep": 10000,
+			"q": 0.01377746663562546,
+			"r": 0.028916655150968668,
+			"sigma": 0.21999498410876817,
+			"type": "Put"
+		},
+		"runs": [
+			{
+				"all_times": [
+					[
+						39.048378,
+						39.092014,
+						39.130356,
+						39.135553,
+						39.181717
+					],
+					[
+						80.213604,
+						80.236378,
+						111.178365,
+						94.138353,
+						80.279039
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.117603599999995,
+						89.20914780000001
+					],
+					"time_ms_std": [
+						0.05010574829597902,
+						13.675898668879412
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.297087,
+						6.029212,
+						4.342468,
+						4.568797,
+						3.25174
+					],
+					[
+						8.201647,
+						8.278478,
+						8.228455,
+						8.239374,
+						8.253761
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						4.2978608,
+						8.240343000000001
+					],
+					"time_ms_std": [
+						1.1367596636341828,
+						0.028609285511875505
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						1.992033,
+						1.719162,
+						1.70737,
+						1.708228,
+						1.706929
+					],
+					[
+						3.91506,
+						3.892917,
+						3.87506,
+						3.879564,
+						3.869774
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						1.7667443999999999,
+						3.886475
+					],
+					"time_ms_std": [
+						0.1260420650033154,
+						0.01813552546798689
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.281804,
+						2.181531,
+						2.177276,
+						2.216824,
+						2.185589
+					],
+					[
+						5.405932,
+						5.362761,
+						5.368355,
+						5.366585,
+						5.367859
+					]
+				],
+				"do_pass_sanity_check": "false",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152669,
+						2.153131
+					],
+					"time_ms_mean": [
+						2.2086048000000003,
+						5.3742984
+					],
+					"time_ms_std": [
+						0.04378895275865829,
+						0.01781910956810132
+					]
+				},
+				"sanity_check": [
+					{
+						"expected": 5.2765702551402915,
+						"price": 5.275815486907959,
+						"test_name": "At-the-money put"
+					},
+					{
+						"expected": 29.743972655501523,
+						"price": 29.74395751953125,
+						"test_name": "High volatility put"
+					},
+					{
+						"expected": 8.413504774380517,
+						"price": 8.41347599029541,
+						"test_name": "Zero interest rate put"
+					},
+					{
+						"expected": 10.954893903914176,
+						"price": 10.954870223999023,
+						"test_name": "Negative interest rate put"
+					}
+				]
+			},
+			{
+				"all_times": [
+					[
+						2.958222,
+						2.952701,
+						2.956458,
+						3.0877,
+						2.958494
+					],
+					[
+						7.64516,
+						7.640363,
+						7.616891,
+						7.649895,
+						7.657643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.166423,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.982715,
+						7.6419904
+					],
+					"time_ms_std": [
+						0.0587339006877629,
+						0.01541234296919202
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.800082,
+						3.422378,
+						3.432426,
+						3.411798,
+						3.388602
+					],
+					[
+						9.946062,
+						9.963417,
+						9.971302,
+						9.974126,
+						9.926643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.4910571999999993,
+						9.956309999999998
+					],
+					"time_ms_std": [
+						0.17351503244157265,
+						0.019860965245928876
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.945638,
+						2.864605,
+						2.860244,
+						2.85955,
+						2.87136
+					],
+					[
+						7.671011,
+						7.740721,
+						7.749179,
+						7.743513,
+						7.768226
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.8802794,
+						7.7345299999999995
+					],
+					"time_ms_std": [
+						0.03683786904531812,
+						0.03709346218675203
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.201342,
+						3.230654,
+						3.149482,
+						3.116107,
+						3.116912
+					],
+					[
+						8.723533,
+						8.774274,
+						8.874342,
+						8.940049,
+						8.946978
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.1628993999999997,
+						8.8518352
+					],
+					"time_ms_std": [
+						0.05136369241789373,
+						0.09977171094403466
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						255.602477,
+						255.408708,
+						255.403407,
+						255.38687,
+						255.398034
+					],
+					[
+						521.836658,
+						521.815855,
+						521.817654,
+						521.819401,
+						521.836956
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_naive",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_naive",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						255.43989919999999,
+						521.8253048
+					],
+					"time_ms_std": [
+						0.09124267600032489,
+						0.010575135067707906
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.29096,
+						2.164371,
+						2.142991,
+						2.14561,
+						2.132443
+					],
+					[
+						4.577901,
+						4.360615,
+						4.301762,
+						4.292455,
+						4.271346
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.175275,
+						4.3608158
+					],
+					"time_ms_std": [
+						0.06568631049541457,
+						0.12578893011986367
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						39.929071,
+						39.964516,
+						39.956521,
+						39.965926,
+						39.957508
+					],
+					[
+						81.225029,
+						80.993614,
+						80.970307,
+						80.980624,
+						80.980358
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.9547084,
+						81.02998640000001
+					],
+					"time_ms_std": [
+						0.014919979266072265,
+						0.10934557913011636
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						11.12284,
+						11.075975,
+						11.087976,
+						11.066209,
+						11.051474
+					],
+					[
+						29.740916,
+						29.743344,
+						29.761617,
+						29.745478,
+						29.754629
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xunroll_stvtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xunroll_stvtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						11.0808948,
+						29.7491968
+					],
+					"time_ms_std": [
+						0.02699538767456369,
+						0.00866640863910869
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						12.542295,
+						12.412284,
+						12.413158,
+						12.520316,
+						12.525735
+					],
+					[
+						31.388684,
+						31.389186,
+						31.409237,
+						31.408665,
+						31.393222
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xunroll_vprftc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xunroll_vprftc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						12.4827576,
+						31.397798799999997
+					],
+					"time_ms_std": [
+						0.0644457619576337,
+						0.01033336492629564
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						20.671807,
+						20.631203,
+						20.648191,
+						20.670961,
+						20.654008
+					],
+					[
+						41.178349,
+						41.15893,
+						41.164251,
+						41.163751,
+						41.149236
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_stvprftc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_stvprftc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						20.655234,
+						41.1629034
+					],
+					"time_ms_std": [
+						0.016960238382758726,
+						0.010531936445875866
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.998604,
+						3.906233,
+						3.953135,
+						3.97215,
+						3.974609
+					],
+					[
+						9.703541,
+						9.765481,
+						9.752331,
+						9.736796,
+						9.603488
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.9609462,
+						9.7123274
+					],
+					"time_ms_std": [
+						0.0345863276411359,
+						0.06509132317213992
+					]
+				},
+				"sanity_check": []
+			}
+		]
+	},
+	{
+		"benchmark_parameters": {
+			"K": 81.69536496418992,
+			"S": 100.0,
+			"T": 1.2259523102337087,
+			"nend": 20000,
+			"nrepetition_at_step": 5,
+			"nstart": 10000,
+			"nstep": 10000,
+			"q": 0.01377746663562546,
+			"r": 0.028916655150968668,
+			"sigma": 0.21999498410876817,
+			"type": "Put"
+		},
+		"runs": [
+			{
+				"all_times": [
+					[
+						39.048378,
+						39.092014,
+						39.130356,
+						39.135553,
+						39.181717
+					],
+					[
+						80.213604,
+						80.236378,
+						111.178365,
+						94.138353,
+						80.279039
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.117603599999995,
+						89.20914780000001
+					],
+					"time_ms_std": [
+						0.05010574829597902,
+						13.675898668879412
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.297087,
+						6.029212,
+						4.342468,
+						4.568797,
+						3.25174
+					],
+					[
+						8.201647,
+						8.278478,
+						8.228455,
+						8.239374,
+						8.253761
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						4.2978608,
+						8.240343000000001
+					],
+					"time_ms_std": [
+						1.1367596636341828,
+						0.028609285511875505
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						1.992033,
+						1.719162,
+						1.70737,
+						1.708228,
+						1.706929
+					],
+					[
+						3.91506,
+						3.892917,
+						3.87506,
+						3.879564,
+						3.869774
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						1.7667443999999999,
+						3.886475
+					],
+					"time_ms_std": [
+						0.1260420650033154,
+						0.01813552546798689
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.281804,
+						2.181531,
+						2.177276,
+						2.216824,
+						2.185589
+					],
+					[
+						5.405932,
+						5.362761,
+						5.368355,
+						5.366585,
+						5.367859
+					]
+				],
+				"do_pass_sanity_check": "false",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152669,
+						2.153131
+					],
+					"time_ms_mean": [
+						2.2086048000000003,
+						5.3742984
+					],
+					"time_ms_std": [
+						0.04378895275865829,
+						0.01781910956810132
+					]
+				},
+				"sanity_check": [
+					{
+						"expected": 5.2765702551402915,
+						"price": 5.275815486907959,
+						"test_name": "At-the-money put"
+					},
+					{
+						"expected": 29.743972655501523,
+						"price": 29.74395751953125,
+						"test_name": "High volatility put"
+					},
+					{
+						"expected": 8.413504774380517,
+						"price": 8.41347599029541,
+						"test_name": "Zero interest rate put"
+					},
+					{
+						"expected": 10.954893903914176,
+						"price": 10.954870223999023,
+						"test_name": "Negative interest rate put"
+					}
+				]
+			},
+			{
+				"all_times": [
+					[
+						2.958222,
+						2.952701,
+						2.956458,
+						3.0877,
+						2.958494
+					],
+					[
+						7.64516,
+						7.640363,
+						7.616891,
+						7.649895,
+						7.657643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.166423,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.982715,
+						7.6419904
+					],
+					"time_ms_std": [
+						0.0587339006877629,
+						0.01541234296919202
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.800082,
+						3.422378,
+						3.432426,
+						3.411798,
+						3.388602
+					],
+					[
+						9.946062,
+						9.963417,
+						9.971302,
+						9.974126,
+						9.926643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.4910571999999993,
+						9.956309999999998
+					],
+					"time_ms_std": [
+						0.17351503244157265,
+						0.019860965245928876
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.945638,
+						2.864605,
+						2.860244,
+						2.85955,
+						2.87136
+					],
+					[
+						7.671011,
+						7.740721,
+						7.749179,
+						7.743513,
+						7.768226
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.8802794,
+						7.7345299999999995
+					],
+					"time_ms_std": [
+						0.03683786904531812,
+						0.03709346218675203
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.201342,
+						3.230654,
+						3.149482,
+						3.116107,
+						3.116912
+					],
+					[
+						8.723533,
+						8.774274,
+						8.874342,
+						8.940049,
+						8.946978
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.1628993999999997,
+						8.8518352
+					],
+					"time_ms_std": [
+						0.05136369241789373,
+						0.09977171094403466
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						255.602477,
+						255.408708,
+						255.403407,
+						255.38687,
+						255.398034
+					],
+					[
+						521.836658,
+						521.815855,
+						521.817654,
+						521.819401,
+						521.836956
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_naive",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_naive",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						255.43989919999999,
+						521.8253048
+					],
+					"time_ms_std": [
+						0.09124267600032489,
+						0.010575135067707906
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.29096,
+						2.164371,
+						2.142991,
+						2.14561,
+						2.132443
+					],
+					[
+						4.577901,
+						4.360615,
+						4.301762,
+						4.292455,
+						4.271346
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.175275,
+						4.3608158
+					],
+					"time_ms_std": [
+						0.06568631049541457,
+						0.12578893011986367
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						39.929071,
+						39.964516,
+						39.956521,
+						39.965926,
+						39.957508
+					],
+					[
+						81.225029,
+						80.993614,
+						80.970307,
+						80.980624,
+						80.980358
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.9547084,
+						81.02998640000001
+					],
+					"time_ms_std": [
+						0.014919979266072265,
+						0.10934557913011636
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						11.12284,
+						11.075975,
+						11.087976,
+						11.066209,
+						11.051474
+					],
+					[
+						29.740916,
+						29.743344,
+						29.761617,
+						29.745478,
+						29.754629
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xunroll_stvtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xunroll_stvtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						11.0808948,
+						29.7491968
+					],
+					"time_ms_std": [
+						0.02699538767456369,
+						0.00866640863910869
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						12.542295,
+						12.412284,
+						12.413158,
+						12.520316,
+						12.525735
+					],
+					[
+						31.388684,
+						31.389186,
+						31.409237,
+						31.408665,
+						31.393222
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xunroll_vprftc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xunroll_vprftc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						12.4827576,
+						31.397798799999997
+					],
+					"time_ms_std": [
+						0.0644457619576337,
+						0.01033336492629564
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						20.671807,
+						20.631203,
+						20.648191,
+						20.670961,
+						20.654008
+					],
+					[
+						41.178349,
+						41.15893,
+						41.164251,
+						41.163751,
+						41.149236
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_stvprftc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_stvprftc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						20.655234,
+						41.1629034
+					],
+					"time_ms_std": [
+						0.016960238382758726,
+						0.010531936445875866
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.998604,
+						3.906233,
+						3.953135,
+						3.97215,
+						3.974609
+					],
+					[
+						9.703541,
+						9.765481,
+						9.752331,
+						9.736796,
+						9.603488
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.9609462,
+						9.7123274
+					],
+					"time_ms_std": [
+						0.0345863276411359,
+						0.06509132317213992
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						4.147332,
+						4.133735,
+						4.170748,
+						4.188473,
+						4.221192
+					],
+					[
+						9.738531,
+						9.810233,
+						9.785522,
+						9.786237,
+						9.788238
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						4.172296,
+						9.7817522
+					],
+					"time_ms_std": [
+						0.03451471594117528,
+						0.026246992793461144
+					]
+				},
+				"sanity_check": []
+			}
+		]
+	},
+	{
+		"benchmark_parameters": {
+			"K": 81.69536496418992,
+			"S": 100.0,
+			"T": 1.2259523102337087,
+			"nend": 20000,
+			"nrepetition_at_step": 5,
+			"nstart": 10000,
+			"nstep": 10000,
+			"q": 0.01377746663562546,
+			"r": 0.028916655150968668,
+			"sigma": 0.21999498410876817,
+			"type": "Put"
+		},
+		"runs": [
+			{
+				"all_times": [
+					[
+						39.048378,
+						39.092014,
+						39.130356,
+						39.135553,
+						39.181717
+					],
+					[
+						80.213604,
+						80.236378,
+						111.178365,
+						94.138353,
+						80.279039
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.117603599999995,
+						89.20914780000001
+					],
+					"time_ms_std": [
+						0.05010574829597902,
+						13.675898668879412
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.297087,
+						6.029212,
+						4.342468,
+						4.568797,
+						3.25174
+					],
+					[
+						8.201647,
+						8.278478,
+						8.228455,
+						8.239374,
+						8.253761
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						4.2978608,
+						8.240343000000001
+					],
+					"time_ms_std": [
+						1.1367596636341828,
+						0.028609285511875505
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						1.992033,
+						1.719162,
+						1.70737,
+						1.708228,
+						1.706929
+					],
+					[
+						3.91506,
+						3.892917,
+						3.87506,
+						3.879564,
+						3.869774
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						1.7667443999999999,
+						3.886475
+					],
+					"time_ms_std": [
+						0.1260420650033154,
+						0.01813552546798689
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.281804,
+						2.181531,
+						2.177276,
+						2.216824,
+						2.185589
+					],
+					[
+						5.405932,
+						5.362761,
+						5.368355,
+						5.366585,
+						5.367859
+					]
+				],
+				"do_pass_sanity_check": "false",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152669,
+						2.153131
+					],
+					"time_ms_mean": [
+						2.2086048000000003,
+						5.3742984
+					],
+					"time_ms_std": [
+						0.04378895275865829,
+						0.01781910956810132
+					]
+				},
+				"sanity_check": [
+					{
+						"expected": 5.2765702551402915,
+						"price": 5.275815486907959,
+						"test_name": "At-the-money put"
+					},
+					{
+						"expected": 29.743972655501523,
+						"price": 29.74395751953125,
+						"test_name": "High volatility put"
+					},
+					{
+						"expected": 8.413504774380517,
+						"price": 8.41347599029541,
+						"test_name": "Zero interest rate put"
+					},
+					{
+						"expected": 10.954893903914176,
+						"price": 10.954870223999023,
+						"test_name": "Negative interest rate put"
+					}
+				]
+			},
+			{
+				"all_times": [
+					[
+						2.958222,
+						2.952701,
+						2.956458,
+						3.0877,
+						2.958494
+					],
+					[
+						7.64516,
+						7.640363,
+						7.616891,
+						7.649895,
+						7.657643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.166423,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.982715,
+						7.6419904
+					],
+					"time_ms_std": [
+						0.0587339006877629,
+						0.01541234296919202
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.800082,
+						3.422378,
+						3.432426,
+						3.411798,
+						3.388602
+					],
+					[
+						9.946062,
+						9.963417,
+						9.971302,
+						9.974126,
+						9.926643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.4910571999999993,
+						9.956309999999998
+					],
+					"time_ms_std": [
+						0.17351503244157265,
+						0.019860965245928876
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.945638,
+						2.864605,
+						2.860244,
+						2.85955,
+						2.87136
+					],
+					[
+						7.671011,
+						7.740721,
+						7.749179,
+						7.743513,
+						7.768226
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.8802794,
+						7.7345299999999995
+					],
+					"time_ms_std": [
+						0.03683786904531812,
+						0.03709346218675203
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.201342,
+						3.230654,
+						3.149482,
+						3.116107,
+						3.116912
+					],
+					[
+						8.723533,
+						8.774274,
+						8.874342,
+						8.940049,
+						8.946978
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.1628993999999997,
+						8.8518352
+					],
+					"time_ms_std": [
+						0.05136369241789373,
+						0.09977171094403466
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						255.602477,
+						255.408708,
+						255.403407,
+						255.38687,
+						255.398034
+					],
+					[
+						521.836658,
+						521.815855,
+						521.817654,
+						521.819401,
+						521.836956
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_naive",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_naive",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						255.43989919999999,
+						521.8253048
+					],
+					"time_ms_std": [
+						0.09124267600032489,
+						0.010575135067707906
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.29096,
+						2.164371,
+						2.142991,
+						2.14561,
+						2.132443
+					],
+					[
+						4.577901,
+						4.360615,
+						4.301762,
+						4.292455,
+						4.271346
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.175275,
+						4.3608158
+					],
+					"time_ms_std": [
+						0.06568631049541457,
+						0.12578893011986367
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						39.929071,
+						39.964516,
+						39.956521,
+						39.965926,
+						39.957508
+					],
+					[
+						81.225029,
+						80.993614,
+						80.970307,
+						80.980624,
+						80.980358
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.9547084,
+						81.02998640000001
+					],
+					"time_ms_std": [
+						0.014919979266072265,
+						0.10934557913011636
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						11.12284,
+						11.075975,
+						11.087976,
+						11.066209,
+						11.051474
+					],
+					[
+						29.740916,
+						29.743344,
+						29.761617,
+						29.745478,
+						29.754629
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xunroll_stvtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xunroll_stvtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						11.0808948,
+						29.7491968
+					],
+					"time_ms_std": [
+						0.02699538767456369,
+						0.00866640863910869
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						12.542295,
+						12.412284,
+						12.413158,
+						12.520316,
+						12.525735
+					],
+					[
+						31.388684,
+						31.389186,
+						31.409237,
+						31.408665,
+						31.393222
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xunroll_vprftc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xunroll_vprftc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						12.4827576,
+						31.397798799999997
+					],
+					"time_ms_std": [
+						0.0644457619576337,
+						0.01033336492629564
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						20.671807,
+						20.631203,
+						20.648191,
+						20.670961,
+						20.654008
+					],
+					[
+						41.178349,
+						41.15893,
+						41.164251,
+						41.163751,
+						41.149236
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_stvprftc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_stvprftc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						20.655234,
+						41.1629034
+					],
+					"time_ms_std": [
+						0.016960238382758726,
+						0.010531936445875866
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.998604,
+						3.906233,
+						3.953135,
+						3.97215,
+						3.974609
+					],
+					[
+						9.703541,
+						9.765481,
+						9.752331,
+						9.736796,
+						9.603488
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.9609462,
+						9.7123274
+					],
+					"time_ms_std": [
+						0.0345863276411359,
+						0.06509132317213992
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						4.147332,
+						4.133735,
+						4.170748,
+						4.188473,
+						4.221192
+					],
+					[
+						9.738531,
+						9.810233,
+						9.785522,
+						9.786237,
+						9.788238
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						4.172296,
+						9.7817522
+					],
+					"time_ms_std": [
+						0.03451471594117528,
+						0.026246992793461144
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						20.152122,
+						20.113512,
+						20.188637,
+						20.105148,
+						19.965313
+					],
+					[
+						43.126084,
+						43.118228,
+						42.928603,
+						43.034007,
+						42.987405
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_vprftc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_vprftc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						20.104946399999996,
+						43.038865400000006
+					],
+					"time_ms_std": [
+						0.08485362441463583,
+						0.08475712379676303
+					]
+				},
+				"sanity_check": []
+			}
+		]
+	},
+	{
+		"benchmark_parameters": {
+			"K": 81.69536496418992,
+			"S": 100.0,
+			"T": 1.2259523102337087,
+			"nend": 20000,
+			"nrepetition_at_step": 5,
+			"nstart": 10000,
+			"nstep": 10000,
+			"q": 0.01377746663562546,
+			"r": 0.028916655150968668,
+			"sigma": 0.21999498410876817,
+			"type": "Put"
+		},
+		"runs": [
+			{
+				"all_times": [
+					[
+						39.048378,
+						39.092014,
+						39.130356,
+						39.135553,
+						39.181717
+					],
+					[
+						80.213604,
+						80.236378,
+						111.178365,
+						94.138353,
+						80.279039
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.117603599999995,
+						89.20914780000001
+					],
+					"time_ms_std": [
+						0.05010574829597902,
+						13.675898668879412
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.297087,
+						6.029212,
+						4.342468,
+						4.568797,
+						3.25174
+					],
+					[
+						8.201647,
+						8.278478,
+						8.228455,
+						8.239374,
+						8.253761
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						4.2978608,
+						8.240343000000001
+					],
+					"time_ms_std": [
+						1.1367596636341828,
+						0.028609285511875505
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						1.992033,
+						1.719162,
+						1.70737,
+						1.708228,
+						1.706929
+					],
+					[
+						3.91506,
+						3.892917,
+						3.87506,
+						3.879564,
+						3.869774
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						1.7667443999999999,
+						3.886475
+					],
+					"time_ms_std": [
+						0.1260420650033154,
+						0.01813552546798689
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.281804,
+						2.181531,
+						2.177276,
+						2.216824,
+						2.185589
+					],
+					[
+						5.405932,
+						5.362761,
+						5.368355,
+						5.366585,
+						5.367859
+					]
+				],
+				"do_pass_sanity_check": "false",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152669,
+						2.153131
+					],
+					"time_ms_mean": [
+						2.2086048000000003,
+						5.3742984
+					],
+					"time_ms_std": [
+						0.04378895275865829,
+						0.01781910956810132
+					]
+				},
+				"sanity_check": [
+					{
+						"expected": 5.2765702551402915,
+						"price": 5.275815486907959,
+						"test_name": "At-the-money put"
+					},
+					{
+						"expected": 29.743972655501523,
+						"price": 29.74395751953125,
+						"test_name": "High volatility put"
+					},
+					{
+						"expected": 8.413504774380517,
+						"price": 8.41347599029541,
+						"test_name": "Zero interest rate put"
+					},
+					{
+						"expected": 10.954893903914176,
+						"price": 10.954870223999023,
+						"test_name": "Negative interest rate put"
+					}
+				]
+			},
+			{
+				"all_times": [
+					[
+						2.958222,
+						2.952701,
+						2.956458,
+						3.0877,
+						2.958494
+					],
+					[
+						7.64516,
+						7.640363,
+						7.616891,
+						7.649895,
+						7.657643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.166423,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.982715,
+						7.6419904
+					],
+					"time_ms_std": [
+						0.0587339006877629,
+						0.01541234296919202
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.800082,
+						3.422378,
+						3.432426,
+						3.411798,
+						3.388602
+					],
+					[
+						9.946062,
+						9.963417,
+						9.971302,
+						9.974126,
+						9.926643
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.4910571999999993,
+						9.956309999999998
+					],
+					"time_ms_std": [
+						0.17351503244157265,
+						0.019860965245928876
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.945638,
+						2.864605,
+						2.860244,
+						2.85955,
+						2.87136
+					],
+					[
+						7.671011,
+						7.740721,
+						7.749179,
+						7.743513,
+						7.768226
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.8802794,
+						7.7345299999999995
+					],
+					"time_ms_std": [
+						0.03683786904531812,
+						0.03709346218675203
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.201342,
+						3.230654,
+						3.149482,
+						3.116107,
+						3.116912
+					],
+					[
+						8.723533,
+						8.774274,
+						8.874342,
+						8.940049,
+						8.946978
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.1628993999999997,
+						8.8518352
+					],
+					"time_ms_std": [
+						0.05136369241789373,
+						0.09977171094403466
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						255.602477,
+						255.408708,
+						255.403407,
+						255.38687,
+						255.398034
+					],
+					[
+						521.836658,
+						521.815855,
+						521.817654,
+						521.819401,
+						521.836956
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_naive",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_naive",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						255.43989919999999,
+						521.8253048
+					],
+					"time_ms_std": [
+						0.09124267600032489,
+						0.010575135067707906
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						2.29096,
+						2.164371,
+						2.142991,
+						2.14561,
+						2.132443
+					],
+					[
+						4.577901,
+						4.360615,
+						4.301762,
+						4.292455,
+						4.271346
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						2.175275,
+						4.3608158
+					],
+					"time_ms_std": [
+						0.06568631049541457,
+						0.12578893011986367
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						39.929071,
+						39.964516,
+						39.956521,
+						39.965926,
+						39.957508
+					],
+					[
+						81.225029,
+						80.993614,
+						80.970307,
+						80.980624,
+						80.980358
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						39.9547084,
+						81.02998640000001
+					],
+					"time_ms_std": [
+						0.014919979266072265,
+						0.10934557913011636
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						11.12284,
+						11.075975,
+						11.087976,
+						11.066209,
+						11.051474
+					],
+					[
+						29.740916,
+						29.743344,
+						29.761617,
+						29.745478,
+						29.754629
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xunroll_stvtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xunroll_stvtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						11.0808948,
+						29.7491968
+					],
+					"time_ms_std": [
+						0.02699538767456369,
+						0.00866640863910869
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						12.542295,
+						12.412284,
+						12.413158,
+						12.520316,
+						12.525735
+					],
+					[
+						31.388684,
+						31.389186,
+						31.409237,
+						31.408665,
+						31.393222
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xunroll_vprftc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xunroll_vprftc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						12.4827576,
+						31.397798799999997
+					],
+					"time_ms_std": [
+						0.0644457619576337,
+						0.01033336492629564
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						20.671807,
+						20.631203,
+						20.648191,
+						20.670961,
+						20.654008
+					],
+					[
+						41.178349,
+						41.15893,
+						41.164251,
+						41.163751,
+						41.149236
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_stvprftc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_stvprftc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						20.655234,
+						41.1629034
+					],
+					"time_ms_std": [
+						0.016960238382758726,
+						0.010531936445875866
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						3.998604,
+						3.906233,
+						3.953135,
+						3.97215,
+						3.974609
+					],
+					[
+						9.703541,
+						9.765481,
+						9.752331,
+						9.736796,
+						9.603488
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						3.9609462,
+						9.7123274
+					],
+					"time_ms_std": [
+						0.0345863276411359,
+						0.06509132317213992
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						4.147332,
+						4.133735,
+						4.170748,
+						4.188473,
+						4.221192
+					],
+					[
+						9.738531,
+						9.810233,
+						9.785522,
+						9.786237,
+						9.788238
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc_trimotm",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_stvtile_vprftc_trimotm",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						4.172296,
+						9.7817522
+					],
+					"time_ms_std": [
+						0.03451471594117528,
+						0.026246992793461144
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						20.152122,
+						20.113512,
+						20.188637,
+						20.105148,
+						19.965313
+					],
+					[
+						43.126084,
+						43.118228,
+						42.928603,
+						43.034007,
+						42.987405
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_vprftc",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_xyunroll_vprftc",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						20.104946399999996,
+						43.038865400000006
+					],
+					"time_ms_std": [
+						0.08485362441463583,
+						0.08475712379676303
+					]
+				},
+				"sanity_check": []
+			},
+			{
+				"all_times": [
+					[
+						41.213028,
+						41.14768,
+						41.184288,
+						41.213678,
+						41.184259
+					],
+					[
+						82.181469,
+						82.156387,
+						82.178842,
+						82.160005,
+						82.203094
+					]
+				],
+				"do_pass_sanity_check": "true",
+				"function_id": "vanilla_american_binomial_cuda_stprcmp_yunroll_vtile",
+				"hyperparams": [],
+				"id": "vanilla_american_binomial_cuda_stprcmp_yunroll_vtile",
+				"runs": {
+					"n": [
+						10000,
+						20000
+					],
+					"price": [
+						2.152706,
+						2.152629
+					],
+					"time_ms_mean": [
+						41.188586599999994,
+						82.17595939999998
+					],
+					"time_ms_std": [
+						0.027099429861161543,
+						0.018792108138790353
+					]
+				},
+				"sanity_check": []
+			}
+		]
+	}
+]

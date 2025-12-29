@@ -65,7 +65,12 @@ double vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds
     const double S, const double K, const double T, const double r, const double sigma,
     const double q, const int n, const OptionType type);
 
+
 template <const Hyperparams& h>
 double vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float(
+    const double S, const double K, const double T, const double r, const double sigma,
+    const double q, const int n, const OptionType type);
+
+double vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds(
     const double S, const double K, const double T, const double r, const double sigma,
     const double q, const int n, const OptionType type);
