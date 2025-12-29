@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import json
 import os
 
-FILE_PATH = '/home/gspadaccini/option-pricing-cuda/build/temp.json'
-OUTPUT_PLOT_FILE = lambda x: f'plot_{x}.png'
+FILE_PATH = './data/thougput.json'
+OUTPUT_PLOT_FILE = lambda x: f'./gen_plots/plot_{x}.png'
 
 
 def calculate_values(df):
