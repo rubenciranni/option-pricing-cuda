@@ -1,4 +1,3 @@
-
 #include <cmath>
 #include <fstream>
 #include <iomanip>
@@ -141,6 +140,7 @@ class RunGenerator {
         run.nstart = nstart;
         run.nend = nend;
         run.nstep = nstep;
+        run.nstep_fct = Constant_Additive_NStep(nstep);
         run.nrepetition_at_step = nrepetition_at_step;
         run.type = type;
 
@@ -152,7 +152,7 @@ class RunGenerator {
         runs.reserve(n_runs);
 
         for (int i = 0; i < n_runs; ++i) {
-            auto run =generateRandomRun(n, n, n, 1, type);
+            auto run = generateRandomRun(n, n, n, 1, type);
             runs.push_back(PricingInput(run.S, run.K, run.T, run.r, run.sigma, run.q, n, type));
         }
 

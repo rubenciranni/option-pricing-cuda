@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#SBATCH --time=00:10
+#SBATCH --time=2:00:00
 #SBATCH --account=dphpc
-#SBATCH --output=benchmark.json
+#SBATCH --output=final-o3.json
 
-./build/bin/pricing_cli benchmark --filter-by-name vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile_trimotm --parameters large-reprare --reference-function vanilla_american_binomial_cuda_naive --output-format=json
+./build/bin/pricing_cli benchmark --filter-by-name vanilla --parameters l-125 --reference-function vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds --output-format=json

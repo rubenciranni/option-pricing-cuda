@@ -11,18 +11,20 @@
 #include "sanity_checker.hpp"
 
 // clang-format off
-std::map<std::string, Run> BENCHMARK_PARAMETERS = {
-    {"xs-cpu", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 8, 8, 8, 1, OptionType::Put)},
-    {"xs-cuda", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 10001, 10000, 1, OptionType::Put)},
-    {"s-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1024, 2000, 1000, 1, OptionType::Put)},
-    {"s-repeat", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1000, 1001, 1000, 5, OptionType::Put)},
-    {"m-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 20000, 10000, 1, OptionType::Put)},
-    {"m-repeat", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 20000, 10000, 1000, OptionType::Put)},
-    {"l-repeat", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 210000, 100000, 5, OptionType::Put)},
-    {"l-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 210000, 100000, 1, OptionType::Put)},
-    {"xl-repeat", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000, 260000, 50000, 10, OptionType::Put)},
-    {"xxl-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 250000, 250000, 30000, 1, OptionType::Put)},
-    {"custom", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1024, 1024 ,1025, 1, OptionType::Put)},
+std::map<std::string, Run> BENCHMARK_PARAMETERS = {    
+    {"xs-cpu",     Run(100, 100, 0.5, 0.03, 0.2, 0.015, 8,      8,      Constant_Additive_NStep(8),        1,  OptionType::Put)},
+    {"xs-cuda",    Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000,  10001,  Constant_Additive_NStep(10000),    1,  OptionType::Put)},
+    {"s-single",   Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1024,   2000,   Constant_Additive_NStep(1000),     1,  OptionType::Put)},
+    {"s-repeat",   Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1000,   1001,   Constant_Additive_NStep(1000),     5,  OptionType::Put)},
+    {"m-single",   Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000,  20000,  Constant_Additive_NStep(10000),    1,  OptionType::Put)},
+    {"l-single",   Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000,  210000, Constant_Additive_NStep(100000),   1,  OptionType::Put)},
+    {"l-repeat",   Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000,  210000, Constant_Additive_NStep(100000),   5,  OptionType::Put)},
+    {"l-125",      Run(100, 100, 0.5, 0.03, 0.2, 0.015, 100,    100000, NStep_125(),                       20, OptionType::Put)},
+    {"xl-repeat",  Run(100, 100, 0.5, 0.03, 0.2, 0.015, 200,    200000, Constant_Multiplicative_NStep(10), 20, OptionType::Put)},
+    {"xl-125",     Run(100, 100, 0.5, 0.03, 0.2, 0.015, 100,    200000, NStep_125(),                       20, OptionType::Put)},
+    {"xl-crazy",   Run(100, 100, 0.5, 0.03, 0.2, 0.015, 111,    200000, Constant_Multiplicative_NStep(2),  20, OptionType::Put)},
+    {"xxl-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 250000, 250000, Constant_Additive_NStep(30000),    1,  OptionType::Put)},
+    {"custom",     Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1024,   1024,   Constant_Additive_NStep(1025),     1,  OptionType::Put)},
 };
 
 std::map<std::string, PricingFunction> FUNCTION_REGISTRY = {
@@ -33,10 +35,10 @@ std::map<std::string, PricingFunction> FUNCTION_REGISTRY = {
     {"vanilla_american_binomial_cpu_trimotm_trimeeon_stprcmp", vanilla_american_binomial_cpu_trimotm_trimeeon_stprcmp},
     // {"vanilla_american_binomial_openmp_naive", vanilla_american_binomial_openmp_naive},
     {"vanilla_american_binomial_cuda_naive", vanilla_american_binomial_cuda_naive},
-    // {"vanilla_american_binomial_cuda_nvidia_baseline", vanilla_american_binomial_cuda_nvidia_baseline},
+    {"vanilla_american_binomial_cuda_nvidia_baseline", vanilla_american_binomial_cuda_nvidia_baseline},
     // {"vanilla_american_binomial_cuda_stprcmp", vanilla_american_binomial_cuda_stprcmp},
     // {"vanilla_american_binomial_cuda_bkdstprcmp", vanilla_american_binomial_cuda_bkdstprcmp},
-    {"vanilla_american_binomial_cuda_stprcmp_yunroll_vtile", vanilla_american_binomial_cuda_stprcmp_yunroll_vtile<DEFAULT_HYPERPARAMS_CUDA_STPRCMP_YUNROLL_VTILE>},
+    // {"vanilla_american_binomial_cuda_stprcmp_yunroll_vtile", vanilla_american_binomial_cuda_stprcmp_yunroll_vtile<DEFAULT_HYPERPARAMS_CUDA_STPRCMP_YUNROLL_VTILE>},
     // {"vanilla_american_binomial_cuda_stprcmp_xunroll_vprftc", vanilla_american_binomial_cuda_stprcmp_xunroll_vprftc<DEFAULT_HYPERPARAMS_CUDA_STPRCMP_XUNROLL_VPRFTC>},
     // {"vanilla_american_binomial_cuda_stprcmp_xunroll_stvtile", vanilla_american_binomial_cuda_stprcmp_xunroll_stvtile<DEFAULT_HYPERPARAMS_CUDA_STPRCMP_XUNROLL_STVTILE>},
     // {"vanilla_american_binomial_cuda_stprcmp_xyunroll_vprftc", vanilla_american_binomial_cuda_stprcmp_xyunroll_vprftc<DEFAULT_HYPERPARAMS_CUDA_STPRCMP_XYUNROLL_VPRFTC>},
@@ -49,8 +51,12 @@ std::map<std::string, PricingFunction> FUNCTION_REGISTRY = {
     // {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
     // {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_malloc<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
     {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
+<<<<<<< HEAD
     {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
     {"vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds", vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds},
+=======
+    // {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_float<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
+>>>>>>> main
 
     #ifdef DO_CARTESIAN_PRODUCT
         #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_STPRCMP_YUNROLL_VTILE
@@ -109,7 +115,6 @@ std::vector<BenchmarkResult> benchmark(const std::string& filter_function_name,
                   << "' not found in function registry.\n";
         return {};
     }
-
     SanityChecker sanity_checker(reference_function_name,
                                  FUNCTION_REGISTRY[reference_function_name]);
 
@@ -126,7 +131,8 @@ std::vector<BenchmarkResult> benchmark(const std::string& filter_function_name,
 
             BenchmarkResult result(data, benchmark_parameters, {}, name, reference_function_name,
                                    sanity_check);
-            for (int n = data.nstart; n <= data.nend; n += data.nstep) {
+            for (int n = data.nstart; n <= data.nend; n += n += (data.nstep != -1) ? data.nstep : data.nstep_fct(n)) {
+                std::cout << n << std::endl;
                 for (int _ = 0; _ < data.nrepetition_at_step; _++) {
                     auto start = std::chrono::high_resolution_clock::now();
                     double price =
@@ -177,7 +183,8 @@ std::vector<std::vector<BenchmarkResult>> random_benchmark(
                 filter_function_name.empty()) {
                 BenchmarkResult result(run, "random_sampled", {}, name, reference_function_name,
                                        sanity_checks_map[name]);
-                for (int n = run.nstart; n <= run.nend; n += run.nstep) {
+                for (int n = run.nstart; n <= run.nend; n += (run.nstep != -1) ? run.nstep : run.nstep_fct(n)) {
+                    std::cout << n << std::endl;
                     for (int _ = 0; _ < run.nrepetition_at_step; _++) {
                         auto start = std::chrono::high_resolution_clock::now();
                         double price =
@@ -254,10 +261,11 @@ std::vector<BatchBenchmarkResult> batch_random_benchmark(const std::string& filt
         }
     }
     std::vector<PricingInput> runs =
-        RunGenerator().generateRandomPricingInput(n_random_runs, n, OptionType::Put);
+    RunGenerator().generateRandomPricingInput(n_random_runs, n, OptionType::Put);
     for (const auto& [name, func] : BATCH_FUNCTION_REGISTRY) {
         // filter_function_name is a substring match
         if (name.find(filter_function_name) != std::string::npos || filter_function_name.empty()) {
+            std::cout << "Aiuto" << std::endl;
             std::vector<double> out(n_random_runs);
             auto start = std::chrono::high_resolution_clock::now();
             func(runs, out);
