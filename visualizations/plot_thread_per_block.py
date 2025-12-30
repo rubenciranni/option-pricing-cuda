@@ -4,8 +4,7 @@ import json
 import os
 
 # 1. The JSON Data
-data_json = """
-[
+data_json = [
     {
         "do_pass_sanity_check": "true",
         "function_id": "vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
@@ -52,7 +51,6 @@ data_json = """
         "time": 845.701049
     }
 ]
-"""
 
 # 2. Process Data
 data = json.loads(data_json)
