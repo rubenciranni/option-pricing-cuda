@@ -577,13 +577,17 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch_scheduler)(std::vector<Prici
             return 16;
         } else if (current_level >= (1 << 14)) {
             return 24;
-        } else if (current_level >= (1 << 12)) {
+        } else if (current_level >= (1 << 11)) {
             return 32;
-        } else if (current_level >= 64) {
+        } else if (current_level >= 512) {
             return 64;
         } else if (current_level >= (32)) {
             return 32;
-        } else {
+        } else if (current_level >= (16)) {
+            return 16;
+        } else if (current_level >= (8)){
+            return current_level;
+        } else  {
             return 1;
         }
     };
@@ -592,46 +596,38 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch_scheduler)(std::vector<Prici
     for (; level > 0; ) {
         int U = (level);
 
-        if (lastU!= U) {
-            nvtxRangePushA(kernel_label.c_str());
-            cudaProfilerStart();
-        }
+        // if (lastU!= U) {
+        //     nvtxRangePushA(kernel_label.c_str());
+        //     cudaProfilerStart();
+        // }
         num_blocks = std::ceil((level) * 1.0 / (THREADS_PER_BLOCK - U));
         dim3 num_blocks_2d_loop(num_blocks, num_runs);
 
         
+#define CASE_N(N) \
+    case N: \
+        FUNC_NAME(compute_next_layers_kernel_batch_schedule)<THREADS_PER_BLOCK, N> \
+            <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>( \
+                layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d, \
+                d_up, d_down, level - U, n, d_bound, MAX_UNROLL_FACTOR); \
+        break;
+
 
         switch (U) {
-            case 1:
-                FUNC_NAME(compute_next_layers_kernel_batch_schedule)<THREADS_PER_BLOCK, 1>
-                    <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>(
-                        layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d,
-                        d_up, d_down, level - U, n, d_bound, MAX_UNROLL_FACTOR);
-                break;
-            case 16:
-                FUNC_NAME(compute_next_layers_kernel_batch_schedule)<THREADS_PER_BLOCK, 16>
-                    <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>(
-                        layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d,
-                        d_up, d_down, level - U, n, d_bound, MAX_UNROLL_FACTOR);
-                break;
-            case 24:
-                FUNC_NAME(compute_next_layers_kernel_batch_schedule)<THREADS_PER_BLOCK, 24>
-                    <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>(
-                        layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d,
-                        d_up, d_down, level - U, n, d_bound, MAX_UNROLL_FACTOR);
-                break;
-            case 32:
-                FUNC_NAME(compute_next_layers_kernel_batch_schedule)<THREADS_PER_BLOCK, 32>
-                    <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>(
-                        layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d,
-                        d_up, d_down, level - U, n, d_bound, MAX_UNROLL_FACTOR);
-                break;
-            case 64:
-                FUNC_NAME(compute_next_layers_kernel_batch_schedule)<THREADS_PER_BLOCK, 64>
-                    <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>(
-                        layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d,
-                        d_up, d_down, level - U, n, d_bound, MAX_UNROLL_FACTOR);
-                break;
+            CASE_N(1)
+            CASE_N(2)
+            CASE_N(3)
+            CASE_N(4)
+            CASE_N(5)
+            CASE_N(6)
+            CASE_N(7)
+            CASE_N(8)
+            CASE_N(16)
+            CASE_N(24)
+            CASE_N(32)
+            CASE_N(64)
+            CASE_N(128)
+            
             default:
                 // Fallback to U=1 if an unsupported unroll factor is requested.
                 FUNC_NAME(compute_next_layers_kernel_batch_schedule)<THREADS_PER_BLOCK, 1>
@@ -644,12 +640,12 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch_scheduler)(std::vector<Prici
 
         std::swap(layer_values_read_d, layer_values_write_d);
         level -= U;
-        if (lastU!= U) {
-            cudaDeviceSynchronize();
-            cudaProfilerStop();
-            nvtxRangePop();
-            lastU = U;
-        }
+        // if (lastU!= U) {
+        //     cudaDeviceSynchronize();
+        //     cudaProfilerStop();
+        //     nvtxRangePop();
+        //     lastU = U;
+        // }
     }
 
     num_blocks = std::ceil(num_runs * 1.0 / THREADS_PER_BLOCK);

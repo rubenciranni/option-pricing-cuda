@@ -16,6 +16,13 @@ void vanilla_american_binomial_cuda_batch_nvidia_baseline(std::vector<PricingInp
 void vanilla_american_binomial_cuda_batch_stprcmp(std::vector<PricingInput>& runs,
                                                   std::vector<double>& out);
 
+void vanilla_american_binomial_cuda_batch_bkdstprcmp(std::vector<PricingInput>& runs,
+                                                     std::vector<double>& out);
+
+template <const Hyperparams& h>
+void vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_vtile_trimotm(
+    std::vector<PricingInput>& runs, std::vector<double>& out);
+
 template <const Hyperparams& h>
 void vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds(
     std::vector<PricingInput>& runs, std::vector<double>& out);
