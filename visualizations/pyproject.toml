@@ -7,4 +7,5 @@ requires-python = ">=3.12"
 dependencies = [
     "ipdb>=0.13.13",
     "matplotlib>=3.10.7",
+    "quantlib>=1.40",
 ]
