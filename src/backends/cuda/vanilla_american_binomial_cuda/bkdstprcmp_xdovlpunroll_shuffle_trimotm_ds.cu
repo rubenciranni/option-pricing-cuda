@@ -594,7 +594,7 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch_scheduler)(std::vector<Prici
 
     // Launch the correct templated kernel based on the chosen unroll factor.
     for (; level > 0; ) {
-        int U = (level);
+        int U = get_current_unrool_factor(level);
 
         // if (lastU!= U) {
         //     nvtxRangePushA(kernel_label.c_str());
@@ -1093,8 +1093,8 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch_search)(std::vector<PricingI
 double FUNC_NAME(vanilla_american_binomial_cuda_scheduler)(
     const double S, const double K, const double T, const double r, const double sigma,
     const double q, const int n, const OptionType type){
-    std::vector<PricingInput> runs =  { PricingInput(S, K, T, r, sigma, q, n, type) };
-    std::vector<double> out{0};
+    std::vector<PricingInput> runs = { PricingInput(S, K, T, r, sigma, q, n, type) };
+    std::vector<double> out(1);
 
     vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds(runs, out);
     return out[0];

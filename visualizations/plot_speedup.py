@@ -137,6 +137,7 @@ def plot_mean_times(processed_data, output_file=None):
         xaxis_title="Tree Size (n)",
         yaxis_title="Mean Execution Time (ms)",
         yaxis_type="log", # Log scale
+        xaxis_type="log", # Log scale
         hovermode="x unified",
         template="plotly_white"
     )
@@ -189,7 +190,7 @@ def plot_speedup(speedup_data, output_file=None):
         fig.show()
 
 def main():
-
+    filename = FILE_PATH
     print(f"Loading benchmark data from: {filename}")
     json_data =  json.load( open(filename, "r") )
 
