@@ -590,7 +590,7 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch_scheduler)(std::vector<Prici
 
     // Launch the correct templated kernel based on the chosen unroll factor.
     for (; level > 0; ) {
-        int U = get_current_unrool_factor(level);
+        int U = (level);
 
         if (lastU!= U) {
             nvtxRangePushA(kernel_label.c_str());
@@ -660,19 +660,19 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch_scheduler)(std::vector<Prici
 
     cudaDeviceSynchronize();
 
-    cudaFree(d_S);
-    cudaFree(d_K);
-    cudaFree(d_u);
-    cudaFree(d_up);
-    cudaFree(d_down);
-    cudaFree(d_n_arr);
-    cudaFree(d_sign);
-    cudaFree(d_bound);
-    cudaFree(d_out);
-    cudaFree(layer_values_read_d);
-    cudaFree(layer_values_write_d);
-    cudaFree(st_buffer_bank0_d);
-    cudaFree(st_buffer_bank1_d);
+    cudaFreeAsync(d_S, 0);
+    cudaFreeAsync(d_K, 0);
+    cudaFreeAsync(d_u, 0);
+    cudaFreeAsync(d_up, 0);
+    cudaFreeAsync(d_down, 0);
+    cudaFreeAsync(d_n_arr, 0);
+    cudaFreeAsync(d_sign, 0);
+    cudaFreeAsync(d_bound, 0);
+    cudaFreeAsync(d_out, 0);
+    cudaFreeAsync(layer_values_read_d, 0);
+    cudaFreeAsync(layer_values_write_d, 0);
+    cudaFreeAsync(st_buffer_bank0_d, 0);
+    cudaFreeAsync(st_buffer_bank1_d, 0);
     checkCuda(cudaGetLastError());
 }
 
@@ -794,19 +794,19 @@ void FUNC_NAME(test_vanilla_american_binomial_cuda_batch)(std::vector<PricingInp
 
     cudaDeviceSynchronize();
 
-    cudaFree(d_S);
-    cudaFree(d_K);
-    cudaFree(d_u);
-    cudaFree(d_up);
-    cudaFree(d_down);
-    cudaFree(d_n_arr);
-    cudaFree(d_sign);
-    cudaFree(d_bound);
-    cudaFree(d_out);
-    cudaFree(layer_values_read_d);
-    cudaFree(layer_values_write_d);
-    cudaFree(st_buffer_bank0_d);
-    cudaFree(st_buffer_bank1_d);
+    cudaFreeAsync(d_S, 0);
+    cudaFreeAsync(d_K, 0);
+    cudaFreeAsync(d_u, 0);
+    cudaFreeAsync(d_up, 0);
+    cudaFreeAsync(d_down, 0);
+    cudaFreeAsync(d_n_arr, 0);
+    cudaFreeAsync(d_sign, 0);
+    cudaFreeAsync(d_bound, 0);
+    cudaFreeAsync(d_out, 0);
+    cudaFreeAsync(layer_values_read_d, 0);
+    cudaFreeAsync(layer_values_write_d, 0);
+    cudaFreeAsync(st_buffer_bank0_d, 0);
+    cudaFreeAsync(st_buffer_bank1_d, 0);
     checkCuda(cudaGetLastError());
 }
 
@@ -928,19 +928,19 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch)(std::vector<PricingInput>& 
 
     cudaDeviceSynchronize();
 
-    cudaFree(d_S);
-    cudaFree(d_K);
-    cudaFree(d_u);
-    cudaFree(d_up);
-    cudaFree(d_down);
-    cudaFree(d_n_arr);
-    cudaFree(d_sign);
-    cudaFree(d_bound);
-    cudaFree(d_out);
-    cudaFree(layer_values_read_d);
-    cudaFree(layer_values_write_d);
-    cudaFree(st_buffer_bank0_d);
-    cudaFree(st_buffer_bank1_d);
+    cudaFreeAsync(d_S, 0);
+    cudaFreeAsync(d_K, 0);
+    cudaFreeAsync(d_u, 0);
+    cudaFreeAsync(d_up, 0);
+    cudaFreeAsync(d_down, 0);
+    cudaFreeAsync(d_n_arr, 0);
+    cudaFreeAsync(d_sign, 0);
+    cudaFreeAsync(d_bound, 0);
+    cudaFreeAsync(d_out, 0);
+    cudaFreeAsync(layer_values_read_d, 0);
+    cudaFreeAsync(layer_values_write_d, 0);
+    cudaFreeAsync(st_buffer_bank0_d, 0);
+    cudaFreeAsync(st_buffer_bank1_d, 0);
     checkCuda(cudaGetLastError());
 }
 
@@ -1079,19 +1079,19 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch_search)(std::vector<PricingI
 
     cudaDeviceSynchronize();
 
-    cudaFree(d_S);
-    cudaFree(d_K);
-    cudaFree(d_u);
-    cudaFree(d_up);
-    cudaFree(d_down);
-    cudaFree(d_n_arr);
-    cudaFree(d_sign);
-    cudaFree(d_bound);
-    cudaFree(d_out);
-    cudaFree(layer_values_read_d);
-    cudaFree(layer_values_write_d);
-    cudaFree(st_buffer_bank0_d);
-    cudaFree(st_buffer_bank1_d);
+    cudaFreeAsync(d_S, 0);
+    cudaFreeAsync(d_K, 0);
+    cudaFreeAsync(d_u, 0);
+    cudaFreeAsync(d_up, 0);
+    cudaFreeAsync(d_down, 0);
+    cudaFreeAsync(d_n_arr, 0);
+    cudaFreeAsync(d_sign, 0);
+    cudaFreeAsync(d_bound, 0);
+    cudaFreeAsync(d_out, 0);
+    cudaFreeAsync(layer_values_read_d, 0);
+    cudaFreeAsync(layer_values_write_d, 0);
+    cudaFreeAsync(st_buffer_bank0_d, 0);
+    cudaFreeAsync(st_buffer_bank1_d, 0);
     checkCuda(cudaGetLastError());
 }
 double FUNC_NAME(vanilla_american_binomial_cuda_scheduler)(

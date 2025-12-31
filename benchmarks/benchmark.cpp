@@ -19,7 +19,7 @@ std::map<std::string, Run> BENCHMARK_PARAMETERS = {
     {"m-single",   Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000,  20000,  Constant_Additive_NStep(10000),    1,  OptionType::Put)},
     {"l-single",   Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000,  210000, Constant_Additive_NStep(100000),   1,  OptionType::Put)},
     {"l-repeat",   Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000,  210000, Constant_Additive_NStep(100000),   5,  OptionType::Put)},
-    {"l-125",      Run(100, 100, 0.5, 0.03, 0.2, 0.015, 100,    100000, NStep_125(),                       20, OptionType::Put)},
+    {"l-125",      Run(100, 100, 0.5, 0.03, 0.2, 0.015, 100,    50000,  NStep_125(),                       20, OptionType::Put)},
     {"xl-repeat",  Run(100, 100, 0.5, 0.03, 0.2, 0.015, 200,    200000, Constant_Multiplicative_NStep(10), 20, OptionType::Put)},
     {"xl-125",     Run(100, 100, 0.5, 0.03, 0.2, 0.015, 100,    200000, NStep_125(),                       20, OptionType::Put)},
     {"xl-crazy",   Run(100, 100, 0.5, 0.03, 0.2, 0.015, 111,    200000, Constant_Multiplicative_NStep(2),  20, OptionType::Put)},
@@ -131,7 +131,7 @@ std::vector<BenchmarkResult> benchmark(const std::string& filter_function_name,
 
             BenchmarkResult result(data, benchmark_parameters, {}, name, reference_function_name,
                                    sanity_check);
-            for (int n = data.nstart; n <= data.nend; n += n += (data.nstep != -1) ? data.nstep : data.nstep_fct(n)) {
+            for (int n = data.nstart; n <= data.nend; n += (data.nstep != -1) ? data.nstep : data.nstep_fct(n)) {
                 std::cout << n << std::endl;
                 for (int _ = 0; _ < data.nrepetition_at_step; _++) {
                     auto start = std::chrono::high_resolution_clock::now();

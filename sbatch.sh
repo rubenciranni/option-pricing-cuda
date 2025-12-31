@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --time=2:00:00
+#SBATCH --time=10:00:00
 #SBATCH --account=dphpc
 #SBATCH --output=final-o3.json
 
