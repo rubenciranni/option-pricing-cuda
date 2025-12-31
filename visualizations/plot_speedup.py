@@ -7,7 +7,8 @@ from collections import defaultdict
 import plotly.graph_objects as go
 import plotly.colors as pc
 
-FILE_PATH = './data/thougput.json'
+#FILE_PATH = './data/thougput.json'
+FILE_PATH = './data/baseline-times.json'
 
 
 def clean_label(label):
