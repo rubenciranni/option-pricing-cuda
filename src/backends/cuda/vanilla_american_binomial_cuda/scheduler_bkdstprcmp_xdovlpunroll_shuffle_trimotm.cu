@@ -66,7 +66,7 @@ __global__ void FUNC_NAME(fill_st_buffers_kernel_batch)(
 }
 
 template <const int THREADS_PER_BLOCK, const int UNROLL_FACTOR>
-__global__ void FUNC_NAME(compute_next_layers_kernel_batch_schedule)(
+__global__ void FUNC_NAME(compute_next_layers_kernel_batch)(
     const double* __restrict__ layer_values_read, double* __restrict__ layer_values_write,
     const double* __restrict__ st_buffer_bank0, const double* __restrict__ st_buffer_bank1,
     const double* __restrict__ up, const double* __restrict__ down, const int level, const int n,
@@ -256,10 +256,11 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch)(std::vector<PricingInput>& 
         num_blocks = std::ceil((level)*1.0 / (THREADS_PER_BLOCK - U));
         dim3 num_blocks_2d_loop(num_blocks, num_runs);
 
-#define CASE_N(N)                                                                                \
-    case N:                                                                                      \
-        FUNC_NAME(compute_next_layers_kernel_batch_schedule)<THREADS_PER_BLOCK, N>               \
-            <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>(                                         \
+           
+#define CASE_N(N) \
+    case N: \
+        FUNC_NAME(compute_next_layers_kernel_batch)<THREADS_PER_BLOCK, N> \
+            <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>( \
                 layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d, \
                 d_up, d_down, level - U, n, d_bound, MAX_UNROLL_FACTOR);                         \
         break;
@@ -281,7 +282,7 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch)(std::vector<PricingInput>& 
 
             default:
                 // Fallback to U=1 if an unsupported unroll factor is requested.
-                FUNC_NAME(compute_next_layers_kernel_batch_schedule)<THREADS_PER_BLOCK, 1>
+                FUNC_NAME(compute_next_layers_kernel_batch)<THREADS_PER_BLOCK, 1>
                     <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>(
                         layer_values_read_d, layer_values_write_d, st_buffer_bank0_d,
                         st_buffer_bank1_d, d_up, d_down, level - 1, n, d_bound, MAX_UNROLL_FACTOR);

@@ -1,0 +1,18 @@
+\begin{table}[h]
+\centering
+\begin{tabular}{lcccc}
+\hline
+\textbf{Configuration} & \textbf{Time (ms)} & \textbf{Time Std} & \textbf{Lost Speedup} & \textbf{Speedup Std} \\
+\hline
+all optimization (baseline) & 79.89 & 1.70 & 1.00� & 0.02� \\
+without shuffle & 98.39 & 1.90 & 1.23� & 0.02� \\
+without trimotm & 104.61 & 1.95 & 1.31� & 0.02� \\
+without scheduler & 120.77 & 2.68 & 1.51� & 0.03� \\
+without unroll & 276.87 & 5.90 & 3.47� & 0.07� \\
+without ds & 305.96 & 6.46 & 3.83� & 0.08� \\
+without bkdstptcmp & 9701.76 & 213.88 & 121.43� & 2.68� \\
+\hline
+\end{tabular}
+\caption{Ablation study results showing mean and standard deviation of execution time and lost speedup when each optimization is removed compared to the baseline with all optimizations (N=2 runs).
+\label{tab:ablation}
+\end{table}

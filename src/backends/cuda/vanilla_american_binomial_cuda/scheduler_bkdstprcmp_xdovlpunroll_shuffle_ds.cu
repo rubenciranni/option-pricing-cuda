@@ -45,7 +45,7 @@ __global__ void FUNC_NAME(fill_st_buffers_kernel_batch)(
 }
 
 template <const int THREADS_PER_BLOCK, const int UNROLL_FACTOR>
-__global__ void FUNC_NAME(compute_next_layers_kernel_batch_schedule)(
+__global__ void FUNC_NAME(compute_next_layers_kernel_batch)(
     const ds_float* __restrict__ layer_values_read, ds_float* __restrict__ layer_values_write,
     const ds_float* __restrict__ st_buffer_bank0, const ds_float* __restrict__ st_buffer_bank1,
     const ds_float* __restrict__ up, const ds_float* __restrict__ down, const int level,
@@ -234,7 +234,7 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch)(std::vector<PricingInput>& 
 
 #define CASE_N(N)                                                                                \
     case N:                                                                                      \
-        FUNC_NAME(compute_next_layers_kernel_batch_schedule)<THREADS_PER_BLOCK, N>               \
+        FUNC_NAME(compute_next_layers_kernel_batch)<THREADS_PER_BLOCK, N>               \
             <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>(                                         \
                 layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d, \
                 d_up, d_down, level - U, n, MAX_UNROLL_FACTOR);                                  \
@@ -257,7 +257,7 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch)(std::vector<PricingInput>& 
 
             default:
                 // Fallback to U=1 if an unsupported unroll factor is requested.
-                FUNC_NAME(compute_next_layers_kernel_batch_schedule)<THREADS_PER_BLOCK, 1>
+                FUNC_NAME(compute_next_layers_kernel_batch)<THREADS_PER_BLOCK, 1>
                     <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>(
                         layer_values_read_d, layer_values_write_d, st_buffer_bank0_d,
                         st_buffer_bank1_d, d_up, d_down, level - 1, n, MAX_UNROLL_FACTOR);

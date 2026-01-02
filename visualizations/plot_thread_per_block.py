@@ -53,7 +53,7 @@ data_json = [
 ]
 
 # 2. Process Data
-data = json.loads(data_json)
+data = data_json
 df = pd.DataFrame(data)
 
 # Extract hyperparameter[1] and rename it to 'THREAD_PER_BLOCK'
