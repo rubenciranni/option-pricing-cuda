@@ -230,8 +230,8 @@ void print_batch_benchmark_result(const std::vector<BatchBenchmarkResult>& resul
         return;
     }
 
-    int max_functional_name_size = 85;
-    int max_width_step_size = 15;
+    int max_functional_name_size = 100;
+    int max_width_step_size = 25;
 
     // build column widths: first column + one per step
     std::vector<int> max_width;
