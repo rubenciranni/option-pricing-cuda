@@ -11,7 +11,7 @@
 #include "sanity_checker.hpp"
 
 // clang-format off
-std::map<std::string, Run> BENCHMARK_PARAMETERS = {    
+std::map<std::string, Run> BENCHMARK_PARAMETERS = {
     {"xs-cpu",     Run(100, 100, 0.5, 0.03, 0.2, 0.015, 8,      8,      Constant_Additive_NStep(8),        1,  OptionType::Put)},
     {"xs-cuda",    Run(100, 100, 0.5, 0.03, 0.2, 0.015, 10000,  10001,  Constant_Additive_NStep(10000),    1,  OptionType::Put)},
     {"s-single",   Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1024,   2000,   Constant_Additive_NStep(1000),     1,  OptionType::Put)},
@@ -222,8 +222,9 @@ std::map<std::string, BatchPricingFunction> BATCH_FUNCTION_REGISTRY = {
     {"vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds", vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds},
     {"vanilla_american_binomial_cuda_batch_scheduler_xdovlpunroll_shuffle_trimotm_ds", vanilla_american_binomial_cuda_batch_scheduler_xdovlpunroll_shuffle_trimotm_ds},
     {"vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_shuffle_trimotm_ds", vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_shuffle_trimotm_ds},
-    { "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_vtile_trimotm_ds", vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_vtile_trimotm_ds },
-    { "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm", vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm },
+    {"vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_vtile_trimotm_ds", vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_vtile_trimotm_ds },
+    {"vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm", vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm },
+    {"vanilla_american_binomial_cuda_batch_scheduler_stprcmp_xdovlpunroll_shuffle_trimotm_ds", vanilla_american_binomial_cuda_batch_scheduler_stprcmp_xdovlpunroll_shuffle_trimotm_ds },
 
 
     #ifdef DO_CARTESIAN_PRODUCT
@@ -238,7 +239,7 @@ std::map<std::string, BatchPricingFunction> BATCH_FUNCTION_REGISTRY = {
         #ifdef DO_CARTESIAN_PRODUCT_OF_VANILLA_AMERICAN_CUDA_BATCH_BKDSTPRCMP_XDOVLPUNROLL_SHUFFLE_TRIMOTM_DS
             APPLY_FUNCTION(PRODUCE_FUNCTIONS_FOR_REGISTRY, HYPERPARAMS_CART_PRODUCT, vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds)
         #endif
-        
+
     #endif
 
 };

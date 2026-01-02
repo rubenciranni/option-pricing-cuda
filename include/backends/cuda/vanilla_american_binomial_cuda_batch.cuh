@@ -19,7 +19,6 @@ void vanilla_american_binomial_cuda_batch_stprcmp(std::vector<PricingInput>& run
 void vanilla_american_binomial_cuda_batch_bkdstprcmp(std::vector<PricingInput>& runs,
                                                      std::vector<double>& out);
 
-
 template <const Hyperparams& h>
 void vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds(
     std::vector<PricingInput>& runs, std::vector<double>& out);
@@ -44,9 +43,11 @@ void vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_vtil
 void vanilla_american_binomial_cuda_batch_scheduler_xdovlpunroll_shuffle_trimotm_ds(
     std::vector<PricingInput>& runs, std::vector<double>& out);
 
-
 void vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm(
     std::vector<PricingInput>& runs, std::vector<double>& out);
 
 void vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds(
+    std::vector<PricingInput>& runs, std::vector<double>& out);
+
+void vanilla_american_binomial_cuda_batch_scheduler_stprcmp_xdovlpunroll_shuffle_trimotm_ds(
     std::vector<PricingInput>& runs, std::vector<double>& out);

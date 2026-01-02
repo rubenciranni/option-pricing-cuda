@@ -1,6 +1,6 @@
 #include <cuda.h>
-#include <cuda_runtime.h>
 #include <cuda_profiler_api.h>
+#include <cuda_runtime.h>
 #include <nvtx3/nvToolsExt.h>
 
 #include <iostream>
@@ -13,9 +13,6 @@
 
 #define IMPL_NAME scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds
 #define WARP_SIZE 32
-
-
-
 
 template <const int THREADS_PER_BLOCK, const int UNROLL_FACTOR>
 __global__ void FUNC_NAME(fill_st_buffers_kernel_batch)(
@@ -52,7 +49,7 @@ __global__ void FUNC_NAME(compute_next_layers_kernel_batch_schedule)(
     const ds_float* __restrict__ layer_values_read, ds_float* __restrict__ layer_values_write,
     const ds_float* __restrict__ st_buffer_bank0, const ds_float* __restrict__ st_buffer_bank1,
     const ds_float* __restrict__ up, const ds_float* __restrict__ down, const int level,
-    const int n,  const int MAX_UNROLL_FACTOR) {
+    const int n, const int MAX_UNROLL_FACTOR) {
     const int option_idx = blockIdx.y;
     constexpr int NUM_WARPS = THREADS_PER_BLOCK / WARP_SIZE;
     const unsigned int full_mask = 0xffffffff;
@@ -70,7 +67,6 @@ __global__ void FUNC_NAME(compute_next_layers_kernel_batch_schedule)(
     const int tile_stride = THREADS_PER_BLOCK - UNROLL_FACTOR;
     const int tile_base = tile_stride * blockIdx.x;
     const int node_id = tile_base + threadIdx.x;
-
 
     // Load DS value
     ds_float val = layer_values_read[base_layer_values + node_id];
@@ -107,7 +103,6 @@ __global__ void FUNC_NAME(compute_next_layers_kernel_batch_schedule)(
     }
 }
 
-
 template <const int THREADS_PER_BLOCK>
 __global__ void FUNC_NAME(copy_final_value)(const ds_float* __restrict__ layer_values_read,
                                             double* __restrict__ out, const int n,
@@ -121,7 +116,7 @@ __global__ void FUNC_NAME(copy_final_value)(const ds_float* __restrict__ layer_v
 }
 
 void FUNC_NAME(vanilla_american_binomial_cuda_batch)(std::vector<PricingInput>& runs,
-                                                               std::vector<double>& out) {
+                                                     std::vector<double>& out) {
     size_t num_runs = runs.size();
     if (num_runs == 0) return;
 
@@ -157,7 +152,7 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch)(std::vector<PricingInput>& 
 
     // Device allocation
     double *d_S, *d_K, *d_u;
-    int  *d_n_arr, *d_sign;
+    int *d_n_arr, *d_sign;
     ds_float *d_up, *d_down;  // Pointers to DS arrays
     double* d_out;
 
@@ -203,11 +198,10 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch)(std::vector<PricingInput>& 
         <<<num_blocks_2d, THREADS_PER_BLOCK>>>(st_buffer_bank0_d, st_buffer_bank1_d, d_S, d_K, d_u,
                                                d_sign, n, layer_values_read_d);
     std::string kernel_label = "Kernel: compute_next_layers_kernel_batch_schedule";
-    int level = n,lastU = -1;
+    int level = n;
+    // int lastU = -1;
 
-    
-    // Don´t has the unrool
-    auto get_current_unrool_factor = [](int current_level) -> int {
+    auto get_current_unroll_factor = [](int current_level) -> int {
         if (current_level >= (1 << 20)) {
             return 16;
         } else if (current_level >= (1 << 14)) {
@@ -228,25 +222,23 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch)(std::vector<PricingInput>& 
     };
 
     // Launch the correct templated kernel based on the chosen unroll factor.
-    for (; level > 0; ) {
-        int U = get_current_unrool_factor(level);
+    for (; level > 0;) {
+        int U = get_current_unroll_factor(level);
 
         // if (lastU!= U) {
         //     nvtxRangePushA(kernel_label.c_str());
         //     cudaProfilerStart();
         // }
-        num_blocks = std::ceil((level) * 1.0 / (THREADS_PER_BLOCK - U));
+        num_blocks = std::ceil((level)*1.0 / (THREADS_PER_BLOCK - U));
         dim3 num_blocks_2d_loop(num_blocks, num_runs);
 
-           
-#define CASE_N(N) \
-    case N: \
-        FUNC_NAME(compute_next_layers_kernel_batch_schedule)<THREADS_PER_BLOCK, N> \
-            <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>( \
+#define CASE_N(N)                                                                                \
+    case N:                                                                                      \
+        FUNC_NAME(compute_next_layers_kernel_batch_schedule)<THREADS_PER_BLOCK, N>               \
+            <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>(                                         \
                 layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d, \
-                d_up, d_down, level - U, n,  MAX_UNROLL_FACTOR); \
+                d_up, d_down, level - U, n, MAX_UNROLL_FACTOR);                                  \
         break;
-
 
         switch (U) {
             CASE_N(1)
@@ -267,8 +259,8 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch)(std::vector<PricingInput>& 
                 // Fallback to U=1 if an unsupported unroll factor is requested.
                 FUNC_NAME(compute_next_layers_kernel_batch_schedule)<THREADS_PER_BLOCK, 1>
                     <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>(
-                        layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d,
-                        d_up, d_down, level - 1, n, MAX_UNROLL_FACTOR);
+                        layer_values_read_d, layer_values_write_d, st_buffer_bank0_d,
+                        st_buffer_bank1_d, d_up, d_down, level - 1, n, MAX_UNROLL_FACTOR);
                 U = 1;
                 break;
         }
@@ -305,9 +297,3 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch)(std::vector<PricingInput>& 
     cudaFreeAsync(st_buffer_bank1_d, 0);
     checkCuda(cudaGetLastError());
 }
-
-
-
-
-
-

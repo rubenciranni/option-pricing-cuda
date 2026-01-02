@@ -221,7 +221,7 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch)(std::vector<PricingInput>& 
     std::string kernel_label = "Kernel: compute_next_layers_kernel_batch_schedule";
     int level = n;
 
-    auto get_current_unrool_factor = [](int current_level) -> int {
+    auto get_current_unroll_factor = [](int current_level) -> int {
         if (current_level >= (1 << 20)) {
             return 16;
         } else if (current_level >= (1 << 14)) {
@@ -243,7 +243,7 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch)(std::vector<PricingInput>& 
 
     // Launch the correct templated kernel based on the chosen unroll factor.
     for (; level > 0;) {
-        int U = get_current_unrool_factor(level);
+        int U = get_current_unroll_factor(level);
 
         // if (lastU!= U) {
         //     nvtxRangePushA(kernel_label.c_str());

@@ -1,6 +1,6 @@
 #include <cuda.h>
-#include <cuda_runtime.h>
 #include <cuda_profiler_api.h>
+#include <cuda_runtime.h>
 #include <nvtx3/nvToolsExt.h>
 
 #include <iostream>
@@ -569,10 +569,10 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch_scheduler)(std::vector<Prici
         <<<num_blocks_2d, THREADS_PER_BLOCK>>>(st_buffer_bank0_d, st_buffer_bank1_d, d_S, d_K, d_u,
                                                d_sign, n, layer_values_read_d);
     std::string kernel_label = "Kernel: compute_next_layers_kernel_batch_schedule";
-    int level = n,lastU = -1;
+    int level = n;
+    // int lastU = -1;
 
-    
-    auto get_current_unrool_factor = [](int current_level) -> int {
+    auto get_current_unroll_factor = [](int current_level) -> int {
         if (current_level >= (1 << 20)) {
             return 16;
         } else if (current_level >= (1 << 14)) {
@@ -585,33 +585,31 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch_scheduler)(std::vector<Prici
             return 32;
         } else if (current_level >= (16)) {
             return 16;
-        } else if (current_level >= (8)){
+        } else if (current_level >= (8)) {
             return current_level;
-        } else  {
+        } else {
             return 1;
         }
     };
 
     // Launch the correct templated kernel based on the chosen unroll factor.
-    for (; level > 0; ) {
-        int U = get_current_unrool_factor(level);
+    for (; level > 0;) {
+        int U = get_current_unroll_factor(level);
 
         // if (lastU!= U) {
         //     nvtxRangePushA(kernel_label.c_str());
         //     cudaProfilerStart();
         // }
-        num_blocks = std::ceil((level) * 1.0 / (THREADS_PER_BLOCK - U));
+        num_blocks = std::ceil((level)*1.0 / (THREADS_PER_BLOCK - U));
         dim3 num_blocks_2d_loop(num_blocks, num_runs);
 
-        
-#define CASE_N(N) \
-    case N: \
-        FUNC_NAME(compute_next_layers_kernel_batch_schedule)<THREADS_PER_BLOCK, N> \
-            <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>( \
+#define CASE_N(N)                                                                                \
+    case N:                                                                                      \
+        FUNC_NAME(compute_next_layers_kernel_batch_schedule)<THREADS_PER_BLOCK, N>               \
+            <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>(                                         \
                 layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d, \
-                d_up, d_down, level - U, n, d_bound, MAX_UNROLL_FACTOR); \
+                d_up, d_down, level - U, n, d_bound, MAX_UNROLL_FACTOR);                         \
         break;
-
 
         switch (U) {
             CASE_N(1)
@@ -627,13 +625,13 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch_scheduler)(std::vector<Prici
             CASE_N(32)
             CASE_N(64)
             CASE_N(128)
-            
+
             default:
                 // Fallback to U=1 if an unsupported unroll factor is requested.
                 FUNC_NAME(compute_next_layers_kernel_batch_schedule)<THREADS_PER_BLOCK, 1>
                     <<<num_blocks_2d_loop, THREADS_PER_BLOCK>>>(
-                        layer_values_read_d, layer_values_write_d, st_buffer_bank0_d, st_buffer_bank1_d,
-                        d_up, d_down, level - 1, n, d_bound, MAX_UNROLL_FACTOR);
+                        layer_values_read_d, layer_values_write_d, st_buffer_bank0_d,
+                        st_buffer_bank1_d, d_up, d_down, level - 1, n, d_bound, MAX_UNROLL_FACTOR);
                 U = 1;
                 break;
         }
@@ -1090,16 +1088,17 @@ void FUNC_NAME(vanilla_american_binomial_cuda_batch_search)(std::vector<PricingI
     cudaFreeAsync(st_buffer_bank1_d, 0);
     checkCuda(cudaGetLastError());
 }
-double FUNC_NAME(vanilla_american_binomial_cuda_scheduler)(
-    const double S, const double K, const double T, const double r, const double sigma,
-    const double q, const int n, const OptionType type){
-    std::vector<PricingInput> runs = { PricingInput(S, K, T, r, sigma, q, n, type) };
+double FUNC_NAME(vanilla_american_binomial_cuda_scheduler)(const double S, const double K,
+                                                           const double T, const double r,
+                                                           const double sigma, const double q,
+                                                           const int n, const OptionType type) {
+    std::vector<PricingInput> runs = {PricingInput(S, K, T, r, sigma, q, n, type)};
     std::vector<double> out(1);
 
-    vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds(runs, out);
+    vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds(runs,
+                                                                                              out);
     return out[0];
 }
-
 
 template void FUNC_NAME(test_vanilla_american_binomial_cuda_batch)<
     DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>(std::vector<PricingInput>& runs,
@@ -1108,7 +1107,6 @@ template void FUNC_NAME(test_vanilla_american_binomial_cuda_batch)<
 template void FUNC_NAME(
     vanilla_american_binomial_cuda_batch)<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>(
     std::vector<PricingInput>& runs, std::vector<double>& out);
-
 
 template void FUNC_NAME(vanilla_american_binomial_cuda_batch_search)<
     DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>(std::vector<PricingInput>& runs,
@@ -1139,4 +1137,3 @@ APPLY_FUNCTION(
 
 #endif
 #endif
-
