@@ -1,0 +1,86 @@
+
+{
+        "benchmark_parameters": {
+                "K": 100.0,
+                "S": 100.0,
+                "T": 0.5,
+                "nend": 1400000,
+                "nrepetition_at_step": 1,
+                "nstart": 100000,
+                "nstep": -1,
+                "q": 0.015,
+                "r": 0.03,
+                "sigma": 0.2,
+                "type": "Put"
+        },
+        "runs": [
+                {
+                        "all_times": [
+                                [
+                                        41.661779
+                                ],
+                                [
+                                        203.031509
+                                ],
+                                [
+                                        503.522532
+                                ],
+                                [
+                                        965.359735
+                                ],
+                                [
+                                        1542.60538
+                                ],
+                                [
+                                        2298.549657
+                                ],
+                                [
+                                        3197.061401
+                                ]
+                        ],
+                        "do_pass_sanity_check": "true",
+                        "function_id": "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+                        "hyperparams": [],
+                        "id": "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+                        "runs": {
+                                "n": [
+                                        100000,
+                                        300000,
+                                        500000,
+                                        700000,
+                                        900000,
+                                        1100000,
+                                        1300000
+                                ],
+                                "price": [
+                                        5.276656,
+                                        5.276671,
+                                        5.276663,
+                                        5.276668,
+                                        5.276691,
+                                        5.276646,
+                                        5.276659
+                                ],
+                                "time_ms_mean": [
+                                        41.661779,
+                                        203.031509,
+                                        503.522532,
+                                        965.359735,
+                                        1542.60538,
+                                        2298.549657,
+                                        3197.061401
+                                ],
+                                "time_ms_std": [
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null
+                                ]
+                        },
+                        "sanity_check": []
+                }
+        ]
+}

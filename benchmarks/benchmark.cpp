@@ -24,6 +24,7 @@ std::map<std::string, Run> BENCHMARK_PARAMETERS = {
     {"xl-125",     Run(100, 100, 0.5, 0.03, 0.2, 0.015, 100,    200000, NStep_125(),                       20, OptionType::Put)},
     {"xl-crazy",   Run(100, 100, 0.5, 0.03, 0.2, 0.015, 111,    200000, Constant_Multiplicative_NStep(2),  20, OptionType::Put)},
     {"xxl-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015, 250000, 250000, Constant_Additive_NStep(30000),    1,  OptionType::Put)},
+    {"xxxl-single", Run(100, 100, 0.5, 0.03, 0.2, 0.015,65536 , 440000, Constant_Multiplicative_NStep(2),    2,  OptionType::Put)},
     {"custom",     Run(100, 100, 0.5, 0.03, 0.2, 0.015, 1024,   1024,   Constant_Additive_NStep(1025),     1,  OptionType::Put)},
 };
 
@@ -35,7 +36,7 @@ std::map<std::string, PricingFunction> FUNCTION_REGISTRY = {
     // {"vanilla_american_binomial_cpu_trimotm_trimeeon_stprcmp", vanilla_american_binomial_cpu_trimotm_trimeeon_stprcmp},
     // {"vanilla_american_binomial_openmp_naive", vanilla_american_binomial_openmp_naive},
 
-    // {"vanilla_american_binomial_cuda_naive", vanilla_american_binomial_cuda_naive},
+    {"vanilla_american_binomial_cuda_naive", vanilla_american_binomial_cuda_naive},
     // {"vanilla_american_binomial_cuda_stprcmp", vanilla_american_binomial_cuda_stprcmp},
     // {"vanilla_american_binomial_cuda_bkdstprcmp", vanilla_american_binomial_cuda_bkdstprcmp},
     // {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_vtile},
@@ -43,7 +44,7 @@ std::map<std::string, PricingFunction> FUNCTION_REGISTRY = {
     // {"vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds", vanilla_american_binomial_cuda_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
     {"vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds", vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds},
 
-    // {"vanilla_american_binomial_cuda_nvidia_baseline", vanilla_american_binomial_cuda_nvidia_baseline},
+    {"vanilla_american_binomial_cuda_nvidia_baseline", vanilla_american_binomial_cuda_nvidia_baseline},
 
     // {"vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile", vanilla_american_binomial_cuda_bkdstprcmp_xovlpunroll_vtile<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_VTILE_10000>},
     {"vanilla_american_binomial_cuda_stprcmp_yunroll_vtile", vanilla_american_binomial_cuda_stprcmp_yunroll_vtile<DEFAULT_HYPERPARAMS_CUDA_STPRCMP_YUNROLL_VTILE>},
@@ -206,25 +207,26 @@ std::vector<std::vector<BenchmarkResult>> random_benchmark(
 
 // clang-format off
 std::map<std::string, BatchPricingFunction> BATCH_FUNCTION_REGISTRY = {
-    // {"vanilla_american_binomial_cuda_batch_naive", vanilla_american_binomial_cuda_batch_naive},
+    {"vanilla_american_binomial_cuda_batch_naive", vanilla_american_binomial_cuda_batch_naive},
     // {"vanilla_american_binomial_cuda_batch_stprcmp", vanilla_american_binomial_cuda_batch_stprcmp},
     // {"vanilla_american_binomial_cuda_batch_bkdstprcmp", vanilla_american_binomial_cuda_batch_bkdstprcmp},
-    {"vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
-        vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
+    // {"vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
+    //     vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
     // {"vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm",
     //         vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm< DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
 
-    // {"vanilla_american_binomial_cuda_batch_nvidia_baseline", vanilla_american_binomial_cuda_batch_nvidia_baseline },
+    {"vanilla_american_binomial_cuda_batch_nvidia_baseline", vanilla_american_binomial_cuda_batch_nvidia_baseline },
+
     // { "test_vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
     //     test_vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
     {"vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds", vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds},
 
-    {"vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds", vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds},
-    {"vanilla_american_binomial_cuda_batch_scheduler_xdovlpunroll_shuffle_trimotm_ds", vanilla_american_binomial_cuda_batch_scheduler_xdovlpunroll_shuffle_trimotm_ds},
-    {"vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_shuffle_trimotm_ds", vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_shuffle_trimotm_ds},
-    {"vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_vtile_trimotm_ds", vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_vtile_trimotm_ds },
-    {"vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm", vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm },
-    {"vanilla_american_binomial_cuda_batch_scheduler_stprcmp_xdovlpunroll_shuffle_trimotm_ds", vanilla_american_binomial_cuda_batch_scheduler_stprcmp_xdovlpunroll_shuffle_trimotm_ds },
+    // {"vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds", vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds},
+    // {"vanilla_american_binomial_cuda_batch_scheduler_xdovlpunroll_shuffle_trimotm_ds", vanilla_american_binomial_cuda_batch_scheduler_xdovlpunroll_shuffle_trimotm_ds},
+    // {"vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_shuffle_trimotm_ds", vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_shuffle_trimotm_ds},
+    // {"vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_vtile_trimotm_ds", vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_vtile_trimotm_ds },
+    // {"vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm", vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm },
+    // {"vanilla_american_binomial_cuda_batch_scheduler_stprcmp_xdovlpunroll_shuffle_trimotm_ds", vanilla_american_binomial_cuda_batch_scheduler_stprcmp_xdovlpunroll_shuffle_trimotm_ds },
 
 
     #ifdef DO_CARTESIAN_PRODUCT

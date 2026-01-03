@@ -7,6 +7,7 @@ from pathlib import Path
 import sys
 import time
 
+output_file = "ablation_study_results.csv"
 # Configuration
 N_RUNS = 10  # Number of times to run the benchmark
 N = 20000
@@ -14,6 +15,7 @@ N_RANDOM_RUNS = 100
 
 # Mapping from full function names to short names
 NAME_MAPPING = {
+    "vanilla_american_binomial_cuda_batch_scheduler_stprcmp_xdovlpunroll_shuffle_trimotm_ds": "without banked",
     "vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds": "without scheduler",
     "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_shuffle_trimotm_ds": "without unroll",
     "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds": "without trimotm",
@@ -181,7 +183,6 @@ def main():
     print("=" * 80)
     
     # Save to CSV
-    output_file = "ablation_study_results.csv"
     df.to_csv(output_file, index=False)
     print(f"\n✓ Results saved to {output_file}")
     
@@ -196,29 +197,35 @@ def generate_latex_table(df):
     """Generate a LaTeX table from the DataFrame."""
     # Remove the N Samples column for LaTeX output
     df_latex = df.drop('N Samples', axis=1)
+    min_mean_time = df_latex["Time (ms) - Mean"].astype(float).min()
+
     
     latex = r"""\begin{table}[h]
 \centering
-\begin{tabular}{lcccc}
+\begin{tabular}{lcc}
 \hline
-\textbf{Configuration} & \textbf{Time (ms)} & \textbf{Time Std} & \textbf{Lost Speedup} & \textbf{Speedup Std} \\
+\textbf{Configuration} & \textbf{Time (ms)} &  \textbf{Effective GNodes/s}   \\
 \hline
 """
     
     for _, row in df_latex.iterrows():
         config = row["Configuration"].replace("_", "\\_")
-        latex += f"{config} & {row['Time (ms) - Mean']} & {row['Time (ms) - Std']} & {row['Lost Speedup - Mean']} & {row['Lost Speedup - Std']} \\\\\n"
+        latex += f"{config} & ${row['Time (ms) - Mean']} \\pm {row['Time (ms) - Std']}$"
+        # latex += f"& {row['Lost Speedup - Mean']} \\pm {row['Lost Speedup - Std']}"
+        latex += f"& { int((N_RANDOM_RUNS* (N*(N+1)/2)/1e9)/(row['Time (ms) - Mean']/1000 )) }\\% "
+        latex += f"\\\\\n"
     
     latex += r"""\hline
 \end{tabular}
-\caption{Ablation study results showing mean and standard deviation of execution time and lost speedup when each optimization is removed compared to the baseline with all optimizations (N="""
-    latex += f"{successful_runs} runs)."
-    latex += r"""
-}
 \label{tab:ablation}
 \end{table}"""
     
     return latex
 
 if __name__ == "__main__":
-    main()
+    # main()
+    # open the csv
+    # 1. Load Data
+    data = pd.read_csv(output_file)
+    print(generate_latex_table(data))
+

@@ -1,8 +1,9 @@
 Configuration,Time (ms) - Mean,Time (ms) - Std,Lost Speedup - Mean,Lost Speedup - Std,N Samples
-all optimization (baseline),80.03,1.55,1.00×,0.02×,10
-without shuffle,98.45,1.90,1.23×,0.02×,10
-without trimotm,104.51,1.65,1.31×,0.02×,10
-without scheduler,120.80,2.39,1.51×,0.03×,10
-without unroll,276.88,5.86,3.46×,0.07×,10
-without ds,305.93,6.45,3.82×,0.08×,10
-without bkdstptcmp,9701.63,214.03,121.23×,2.67×,10
+all optimization (baseline),77.99,0.34,1.00,0.00,10
+without banked,79.35,1.93,1.02,0.02,10
+without shuffle,96.19,0.95,1.23,0.01,10
+without trimotm,102.83,1.93,1.32,0.02,10
+without scheduler,120.12,4.66,1.54,0.06,10
+without unroll,272.13,4.84,3.49,0.06,10
+without ds,298.00,2.49,3.82,0.03,10
+without bkdstptcmp,9405.03,82.63,120.59,1.06,10
