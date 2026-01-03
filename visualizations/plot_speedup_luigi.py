@@ -9,21 +9,28 @@ from scipy.stats import shapiro
 import plotly.graph_objects as go
 import plotly.colors as pc
 import kaleido
-kaleido.get_chrome_sync()
 
 
 #FILE_PATH = './data/thougput.json'
 # FILE_PATH = './data/baseline-times.json'
-FILE_PATH = './data/random-benchmark-baselines-with-quantlib-and-nvidia.json'
+# FILE_PATH = './data/random-benchmark-baselines-with-quantlib-and-nvidia.json'
 # FILE_PATH = './data/temp.json'
+
+FILES = [
+"vanilla_american_binomial_cpu_quantlib.json",
+"vanilla_american_binomial_cuda_naive.json",
+"vanilla_american_binomial_cuda_nvidia_baseline.json",
+"vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds.json"
+]
 
 func_id_transformation = {
     "vanilla_american_binomial_cuda_nvidia": "cuda_nvidia",
     "vanilla_american_binomial_cuda_naive": "cuda_naive",
     "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds": "cuda_optimized",
-    "vanilla_american_binomial_cpu_naive": "cpu_naive",
+    # "vanilla_american_binomial_cpu_naive": "cpu_naive",
     "vanilla_american_binomial_cpu_quantlib": "cpu_quantlib",
-    "vanilla_american_binomial_cpu_trimotm_trimeeon_stprcmp": "cpu_optimized",
+    # "vanilla_american_binomial_cpu_trimotm_trimeeon_stprcmp": "cpu_optimized",
+    "vanilla_american_binomial_cuda_nvidia_baseline": "cuda_nvidia_baseline",
 }
 
 
@@ -42,7 +49,7 @@ def get_color_palette(n_colors):
 def process_data(json_data):
     """Process benchmark data and calculate statistics (Unchanged logic)"""
     grouped_by_function = defaultdict(
-        lambda: {"n_values": [], "times": []}
+        lambda: {"n_values": [], "times": [], "all_times": []}
     )
 
     # Group data by function_id
@@ -54,41 +61,68 @@ def process_data(json_data):
         for run in benchmark["runs"]:
             func_id = run["function_id"]
 
+            print(run.keys())
             if (
                 "runs" not in run
                 or "n" not in run["runs"]
-                or "time_ms_mean" not in run["runs"]
+                or "all_times" not in run
             ):
+                print(f"Skipping invalid run data for function_id: {func_id}")
                 continue
 
             for idx, n in enumerate(run["runs"]["n"]):
-                time_value = run["runs"]["time_ms_mean"][idx]
-
+                all_times = run["all_times"][idx]
+                time_value = sum(all_times) / len(all_times)
                 if n in grouped_by_function[func_id]["n_values"]:
                     n_idx = grouped_by_function[func_id]["n_values"].index(n)
                     grouped_by_function[func_id]["times"][n_idx].append(time_value)
+                    grouped_by_function[func_id]["all_times"][n_idx].extend(all_times)
                 else:
                     grouped_by_function[func_id]["n_values"].append(n)
                     grouped_by_function[func_id]["times"].append([time_value])
+                    grouped_by_function[func_id]["all_times"].append(all_times)
 
     processed_data = {}
 
+    faild_shapiro = 0
+    faild_confidence = 0
+    total = 0
     for func_id, func_data in grouped_by_function.items():
         sorted_indices = sorted(range(len(func_data["n_values"])), key=lambda i: func_data["n_values"][i])
         n_values = [func_data["n_values"][i] for i in sorted_indices]
 
         mean_times = []
+        all_times = []
+
         for i in sorted_indices:
             times = func_data["times"][i]
+            all_times.append(func_data["all_times"][i])
+            
             if times:
-                mean_times.append(sum(times) / len(times))
+                mean = sum(times) / len(times)
+                mean_times.append(mean)
+                
+                pvalue = shapiro(func_data["all_times"][i]).pvalue
+                if pvalue > 0.05:
+                    faild_shapiro += 1
+                std = math.sqrt(sum((i - mean) ** 2 for i in func_data["all_times"][i]) / (len(func_data["all_times"][i]) -1))
+                pconfidence = mean + std* 1.96
+                nconfidence = mean - std* 1.96
+                if not (pconfidence < mean + 0.05 *mean and nconfidence > mean - 0.05 *mean):
+                    faild_confidence += 1
+                total +=1
             else:
                 mean_times.append(0.0)
 
         processed_data[func_id] = {
             "n": n_values,
             "mean": mean_times,
+            "all_times": all_times
+
         }
+    print(f"Shapiro test failed {faild_shapiro} times.")
+    print(f"Confidence interval test failed {faild_confidence} times.")
+    print(f"Total tests conducted: {total}")
     return processed_data
 
 def calculate_speedup(processed_data):
@@ -124,8 +158,10 @@ def calculate_speedup(processed_data):
      
     return speedup_data
 
+
 def plot_mean_times(processed_data, output_file=None):
-    """Plot mean execution times using Plotly"""
+    """Plot mean execution times using Plotly with violin plots for each point"""
+    import numpy as np
     
     # 1. Generate Colors
     func_ids = list(processed_data.keys())
@@ -133,33 +169,80 @@ def plot_mean_times(processed_data, output_file=None):
     
     fig = go.Figure()
 
+    # Collect all y-values to determine the range for tick labels
+    all_y_values = []
+
     # 2. Add Traces
-    arr=list(processed_data.items())
-    sorted_arr=sorted(arr,key=lambda x: x[1]["mean"][-1])  
+    arr = list(processed_data.items())
+    sorted_arr = sorted(arr, key=lambda x: x[1]["mean"][-1])  
+    x_axis = set() 
     
     for i, (func_id, data) in enumerate(sorted_arr):
+        if func_id not in func_id_transformation:
+            continue
         clean_name = clean_label(func_id)
+        
+        # Log-transform the mean values
+        log_mean = [np.log10(val) for val in data["mean"]]
+        
+        # Add line connecting the means
         fig.add_trace(go.Scatter(
             x=data["n"],
-            y=data["mean"],
-            mode='lines+markers',
+            y=log_mean,
+            mode='lines',
             name=clean_name,
-            line=dict(color=colors[i], width=2)
+            line=dict(color=colors[i], width=2),
+            legendgroup=i,
+            showlegend=True,
+            hoverinfo='skip'
         ))
+        
+        # Add violin plot for each point
+        for j, (n, mean_time) in enumerate(zip(data["n"], data["mean"])):
+            if j < len(data['all_times']):
+                all_times = data['all_times'][j]
+                # Log-transform the individual times
+                log_times = [np.log10(t) for t in all_times if t > 0]  # Filter out zeros/negatives
+                all_y_values.extend(all_times)
+                
+                fig.add_trace(go.Violin(
+                    x=[str(n)] * len(log_times),
+                    y=log_times,
+                    name=clean_name,
+                    legendgroup=i,
+                    scalegroup=i,
+                    side='negative',
+                    line_color=colors[i],
+                    meanline_visible=True,
+                    points=False,
+                    showlegend=False,
+                    opacity=0.6,
+                    width=0.7
+                ))
+        
+        x_axis.update(data["n"])
+
+    # Create nice tick values for the y-axis
+    y_min, y_max = min(all_y_values), max(all_y_values)
+    log_min, log_max = np.floor(np.log10(y_min)), np.ceil(np.log10(y_max))
+    tick_vals = [10**i for i in range(int(log_min), int(log_max)+1)]
+    tick_vals_log = [np.log10(v) for v in tick_vals]
 
     # 3. Layout Configuration
     fig.update_layout(
-        title={
-            'text' : "Mean Execution Time vs Tree Size",
-            'y':0.9, # new
-            'x':0.5,
-            'xanchor': 'center',
-            'yanchor': 'top' # new
-        },
-        xaxis_title="Tree Size (n)",
+        xaxis_title="Time Steps (n)",
         yaxis_title="Mean Execution Time (ms)",
-        yaxis_type="log", # Log scale
-        xaxis_type="log", # Log scale
+        yaxis_type="linear",  # Changed to linear since we're plotting log-transformed data
+        yaxis=dict(
+            tickmode='array',
+            tickvals=tick_vals_log,
+            ticktext=[str(int(v)) if v >= 1 else f"{v:.1g}" for v in tick_vals]
+        ),
+        xaxis_type="log",
+        xaxis=dict(
+            tickvals=sorted(x_axis),
+            ticktext=[f"{val:,}" for val in sorted(x_axis)]
+        ),
         hovermode="x unified",
         template="plotly_white"
     )
@@ -169,6 +252,7 @@ def plot_mean_times(processed_data, output_file=None):
         print(f"Saved SVG: {output_file}")
     else:
         fig.show()
+
 
 def plot_speedup(speedup_data, output_file=None):
     """Plot speedup relative to baseline using Plotly"""
@@ -219,122 +303,9 @@ def plot_speedup(speedup_data, output_file=None):
         fig.show()
 
 
-DATA_TO_ADD = {
-        "benchmark_parameters": {
-                "K": 100.0,
-                "S": 100.0,
-                "T": 0.5,
-                "nend": 2500000,
-                "nrepetition_at_step": 2,
-                "nstart": 65536,
-                "nstep": -1,
-                "q": 0.015,
-                "r": 0.03,
-                "sigma": 0.2,
-                "type": "Put"
-        },
-        "runs": [
-                {
-                        "all_times": [
-                                [
-                                        15.944805,
-                                        15.918976
-                                ],
-                                [
-                                        48.450143,
-                                        48.622487
-                                ],
-                                [
-                                        162.923361,
-                                        162.903276
-                                ],
-                                [
-                                        587.016705,
-                                        587.190346
-                                ],
-                        ],
-                        "do_pass_sanity_check": "true",
-                        "function_id": "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
-                        "hyperparams": [],
-                        "id": "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
-                        "runs": {
-                                "n": [
-                                        65536,
-                                        131072,
-                                        262144,
-                                        524288,
-                                ],
-                                "price": [
-                                        5.276651,
-                                        5.276658,
-                                        5.276661,
-                                        5.276662,
-                                ],
-                                "time_ms_mean": [
-                                        15.931890500000002,
-                                        48.536315,
-                                        162.9133185,
-                                        587.1035254999999,
-                                ],
-                                "time_ms_std": [
-                                        0.01826386105126725,
-                                        0.12186561109681611,
-                                        0.014202239700127975,
-                                        0.12278272859199567,
-                                ]
-                        },
-                        "sanity_check": []
-                },
-                    {
-                        "all_times": [
-                                [
-                                        2177.496891,
-                                        2177.219694
-                                ],
-                                [
-                                        6830.286181,
-                                        6824.628552
-                                ],
-                                [
-                                        23609.614968,
-                                        23603.013311
-                                ]
-                        ],
-                        "do_pass_sanity_check": "true",
-                        "function_id": "vanilla_american_binomial_cuda_naive",
-                        "hyperparams": [],
-                        "id": "vanilla_american_binomial_cuda_naive",
-                        "runs": {
-                                "n": [
-                                        65536,
-                                        131072,
-                                        262144
-                                ],
-                                "price": [
-                                        5.276651,
-                                        5.276659,
-                                        5.276662
-                                ],
-                                "time_ms_mean": [
-                                        2177.3582925,
-                                        6827.457366500001,
-                                        23606.3141395
-                                ],
-                                "time_ms_std": [
-                                        0.19600787842448775,
-                                        4.000547831337856,
-                                        4.6680764317696815
-                                ]
-                        },
-                        "sanity_check": []
-                }
-                                
-
-        ]
-}
 
 def plot_GNodes_per_second(processed_data, output_file=None):
-    """Plot GNodes per second using Plotly"""
+    """Plot GNodes per second using Plotly with violin plots"""
     
     # 1. Generate Colors
     func_ids = list(processed_data.keys())
@@ -349,10 +320,6 @@ def plot_GNodes_per_second(processed_data, output_file=None):
     sorted_arr=sorted(arr,key=lambda x: x[1]["mean"][-1])  
     n_set = set()
     for i, (func_id, data) in enumerate(sorted_arr):
-        if func_id in [ t["function_id"] for  t in DATA_TO_ADD["runs"] ]:
-            data_to_add = next( t for t in DATA_TO_ADD["runs"] if t["function_id"] == func_id )
-            data['n'].extend( data_to_add["runs"]["n"] )
-            data['mean'].extend( data_to_add["runs"]["time_ms_mean"] )
         clean_name = clean_label(func_id)
         ns,gnodes_per_second = zip(*[
            (n, (n * (n + 1) / 2) / (time_ms / 1000) / 1e9 if time_ms > 0 else 0)
@@ -382,17 +349,39 @@ def plot_GNodes_per_second(processed_data, output_file=None):
         )
         n_set.update(set(ns))
 
-        # add a line of heigh 
-
-        
-
+        # Add main line trace
         fig.add_trace(go.Scatter(
             x=ns,
             y=gnodes_per_second,
             mode='lines+markers',
             name=clean_name,
-            line=dict(color=colors[i], width=2)
+            line=dict(color=colors[i], width=2),
+            legendgroup=i,
+            showlegend=True
         ))
+        
+        # Add violin plots for each point
+        for j, (n, gnodes) in enumerate(zip(ns, gnodes_per_second)):
+            # Get all times for this data point
+            idx_in_original = data["n"].index(n) if n in data["n"] else -1
+            if idx_in_original >= 0 and idx_in_original < len(data['all_times']):
+                all_times = data['all_times'][idx_in_original]
+                # Convert times to gnodes
+                all_gnodes = [(n * (n + 1) / 2) / (t / 1000) / 1e9 if t > 0 else 0 for t in all_times]
+                
+                fig.add_trace(go.Violin(
+                    x=[str(n)] * len(all_gnodes),
+                    y=all_gnodes,
+                    name=f"{clean_name} (n={n})",
+                    legendgroup=i,
+                    scalegroup=i,
+                    side='negative',
+                    line_color=colors[i],
+                    meanline_visible=True,
+                    points=False,
+                    showlegend=False,
+                    opacity=0.6
+                ))
     # 3. Layout Configuration
     fig.update_layout(
         title={
@@ -431,9 +420,13 @@ def plot_GNodes_per_second(processed_data, output_file=None):
         fig.show()
 
 def main():
-    filename = FILE_PATH
-    print(f"Loading benchmark data from: {filename}")
-    json_data =  json.load( open(filename, "r") )
+    json_data ={ "runs": [] }
+    for file in FILES:
+        filename = Path(__file__).parent / 'data' / file
+        print(f"Loading benchmark data from: {filename}")
+        with open(filename, 'r') as f:
+            json_data_t = json.load(f)
+        json_data['runs'].extend( json_data_t['runs'] )
 
     print("Processing data...")
     processed_data = process_data(json_data)
@@ -446,9 +439,9 @@ def main():
     gen_plots_dir = Path(__file__).parent / 'gen_plots'
     gen_plots_dir.mkdir(parents=True, exist_ok=True)
 
-    # plot_mean_times(processed_data, gen_plots_dir / "benchmark_mean.svg")
+    plot_mean_times(processed_data, gen_plots_dir / "benchmark_mean.svg")
+    # plot_GNodes_per_second(processed_data, gen_plots_dir / "benchmark_gnodes_per_second.svg")
     # plot_speedup(speedup_data, gen_plots_dir / "benchmark_speedup.svg")
-    plot_GNodes_per_second(processed_data, gen_plots_dir / "benchmark_gnodes_per_second.svg")
 
 if __name__ == "__main__":
     main()

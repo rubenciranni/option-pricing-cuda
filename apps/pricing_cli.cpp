@@ -117,10 +117,11 @@ void handle_benchmark_random_throughput(const std::string& output_format_str,
                                         const std::string& filter_name,
                                         const std::string& reference_function_name,
                                         int skip_sanity_checks) {
+    
+    int n =  1024;
     nlohmann::json::array_t output;
-    for (auto random_runs : std::vector<int>{1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024}) {
-        for (auto n : std::vector<int>{64, 128, 256, 512, 1024, 2048, 4096, 8192, 1 << 14, 1 << 15,
-                                       1 << 16, 1 << 17}) {
+    for (auto random_runs : std::vector<int>{1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048}) {
+        for(int times = 0; times < 200; times++){
             auto results = batch_random_benchmark(filter_name, reference_function_name, random_runs,
                                                   n, skip_sanity_checks);
             OutputFormat output_format = output_format_from_string(output_format_str);

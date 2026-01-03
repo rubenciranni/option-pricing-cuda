@@ -1,161 +1,4052 @@
-{
-    "vanilla_american_binomial_cuda_batch_naive": {
-        "n": [
-            1,
-            2,
-            4,
-            8,
-            16,
-            32,
-            64,
-            128,
-            256,
-            512,
-            1024,
-            2048,
-            4096,
-            8192,
-            16384
-        ],
-        "mean": [
-            0.03838651134414405,
-            0.07664103396897164,
-            0.15190891784696695,
-            0.3085258486456096,
-            0.6138980742069742,
-            1.1187971688958969,
-            1.267056829158313,
-            1.3416171032996735,
-            1.4011823817307016,
-            1.5028556870423935,
-            1.559381157195283,
-            1.5853094035824271,
-            1.5879417593797498,
-            1.5921902400450492,
-            1.567005753809678
-        ],
-        "std": [
-            0.0012523375554026155,
-            0.002563375084728971,
-            0.0017898144291914032,
-            0.0018801003805514744,
-            0.0036234062573967303,
-            0.007706901472012075,
-            0.006479664030075326,
-            0.009119142540877949,
-            0.011272000803506802,
-            0.012272899665923511,
-            0.012048834991229999,
-            0.01400416032073281,
-            0.014087562517885607,
-            0.014196441298451518,
-            0.014377024678453133
-        ]
+[
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 13.343665
     },
-    "vanilla_american_binomial_cuda_batch_nvidia_baseline": {
-        "n": [
-            1,
-            2,
-            4,
-            8,
-            16,
-            32,
-            64,
-            128,
-            256,
-            512,
-            1024,
-            2048,
-            4096,
-            8192,
-            16384
-        ],
-        "mean": [
-            0.14066349593968552,
-            0.2805457618372272,
-            0.5613526306366629,
-            1.1412314499140117,
-            2.3043179626557104,
-            4.6092351342906,
-            5.197497455899752,
-            5.55276260705798,
-            5.752586967787607,
-            6.214357215090081,
-            6.48494633112076,
-            6.6183001414541875,
-            6.6314081202594535,
-            6.650987843959662,
-            6.5482346520612085
-        ],
-        "std": [
-            0.004264566971398752,
-            0.008546364363646053,
-            0.006210925561725095,
-            0.007343901724305995,
-            0.017341853710753422,
-            0.025830841754045163,
-            0.0452775465018049,
-            0.04890615722200829,
-            0.050019786928199174,
-            0.054702328883932505,
-            0.05632821981725672,
-            0.060355720380176996,
-            0.0638002550550818,
-            0.06375087069691168,
-            0.05980975555941245
-        ]
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 3.631316
     },
-    "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds": {
-        "n": [
-            1,
-            2,
-            4,
-            8,
-            16,
-            32,
-            64,
-            128,
-            256,
-            512,
-            1024,
-            2048,
-            4096,
-            8192,
-            16384
-        ],
-        "mean": [
-            1.5287591832952179,
-            3.0881209783339028,
-            6.131717047857872,
-            11.896522404224296,
-            22.365869656230856,
-            36.63377819786102,
-            46.27803161662805,
-            55.5385753791078,
-            70.59311365538382,
-            85.75395269010161,
-            96.09862942850863,
-            102.78431110417485,
-            105.84360679217926,
-            107.60216749676015,
-            106.68669957662603
-        ],
-        "std": [
-            0.02271724636677476,
-            0.11704900755056005,
-            0.1695677391466814,
-            0.4045234674739988,
-            0.618808339195479,
-            0.8010437893477708,
-            1.3521879568626267,
-            1.5756630791838608,
-            1.4194035568140335,
-            0.9909585649992033,
-            0.39360442577150445,
-            0.9409508729050378,
-            0.8670408809956239,
-            0.7499252340483399,
-            0.994903855386885
-        ]
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 0.329076
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 13.332614
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 3.069166
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 0.355029
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 13.322907
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 3.116657
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 0.339058
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 13.330464
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 3.13221
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 0.355819
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 13.325854
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 3.069143
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 0.335312
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 13.327448
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 3.074673
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 0.354775
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 13.32457
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 3.074823
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 0.334853
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 13.327561
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 3.074338
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 0.335665
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 13.334663
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 3.070513
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 0.349482
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 13.344647
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 3.067028
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 1,
+        "time": 0.327498
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 13.34629
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 3.065674
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 0.327751
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 13.345651
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 3.067984
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 0.328627
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 13.365951
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 3.066905
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 0.346832
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 13.370821
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 3.085899
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 0.36611900000000003
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 13.347838
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 3.071638
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 0.364826
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 13.353671
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 3.114765
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 0.329707
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 13.351468
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 3.087907
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 0.339609
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 13.34636
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 3.071427
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 0.3377
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 13.340814
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 3.06436
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 0.33989
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 13.357243
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 3.107657
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 2,
+        "time": 0.329482
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 13.357073
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 3.112065
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 0.328193
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 13.476387
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 3.08073
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 0.330964
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 13.470972
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 3.094775
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 0.328121
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 13.440375
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 3.084351
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 0.327964
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 13.44864
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 3.128163
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 0.422332
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 13.481776
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 3.167776
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 0.333024
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 13.469281
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 3.084583
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 0.328351
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 13.455942
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 3.084906
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 0.328476
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 13.448936
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 3.089498
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 0.329607
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 13.445854
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 3.085431
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 4,
+        "time": 0.335802
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 13.487594
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 3.112721
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 0.340138
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 13.458106
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 3.167377
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 0.478036
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 13.489313
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 3.133948
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 0.344232
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 13.528148
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 3.14824
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 0.340413
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 13.464861
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 3.083683
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 0.341634
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 13.462608
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 3.081551
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 0.340849
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 13.461383
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 3.109672
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 0.372423
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 13.465619
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 3.088671
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 0.340789
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 13.526249
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 3.090463
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 0.338239
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 13.486401
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 3.089389
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 8,
+        "time": 0.340986
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 13.548768
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 3.112816
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 0.363916
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 13.517783
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 3.097111
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 0.372803
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 13.507228
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 3.190851
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 0.360344
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 13.568753
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 3.240797
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 0.435951
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 13.552586
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 3.22793
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 0.435797
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 13.517398
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 3.100697
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 0.390659
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 13.518128
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 3.086912
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 0.396398
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 13.509277
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 3.087921
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 0.35763
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 13.509198
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 3.120217
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 0.458506
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 13.528859
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 3.088632
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 16,
+        "time": 0.354766
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 14.808346
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 3.104583
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 0.462113
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 14.74432
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 3.089084
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 0.441819
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 14.719709
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 3.094571
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 0.442586
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 14.748709
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 3.127221
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 0.450509
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 14.782796
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 3.095275
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 0.443727
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 14.771557
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 3.183302
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 0.444632
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 14.724768
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 3.145374
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 0.460855
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 14.724765
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 3.087597
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 0.442587
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 14.712686
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 3.090308
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 0.444552
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 14.72378
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 3.105146
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 32,
+        "time": 0.441662
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 26.266264
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 5.883557
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 0.815706
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 26.112046
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 5.872472
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 0.680927
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 26.106231
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 5.875027
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 0.684461
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 26.104045
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 5.891457
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 0.680923
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 26.126569
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 5.899866
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 0.706722
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 26.140622
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 5.879537
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 0.713158
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 26.095825
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 5.915486
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 0.71918
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 26.103118
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 5.903989
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 0.71541
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 26.119586
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 5.900897
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 0.690969
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 26.112209
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 5.881259
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 64,
+        "time": 0.687404
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 49.492627
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 11.472555
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 1.191946
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 49.258301
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 11.465123
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 1.165849
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 49.23102
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 11.461773
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 1.182091
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 49.252754
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 11.461098
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 1.193397
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 49.833914
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 11.552591
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 1.191516
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 49.434409
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 11.589635
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 1.223159
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 49.513787
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 11.551709
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 1.264154
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 49.468465
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 11.557617
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 1.206992
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 49.44973
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 11.556388
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 1.247327
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 49.512125
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 11.566318
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 128,
+        "time": 1.217855
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 94.960181
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 22.751186
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 1.967649
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 94.4538
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 22.774814
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 2.025957
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 94.571616
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 22.804153
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 1.966533
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 94.52431
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 22.768264
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 1.965317
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 94.551164
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 22.763947
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 2.016111
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 94.547038
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 22.761961
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 1.94316
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 94.637701
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 22.780966
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 1.95531
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 94.523242
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 22.797676
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 1.957516
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 94.580275
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 22.764943
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 1.969146
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 94.549619
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 22.77882
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 256,
+        "time": 1.961486
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 177.674761
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 42.431838
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 3.349908
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 176.736681
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 42.432615
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 3.219199
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 175.763129
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 42.466645
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 3.270968
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 175.808898
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 42.455794
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 3.317138
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 175.810078
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 42.423178
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 3.285951
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 175.858756
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 42.444355
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 3.217045
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 175.823599
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 42.480748
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 3.268297
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 175.785124
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 42.450483
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 3.246271
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 175.72564
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 42.455861
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 3.252391
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 175.717108
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 42.284949
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 512,
+        "time": 3.16804
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 342.359005
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 81.680164
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 6.531178
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 339.434836
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 81.429384
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 5.512904
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 337.504938
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 81.435533
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 5.502695
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 337.489222
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 81.444144
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 5.534459
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 337.555073
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 81.479875
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 5.519108
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 337.650585
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 81.452058
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 5.505547
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 337.469757
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 81.43078
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 5.497028
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 337.601302
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 81.424862
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 5.515557
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 337.61026
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 81.433508
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 5.503341
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 337.542157
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 81.430942
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 1024,
+        "time": 5.511912
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 671.707008
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 160.072112
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 10.821941
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 667.721159
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 160.085599
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 10.444715
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 663.801303
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 160.063674
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 10.352747
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 663.995751
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 160.0679
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 10.339475
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 664.04322
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 160.085873
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 10.40273
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 664.082962
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 160.043132
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 10.295214
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 681.513854
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 160.01567
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 10.34655
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 668.75248
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 160.043637
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 10.290141
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 663.143677
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 160.013747
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 10.306813
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 662.924373
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 159.996823
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 2048,
+        "time": 10.304227
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 1339.459657
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 319.796337
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 20.610534
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 1339.628141
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 319.790145
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 20.553112
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 1339.64189
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 319.784461
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 20.588159
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 1338.38755
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 319.747864
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 20.534378
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 1339.815054
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 319.759535
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 20.542771
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 1338.513397
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 319.777567
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 20.576648
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 1338.934963
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 319.811598
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 20.611123
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 1339.774528
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 319.792801
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 20.61188
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 1338.467413
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 319.752152
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 20.609045
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 1339.037649
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 319.828445
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 4096,
+        "time": 20.612629
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 2674.989639
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 638.636764
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 40.410782
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 2678.284583
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 638.419981
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 39.972673
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 2678.908663
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 638.541586
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 40.078372
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 2680.394409
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 638.42091
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 39.93927
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 2680.24005
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 638.580825
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 40.218064
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 2681.550899
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 638.585673
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 40.061853
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 2679.14681
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 638.452957
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 39.958107
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 2679.49328
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 638.547364
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 40.175803
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 2678.789627
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 638.424439
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 39.971051
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 2678.82929
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 638.439265
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 8192,
+        "time": 39.909113
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 5345.891947
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 1275.538565
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 79.287665
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 5347.895039
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 1275.283279
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 78.994119
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 5345.602886
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 1275.414898
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 79.539011
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 5346.467775
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 1275.358034
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 79.057852
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 5349.219205
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 1275.585341
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 79.194119
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 5351.48922
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 1275.309818
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 79.147273
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 5346.02289
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 1275.360483
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 79.409411
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 5352.860856
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 1275.412639
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 79.418305
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 5347.711857
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 1275.870251
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 79.593869
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_naive",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_naive",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 5347.113247
+    },
+    {
+        "do_pass_sanity_check": "false",
+        "function_id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_nvidia_baseline",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 1275.661878
+    },
+    {
+        "do_pass_sanity_check": "true",
+        "function_id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "hyperparams": [],
+        "id": "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds",
+        "n": 1024,
+        "n_runs": 16384,
+        "time": 79.422782
     }
-}
+]
