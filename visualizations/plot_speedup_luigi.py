@@ -349,12 +349,6 @@ def plot_GNodes_per_second(processed_data, output_file=None):
     sorted_arr=sorted(arr,key=lambda x: x[1]["mean"][-1])  
     n_set = set()
     for i, (func_id, data) in enumerate(sorted_arr):
-        print(data)
-        for k,times in zip(data['n'],data['all_times']):
-            out = shapiro(times)
-            print(
-                f"Shapiro test for {func_id} with n={k}: W={out.statistic}, p-value={out.pvalue}"
-            )
         if func_id in [ t["function_id"] for  t in DATA_TO_ADD["runs"] ]:
             data_to_add = next( t for t in DATA_TO_ADD["runs"] if t["function_id"] == func_id )
             data['n'].extend( data_to_add["runs"]["n"] )

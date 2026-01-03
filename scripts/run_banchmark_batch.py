@@ -72,7 +72,7 @@ def gen_data(print_progress=False):
     N=1024
     data_full = {}
     for _ in tqdm(range(10)):
-        for N_RANDOM_RUNS in tqdm([16384]):
+        for N_RANDOM_RUNS in tqdm( [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384]):
             if print_progress:
                 print(f"\nRunning benchmark for N={N}, N_RANDOM_RUNS={N_RANDOM_RUNS}...")
             results = run_benchmark(N, N_RANDOM_RUNS)
@@ -83,22 +83,11 @@ def gen_data(print_progress=False):
                     print("GN/s:", round(gn_s,2))
                 data_full.setdefault(i["function_id"], {}).setdefault(N_RANDOM_RUNS, []).append( gn_s)
                 
-        # for N_RANDOM_RUNS in []:#tqdm([8192, 16384 ]):
-        #     if print_progress:
-        #         print(f"\nRunning benchmark for N={N}, N_RANDOM_RUNS={N_RANDOM_RUNS}...")
-        #     results = run_benchmark(N, N_RANDOM_RUNS, params=["--filter-by-name",'scheduler'])
-        #     for i in results:
-        #         gn_s =(i["n"]*(i["n"]+1)/2 )* N_RANDOM_RUNS/(i["time"]/1000)/1e9 
-        #         if print_progress:
-        #             print("for fun", i["function_id"], "with n=", i["n"] )
-        #             print("GN/s:", round(gn_s,2))
-
-        #         data_full.setdefault(i["function_id"], {}).setdefault(N_RANDOM_RUNS, []).append( gn_s)
 
     summary_data = {}
 
-    with open(FILE_DATA_OUTPUT, "r") as f:
-        summary_data=json.load( f)
+    # with open(FILE_DATA_OUTPUT, "r") as f:
+    #     summary_data=json.load( f)
     for func_id, n_dict in data_full.items():
         summary_data.setdefault(func_id, {"n": [], "mean": [], "std": []})
         for n, gn_s_list in n_dict.items():
@@ -107,6 +96,7 @@ def gen_data(print_progress=False):
             stddev_gn_s = variance ** 0.5
             
             summary_data[func_id]["n"].append(n)
+            summary_data[func_id].setdefault("all_times", []).append(gn_s_list)
             summary_data[func_id]["mean"].append(mean_gn_s)
             summary_data[func_id]["std"].append(stddev_gn_s)
 
