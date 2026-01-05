@@ -17,22 +17,21 @@ import kaleido
 # FILE_PATH = './data/temp.json'
 
 FILES = [
-"vanilla_american_binomial_cpu_quantlib.json",
-"vanilla_american_binomial_cuda_naive.json",
-"vanilla_american_binomial_cuda_nvidia_baseline.json",
-"vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds.json"
+"vanilla_american_binomial_cpu_quantlib copy.json",
+"vanilla_american_binomial_cuda_naive copy.json",
+"vanilla_american_binomial_cuda_nvidia_baseline copy.json",
+"vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds copy.json"
 ]
 
 func_id_transformation = {
-    "vanilla_american_binomial_cuda_nvidia": "cuda_nvidia",
-    "vanilla_american_binomial_cuda_naive": "cuda_naive",
-    "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds": "cuda_optimized",
+    "vanilla_american_binomial_cuda_nvidia": "Podhloznyuk",
+    "vanilla_american_binomial_cuda_naive": "Kolb and Pharr",
+    "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds": "Our Method",
     # "vanilla_american_binomial_cpu_naive": "cpu_naive",
-    "vanilla_american_binomial_cpu_quantlib": "cpu_quantlib",
+    "vanilla_american_binomial_cpu_quantlib": "QuantLib",
     # "vanilla_american_binomial_cpu_trimotm_trimeeon_stprcmp": "cpu_optimized",
-    "vanilla_american_binomial_cuda_nvidia_baseline": "cuda_nvidia_baseline",
+    "vanilla_american_binomial_cuda_nvidia_baseline": "Podhloznyuk",
 }
-
 
 def clean_label(label):
     """Remove the specified suffix from function names for cleaner legends"""
@@ -45,6 +44,19 @@ def get_color_palette(n_colors):
         return []
     # 'Turbo' is excellent for high contrast with many lines
     return pc.sample_colorscale('Turbo', [n/(n_colors -1) if n_colors > 1 else 0 for n in range(n_colors)])
+
+
+colors = get_color_palette(5)
+
+func_id_to_color = {
+    "vanilla_american_binomial_cuda_nvidia": colors[1],
+    "vanilla_american_binomial_cuda_naive": colors[2],
+    "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds": colors[3],
+    # "vanilla_american_binomial_cpu_naive": "cpu_naive",
+    "vanilla_american_binomial_cpu_quantlib": colors[4],
+    # "vanilla_american_binomial_cpu_trimotm_trimeeon_stprcmp": "cpu_optimized",
+    "vanilla_american_binomial_cuda_nvidia_baseline": colors[1],
+}
 
 def process_data(json_data):
     """Process benchmark data and calculate statistics (Unchanged logic)"""
@@ -165,85 +177,55 @@ def plot_mean_times(processed_data, output_file=None):
     
     # 1. Generate Colors
     func_ids = list(processed_data.keys())
-    colors = get_color_palette(len(func_ids))
     
     fig = go.Figure()
-
-    # Collect all y-values to determine the range for tick labels
-    all_y_values = []
 
     # 2. Add Traces
     arr = list(processed_data.items())
     sorted_arr = sorted(arr, key=lambda x: x[1]["mean"][-1])  
     x_axis = set() 
     
-    for i, (func_id, data) in enumerate(sorted_arr):
+    for i, (func_id, data) in enumerate(reversed(sorted_arr)):
         if func_id not in func_id_transformation:
             continue
         clean_name = clean_label(func_id)
         
         # Log-transform the mean values
-        log_mean = [np.log10(val) for val in data["mean"]]
         
         # Add line connecting the means
         fig.add_trace(go.Scatter(
             x=data["n"],
-            y=log_mean,
-            mode='lines',
+            y=data['mean'],
             name=clean_name,
-            line=dict(color=colors[i], width=2),
+            line=dict(color=func_id_to_color[func_id], width=2),
             legendgroup=i,
             showlegend=True,
-            hoverinfo='skip'
         ))
-        
-        # Add violin plot for each point
-        for j, (n, mean_time) in enumerate(zip(data["n"], data["mean"])):
-            if j < len(data['all_times']):
-                all_times = data['all_times'][j]
-                # Log-transform the individual times
-                log_times = [np.log10(t) for t in all_times if t > 0]  # Filter out zeros/negatives
-                all_y_values.extend(all_times)
-                
-                fig.add_trace(go.Violin(
-                    x=[str(n)] * len(log_times),
-                    y=log_times,
-                    name=clean_name,
-                    legendgroup=i,
-                    scalegroup=i,
-                    side='negative',
-                    line_color=colors[i],
-                    meanline_visible=True,
-                    points=False,
-                    showlegend=False,
-                    opacity=0.6,
-                    width=0.7
-                ))
         
         x_axis.update(data["n"])
 
-    # Create nice tick values for the y-axis
-    y_min, y_max = min(all_y_values), max(all_y_values)
-    log_min, log_max = np.floor(np.log10(y_min)), np.ceil(np.log10(y_max))
-    tick_vals = [10**i for i in range(int(log_min), int(log_max)+1)]
-    tick_vals_log = [np.log10(v) for v in tick_vals]
 
     # 3. Layout Configuration
     fig.update_layout(
-        xaxis_title="Time Steps (n)",
+        xaxis_title="Time Steps (N)",
         yaxis_title="Mean Execution Time (ms)",
-        yaxis_type="linear",  # Changed to linear since we're plotting log-transformed data
-        yaxis=dict(
-            tickmode='array',
-            tickvals=tick_vals_log,
-            ticktext=[str(int(v)) if v >= 1 else f"{v:.1g}" for v in tick_vals]
-        ),
+        yaxis_type="log",  # Changed to linear since we're plotting log-transformed data
         xaxis_type="log",
         xaxis=dict(
             tickvals=sorted(x_axis),
-            ticktext=[f"{val:,}" for val in sorted(x_axis)]
+            ticktext=[f"{val:,}" for val in sorted(x_axis)],
+            automargin=True
         ),
         hovermode="x unified",
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            font=dict(size=10)
+        ),
+        autosize=True,
+        yaxis=dict(automargin=True),
+
         template="plotly_white"
     )
 

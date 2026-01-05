@@ -117,23 +117,31 @@ void handle_benchmark_random_throughput(const std::string& output_format_str,
                                         const std::string& filter_name,
                                         const std::string& reference_function_name,
                                         int skip_sanity_checks) {
+
+    // hyperparams for gnodes_banchmark n= 1024 ,random_runs {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048} times = 50--
+    // Ablation study n = 20000 , random_runs = 100, times = 50
+    // GNodes
     
-    int n =  1024;
+    OutputFormat output_format = output_format_from_string(output_format_str);
     nlohmann::json::array_t output;
-    for (auto random_runs : std::vector<int>{1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048}) {
-        for(int times = 0; times < 200; times++){
-            auto results = batch_random_benchmark(filter_name, reference_function_name, random_runs,
-                                                  n, skip_sanity_checks);
-            OutputFormat output_format = output_format_from_string(output_format_str);
-            if (output_format == OutputFormat::PPRINT) {
-                print_batch_benchmark_result(results, skip_sanity_checks);
-            } else if (output_format == OutputFormat::JSON) {
-                auto batch_output = dump_batch_benchmark_results_json(results);
-                output.insert(output.end(), batch_output.begin(), batch_output.end());
+    for(int times = 0; times < 1; times++){
+        for (auto random_runs : std::vector<int>{1,  4,  16,  64,  256,  1024,2048,4096,8192,8192 *2 }) {
+            for(auto n : std::vector<int> { 256, 512, 1024, 2048,4096,8192}){
+                auto results = batch_random_benchmark(filter_name, reference_function_name, random_runs,
+                                                    n, skip_sanity_checks);
+                if (output_format == OutputFormat::PPRINT) {
+                    std::cout << "N :"<<n <<"  Random runs: "<< random_runs<<std::endl;
+                    print_batch_benchmark_result(results, skip_sanity_checks);
+                } else if (output_format == OutputFormat::JSON) {
+                    auto batch_output = dump_batch_benchmark_results_json(results);
+                    output.insert(output.end(), batch_output.begin(), batch_output.end());
+                }
             }
         }
     }
-    std::cout << output << std::endl;
+    if (output_format != OutputFormat::PPRINT) {
+        std::cout << output << std::endl;
+    }
 }
 
 int main(int argc, char** argv) {

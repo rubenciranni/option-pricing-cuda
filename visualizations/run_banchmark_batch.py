@@ -28,12 +28,23 @@ def get_color_palette(n_colors):
 
 
 renamed = {
-    "vanilla_american_binomial_cuda_batch_nvidia": "cuda_nvidia",
-    "vanilla_american_binomial_cuda_batch_naive": "cuda_naive",
-    "vanilla_american_binomial_cuda_batch_nvidia_baseline": "cuda_nvidia_baseline",
-    "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds": "cuda_optimized",
+    "vanilla_american_binomial_cuda_batch_nvidia": "Podhloznyuk",
+    "vanilla_american_binomial_cuda_batch_naive": "Kolb and Pharr",
+    "vanilla_american_binomial_cuda_batch_nvidia_baseline": "Podhloznyuk",
+    "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds": "Our Method",
 }
 
+colors = get_color_palette(5)
+
+func_id_to_color = {
+    "vanilla_american_binomial_cuda_batch_nvidia": colors[1],
+    "vanilla_american_binomial_cuda_batch_naive": colors[2],
+    "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds": colors[3],
+    # "vanilla_american_binomial_cpu_naive": "cpu_naive",
+    "vanilla_american_binomial_cpu_quantlib": colors[4],
+    # "vanilla_american_binomial_cpu_trimotm_trimeeon_stprcmp": "cpu_optimized",
+    "vanilla_american_binomial_cuda_batch_nvidia_baseline": colors[1],
+}
 
 # def get_data():
 #     with open(FILE_DATA_OUTPUT, "r") as f:
@@ -173,23 +184,6 @@ def get_data():
                 processed_data[func_id]["gnodes/s"][batch_size] = gnodes_per_second
                 processed_data[func_id]["median_gnodes/s"][batch_size] = gnodes_per_second_median
                 
-                q1 = np.percentile(times, 25)
-                q3 = np.percentile(times, 75)
-                processed_data[func_id]["latency_iqr"][batch_size] = (q1, q3)
-                
-                times_sorted = sorted(times)
-                n_samples = len(times)
-                z = 1.96  # 95% CI for the median
-                lower_rank = max(0, int(math.floor((n_samples - z * math.sqrt(n_samples)) / 2)))
-                upper_rank = min(n_samples - 1, int(math.ceil((n_samples + z * math.sqrt(n_samples)) / 2) - 1))
-                ci_lower = times_sorted[lower_rank]
-                ci_upper = times_sorted[upper_rank]
-                processed_data[func_id]["median_ci"][batch_size] = (ci_lower, ci_upper)
-                
-                gnodes_ci_lower = calculate_gnodes(ci_upper)  # Note: inverted because time is in denominator
-                gnodes_ci_upper = calculate_gnodes(ci_lower)
-                processed_data[func_id]["gnodes_ci"][batch_size] = (gnodes_ci_lower, gnodes_ci_upper)
-                
     return processed_data
 def plot_data_single():
     processed_data = get_data()
@@ -199,24 +193,9 @@ def plot_data_single():
     x_elements = set()
     
     for idx, (func_id, data) in enumerate(processed_data.items()):
-        batch_sizes = sorted(data["median_gnodes/s"].keys())
-        gnodes_median = [data["median_gnodes/s"][batch_size] for batch_size in batch_sizes]
-        ci_lower = [data["gnodes_ci"][batch_size][0] for batch_size in batch_sizes]
-        ci_upper = [data["gnodes_ci"][batch_size][1] for batch_size in batch_sizes]
+        batch_sizes = sorted(data["gnodes/s"].keys())
+        gnodes_median = [data["gnodes/s"][batch_size] for batch_size in batch_sizes]
         
-        # Add shaded CI
-        fig.add_trace(go.Scatter(
-            x=batch_sizes + batch_sizes[::-1],
-            y=ci_upper + ci_lower[::-1],
-            fill='toself',
-            fillcolor=colors[idx],
-            opacity=0.2,
-            line=dict(width=0),
-            name=renamed.get(func_id, func_id) + ' (95% CI)',
-            showlegend=True,
-            legendgroup=func_id,
-            hoverinfo='skip'
-        ))
         
         # Add median line
         fig.add_trace(go.Scatter(
@@ -224,7 +203,7 @@ def plot_data_single():
             y=gnodes_median,
             mode='lines+markers',
             name=renamed.get(func_id, func_id),
-            line=dict(color=colors[idx], width=2),
+            line=dict(color= func_id_to_color[func_id], width=2),
             marker=dict(size=8),
             legendgroup=func_id,
         ))
@@ -241,9 +220,8 @@ def plot_data_single():
         )
     
     fig.update_layout(
-        title="Performance Comparison (Median with 95% CI)",
-        xaxis_title="Batch Size",
-        yaxis_title="GNodes/s",
+        xaxis_title="Batch Size (B)",
+        yaxis_title="GigaNodes per Second (GNodes/s)",
         xaxis_type="log",
         yaxis_type="log",
         hovermode="x unified",
@@ -252,7 +230,14 @@ def plot_data_single():
             tickvals=sorted(x_elements),
             ticktext=[str(x) for x in sorted(x_elements)]
         ),
-        legend=dict(x=0, y=1),
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            font=dict(size=10)
+        ),
+        autosize=True,
+        yaxis=dict(automargin=True),
         template="plotly_white"
     )
     
