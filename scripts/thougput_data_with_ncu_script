@@ -1,0 +1,36 @@
+#!/bin/bash
+
+RESULTS_DIR="./res_ncu_full_test"
+
+mkdir -p ${RESULTS_DIR}
+
+function run_benchmark(){
+    local t=$1 
+    local b=$2
+    echo "Running benchmark with t=${t}..."
+    
+    srun --pty -A dphpc -t 60 ncu --launch-count 1 --set full \
+        --kernel-name "compute_next_layers_kernel_batch_schedule_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds" \
+        -o "${RESULTS_DIR}/full_test_${b}_${t}" -f ../build/bin/pricing_cli batch-random-benchmark \
+        --n-random-runs 1000 -n ${t} --skip-sanity-checks
+    
+    echo "Completed benchmark for t=${t}"
+}
+
+function extract_ncu_metrics() {
+    local t=$1
+    local b=$2
+    ncu --import ./res_ncu_full_test/full_test_${b}_${t}.ncu-rep --page raw --csv > ./res_ncu_full_test/full_test_${b}_${t}.csv
+
+    rm ./res_ncu_full_test/full_test_${b}_${t}.ncu-rep
+}
+# Loop through all powers of two from 2 to 16384
+for t in 2 4 8 16 32 64 128 256 512 1024 2048 4096 8192 16384; do
+    for b in {5..9}; do
+        echo "The ${b} run forn=${t}"
+        run_benchmark ${t} ${b}
+        extract_ncu_metrics ${t} ${b}
+    done
+done
+
+echo "All benchmarks completed!"
