@@ -125,8 +125,8 @@ void handle_benchmark_random_throughput(const std::string& output_format_str,
     OutputFormat output_format = output_format_from_string(output_format_str);
     nlohmann::json::array_t output;
     for(int times = 0; times < 1; times++){
-        for (auto random_runs : std::vector<int>{1,  4,  16,  64,  256,  1024,2048,4096,8192,8192 *2 }) {
-            for(auto n : std::vector<int> { 256, 512, 1024, 2048,4096,8192}){
+        for (auto random_runs : std::vector<int>{1  }) {
+            for(auto n : std::vector<int> {20000}) {
                 auto results = batch_random_benchmark(filter_name, reference_function_name, random_runs,
                                                     n, skip_sanity_checks);
                 if (output_format == OutputFormat::PPRINT) {

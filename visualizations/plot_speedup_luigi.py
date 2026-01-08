@@ -24,6 +24,7 @@ FILES = [
 ]
 
 func_id_transformation = {
+    "vanilla_american_binomial_cuda_batch_naive": "GPU Naive",
     "vanilla_american_binomial_cuda_nvidia": "Podhloznyuk",
     "vanilla_american_binomial_cuda_naive": "Kolb and Pharr",
     "vanilla_american_binomial_cuda_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds": "Our Method",
@@ -380,7 +381,7 @@ def plot_GNodes_per_second(processed_data, output_file=None):
         xaxis=dict(
             tickmode='array',
             tickvals=sorted(n_set),
-            ticktext=[f"{n}" for n in sorted(n_set)]
+            ticktext=[f"{n:,}" for n in sorted(n_set)]
         ),
         hovermode="x unified",
         template="plotly_white",

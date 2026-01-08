@@ -10,10 +10,11 @@ import plotly.graph_objects as go
 import plotly.colors as pc
 import kaleido
 
-# FILE_DATA_OUTPUT = "../visualizations/data/batch_gnodes_per_second.json"
-FILE_DATA_OUTPUT = "../visualizations/data/batch_gnodes_per_second_2.json"
+FILE_DATA_OUTPUT = "../visualizations/data/batch_gnodes_per_second.json"
+# FILE_DATA_OUTPUT = "../visualizations/data/batch_gnodes_per_second_2.json"
 # FILE_DATA_OUTPUT = "../build/temp.json"
 IMAGE_OUTPUT = "../visualizations/gen_plots/gnodes_per_second_plot.svg"
+IMAGE_OUTPUT_OPTIONS = "../visualizations/gen_plots/options_per_second_plot.svg"
 
 # to create the data run the file
 #srun --pty -A dphpc -t 60   ./bin/pricing_cli benchmark-random-throughput --output-format json > ../visualizations/data/batch_gnodes_per_second.json
@@ -28,10 +29,12 @@ def get_color_palette(n_colors):
 
 
 renamed = {
+    "vanilla_american_binomial_cuda_naive": "GPU Naive",
     "vanilla_american_binomial_cuda_batch_nvidia": "Podhloznyuk",
-    "vanilla_american_binomial_cuda_batch_naive": "Kolb and Pharr",
+    "vanilla_american_binomial_cuda_batch_naive": "GPU Naive",
     "vanilla_american_binomial_cuda_batch_nvidia_baseline": "Podhloznyuk",
     "vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds": "Our Method",
+    "vanilla_american_binomial_cpu_quantlib": "QuantLib", 
 }
 
 colors = get_color_palette(5)
@@ -163,6 +166,7 @@ def get_data():
             "latency_iqr": {},
             "median_ci": {},
             "gnodes_ci": {},  # Add CI for gnodes
+            "options/s": {}, 
         })
         n = None
         for tdata in data_to_process: 
@@ -178,13 +182,75 @@ def get_data():
                 mean_time = sum(times) / len(times)
                 median_time = np.median(times)
                 calculate_gnodes = lambda t: (batch_size * (n*(n+1)/2) / (t / 1000)) / 1e9
+                caculate_options = lambda t: batch_size  / (t / 1000)
                 gnodes_per_second = calculate_gnodes(mean_time)
                 gnodes_per_second_median = calculate_gnodes(median_time)
                 processed_data[func_id]["mean_latency"][batch_size] = mean_time
                 processed_data[func_id]["gnodes/s"][batch_size] = gnodes_per_second
+                processed_data[func_id]["options/s"][batch_size] = caculate_options(mean_time)
                 processed_data[func_id]["median_gnodes/s"][batch_size] = gnodes_per_second_median
                 
     return processed_data
+
+def plot_data_option_s():
+    processed_data = get_data()
+    fig = go.Figure()
+    
+    colors = get_color_palette(len(processed_data) + 3)
+    x_elements = set()
+    
+    for idx, (func_id, data) in enumerate(processed_data.items()):
+        batch_sizes = sorted(data["options/s"].keys())
+        gnodes_median = [data["options/s"][batch_size] for batch_size in batch_sizes]
+        
+        
+        # Add median line
+        fig.add_trace(go.Scatter(
+            x=batch_sizes,
+            y=gnodes_median,
+            mode='lines+markers',
+            name=renamed.get(func_id, func_id),
+            line=dict(color= func_id_to_color[func_id], width=2),
+            marker=dict(size=8),
+            legendgroup=func_id,
+        ))
+        
+        x_elements.update(batch_sizes)
+        
+        max_index = gnodes_median.index(max(gnodes_median))
+        fig.add_annotation(
+            x=math.log(batch_sizes[max_index], 10),
+            y=math.log(gnodes_median[max_index], 10),
+            text=f"{int(gnodes_median[max_index]):,}",
+            showarrow=True,
+            arrowhead=2,
+        )
+    
+    fig.update_layout(
+        xaxis_title="Batch Size (B)",
+        yaxis_title="Throughput (Options/s)",
+        xaxis_type="log",
+        yaxis_type="log",
+        hovermode="x unified",
+        xaxis=dict(
+            tickmode='array',
+            tickvals=sorted(x_elements),
+            ticktext=[f"{n:,}" for n in sorted(x_elements)]
+        ),
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            font=dict(size=10)
+        ),
+        autosize=True,
+        yaxis=dict(automargin=True),
+        template="plotly_white"
+    )
+    
+    fig.write_image(IMAGE_OUTPUT_OPTIONS)
+    print(f"Saved image: {IMAGE_OUTPUT_OPTIONS}")
+
 def plot_data_single():
     processed_data = get_data()
     fig = go.Figure()
@@ -246,7 +312,7 @@ def plot_data_single():
 
 if __name__ == "__main__":
 
-    plot_data_single()
+    # plot_data_single()
     # plot_histogram_data()
-
+    plot_data_option_s()
 

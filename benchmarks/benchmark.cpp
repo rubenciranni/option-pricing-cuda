@@ -211,7 +211,7 @@ std::map<std::string, BatchPricingFunction> BATCH_FUNCTION_REGISTRY = {
 
     // gnodes plot
     // {"vanilla_american_binomial_cuda_batch_nvidia_baseline", vanilla_american_binomial_cuda_batch_nvidia_baseline },
-    // {"vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds", vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds},
+    {"vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds", vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds},
     // {"vanilla_american_binomial_cuda_batch_naive", vanilla_american_binomial_cuda_batch_naive},
 
     
@@ -219,7 +219,7 @@ std::map<std::string, BatchPricingFunction> BATCH_FUNCTION_REGISTRY = {
     // {"vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds",
     //     vanilla_american_binomial_cuda_batch_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds<DEFAULT_HYPERPARAMS_CUDA_BKDSTPRCMP_XOVLPUNROLL_SHUFFLE>},
     // {"vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds", vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_ds},
-    {"vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds", vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds},
+    // {"vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds", vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_shuffle_trimotm_ds},
     // {"vanilla_american_binomial_cuda_batch_scheduler_xdovlpunroll_shuffle_trimotm_ds", vanilla_american_binomial_cuda_batch_scheduler_xdovlpunroll_shuffle_trimotm_ds},
     // {"vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_shuffle_trimotm_ds", vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_shuffle_trimotm_ds},
     // {"vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_vtile_trimotm_ds", vanilla_american_binomial_cuda_batch_scheduler_bkdstprcmp_xdovlpunroll_vtile_trimotm_ds },
