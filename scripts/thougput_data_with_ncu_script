@@ -25,8 +25,15 @@ function extract_ncu_metrics() {
     rm ./res_ncu_full_test/full_test_${b}_${t}.ncu-rep
 }
 # Loop through all powers of two from 2 to 16384
-for t in 2 4 8 16 32 64 128 256 512 1024 2048 4096 8192 16384; do
-    for b in {5..9}; do
+for t in 32768 65536; do
+    for b in {3..9}; do
+        echo "The ${b} run forn=${t}"
+        run_benchmark ${t} ${b}
+        extract_ncu_metrics ${t} ${b}
+    done
+done
+for t in 2 4 8 16 32 64 128 256 512 1024 2048 4096 8192 16384 32768 65536; do
+    for b in {10..50}; do
         echo "The ${b} run forn=${t}"
         run_benchmark ${t} ${b}
         extract_ncu_metrics ${t} ${b}

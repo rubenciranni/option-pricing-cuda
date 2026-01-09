@@ -5,7 +5,7 @@ import os
 
 import math
 
-def median_confidence_interval(data, confidence=0.95):
+def median_confidence_interval(data, confidence=0.99):
     n = len(data)
     if n == 0: return None
     
@@ -36,17 +36,32 @@ def median_confidence_interval(data, confidence=0.95):
 
 
 output_values = pd.DataFrame(columns=["n"  ,"number_of_dataframe", * [f"{i}_{j}" for i in ["ai_dram", "ai_l2", "ai_l1", "Performance"] for j in ["median", "ci_lower", "ci_upper"]]])
+all_columns= [
+
+        "smsp__sass_thread_inst_executed_op_fadd_pred_on.sum.per_cycle_elapsed",
+        "smsp__sass_thread_inst_executed_op_fmul_pred_on.sum.per_cycle_elapsed",
+        "derived__smsp__sass_thread_inst_executed_op_ffma_pred_on_x2",
+        "smsp__cycles_elapsed.avg.per_second",
+        "derived__lts__lts2xbar_bytes.sum.per_second",
+        "dram__bytes.sum.per_second",
+        "derived__l1tex__lsu_writeback_bytes_mem_lgds.sum.per_second"
+
+]
 
 files = os.listdir("./res_ncu_full_test/")
-for n in map(lambda x:2**x,range(4, 15)):
+for n in map(lambda x:2**x,range(4, 16)):
+    
     # df = pd.read_csv(f"./res_ncu_full_test/full_test_{n}.csv", thousands=",")
     #check if there are path like ./res_ncu_full_test/full_test_number_{n}.csv where number is a number
     df = pd.DataFrame()
     for file in files:
         if file.startswith("full_test_") and file.endswith(f"_{n}.csv"):
             df_add = pd.read_csv(f"./res_ncu_full_test/{file}", thousands=",")
-            df = pd.concat([df, df_add[1:]], ignore_index=True)
-
+            #check if df contain all_columns
+            if all(col in df_add.columns for col in all_columns):
+                df = pd.concat([df, df_add[1:]], ignore_index=True)
+            else:
+                print(f"File {file} is missing some required columns. Skipping.")
 
     work = (
         df["smsp__sass_thread_inst_executed_op_fadd_pred_on.sum.per_cycle_elapsed"]
@@ -113,7 +128,12 @@ for n in map(lambda x:2**x,range(4, 15)):
         ignore_index=True,
     )
 
+
 print(output_values)
+# output to csv on terminal
+output_values.to_csv("./res_ncu_full_test/processed_ncu_full_test.csv", index=False)
+print(open("./res_ncu_full_test/processed_ncu_full_test.csv").read())
+
 
 import pandas as pd
 import numpy as np
@@ -370,7 +390,7 @@ fig.update_layout(
     template="plotly_white"
 )
 
-fig.update_layout(margin=dict(l=0, r=0, t=0, b=0))
+fig.update_layout(margin=dict(l=0, r=0, t=0, b=50))
 
 fig.show()
 fig.write_image("../visualizations/gen_plots/roofline_full_ncu_test.pdf", scale=2)
